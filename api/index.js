@@ -411,3 +411,9 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 })();
+
+export default function handler(request, response) {
+  response.status(200).json({
+    message: 'API is working!'
+  });
+}

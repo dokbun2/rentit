@@ -165,6 +165,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // API 라우트 등록
+app.get("/", (req, res) => {
+  res.status(200).send("API 서버가 정상 작동 중입니다. 프론트엔드를 보려면 메인 URL로 접속하세요.");
+});
+
+// :1 경로 특별 처리
+app.get("/:1", (req, res) => {
+  res.redirect('/');
+});
+
 app.post("/api/contact", async (req, res) => {
   try {
     const contactData = insertContactSchema.parse(req.body);

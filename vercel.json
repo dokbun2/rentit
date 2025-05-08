@@ -12,8 +12,11 @@
       "dest": "/dist/index.js"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/dist/public/$1"
+      "dest": "/client/index.html"
     }
   ]
 } 

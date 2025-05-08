@@ -160,16 +160,24 @@ const storage = process.env.NODE_ENV === "production" ? new PostgresStorage() : 
 // Express 앱 생성
 const app = express();
 
+// CORS 설정 추가
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 // 미들웨어 설정
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// API 라우트 등록
+// 루트 경로 처리 추가
 app.get("/", (req, res) => {
-  res.status(200).send("API 서버가 정상 작동 중입니다. 프론트엔드를 보려면 메인 URL로 접속하세요.");
+  res.status(200).json({ status: "API 서버가 정상 작동 중입니다." });
 });
 
-// :1 경로 특별 처리
+// :1 경로 특별 처리 (문제가 된 경로)
 app.get("/:1", (req, res) => {
   res.redirect('/');
 });

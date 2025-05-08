@@ -55,3 +55,22 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+// json 응답을 반환하는 API를 호출하는 함수
+export async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
+  // URL이 절대 경로가 아니면 /api/를 앞에 붙임
+  if (!url.startsWith('http') && !url.startsWith('/api/')) {
+    url = `/api${url.startsWith('/') ? url : '/' + url}`;
+  }
+  
+  const res = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    ...options,
+  });
+
+  await throwIfResNotOk(res);
+  return await res.json();
+}

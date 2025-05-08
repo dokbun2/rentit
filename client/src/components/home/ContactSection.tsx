@@ -122,7 +122,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">주소</h4>
-                    <p className="text-gray-400">서울특별시 강남구 테헤란로 123, 렌잇빌딩 8층</p>
+                    <p className="text-gray-400">경기도 하남시 감일로 75번길 40 201호 렌잇빌딩 2층</p>
                   </div>
                 </div>
                 

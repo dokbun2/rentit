@@ -62,7 +62,7 @@ const HeroSection = () => {
                 onClick={() => scrollToSection("#services")}
                 className="px-6 py-6 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
-                서비스 둘러보기
+                렌탈솔루션이란?
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}

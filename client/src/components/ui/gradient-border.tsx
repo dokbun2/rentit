@@ -9,7 +9,7 @@ interface GradientBorderProps {
 const GradientBorder = ({ children, className }: GradientBorderProps) => {
   return (
     <div className={cn("relative z-0 rounded-xl overflow-hidden gradient-border", className)}>
-      <style jsx>{`
+      <style>{`
         .gradient-border::before {
           content: '';
           position: absolute;

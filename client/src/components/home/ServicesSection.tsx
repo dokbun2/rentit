@@ -8,8 +8,8 @@ const services = [
   {
     icon: <Building className="h-6 w-6 text-primary" />,
     title: "렌탈사 설립",
-    description: "비즈니스 계획 수립부터 법적 절차, 초기 운영 전략까지 렌탈사 설립의 모든 과정을 지원합니다.",
-    features: ["시장 조사 및 분석", "법인 설립 절차 안내", "초기 투자 전략 수립"],
+    description: "렌탈사설립, 전산시스템구축, 조직셋팅 등, 초기 운영 전략까지 렌탈사 설립의 모든 과정을 지원합니다.",
+    features: ["법인설립 전반", "전산시스템구축", "각종계약서 작성"],
     iconBgClass: "bg-primary/20",
     textColorClass: "text-primary",
     checkColorClass: "text-primary",
@@ -17,7 +17,7 @@ const services = [
   {
     icon: <Handshake className="h-6 w-6 text-secondary" />,
     title: "렌탈업무 제휴",
-    description: "파트너십 구축과 효율적인 업무 제휴를 통해 렌탈 비즈니스의 경쟁력을 강화합니다.",
+    description: "국내 렌탈사와의 파트너십 구축과 효율적인 업무 제휴를 통해 렌탈사와 협업 타사 대비 경쟁력을 강화.",
     features: ["전략적 파트너 발굴", "계약 조건 협상 지원", "협력 관계 구축 컨설팅"],
     iconBgClass: "bg-secondary/20",
     textColorClass: "text-secondary",
@@ -26,7 +26,7 @@ const services = [
   {
     icon: <Laptop className="h-6 w-6 text-amber-500" />,
     title: "렌탈시스템 구축",
-    description: "효율적인 렌탈 관리를 위한 맞춤형 전산 시스템 개발 및 구축 서비스를 제공합니다.",
+    description: "렌탈전산시스템 구축을 통해 고정비용 절감 및 효율적인 렌탈 관리를 위한 맞춤형 서비스를 제공합니다.",
     features: ["맞춤형 렌탈 관리 시스템", "재고 및 자산 관리 솔루션", "고객 관리 및 결제 시스템"],
     iconBgClass: "bg-amber-500/20",
     textColorClass: "text-amber-500",
@@ -35,8 +35,8 @@ const services = [
   {
     icon: <Coins className="h-6 w-6 text-primary" />,
     title: "렌탈 부업",
-    description: "부업으로 시작하는 렌탈 비즈니스를 위한 맞춤형 컨설팅과 전략을 제공합니다.",
-    features: ["소규모 시작 전략", "효율적인 시간 관리 방법", "저비용 운영 모델 구축"],
+    description: "렌탈 판매 부업을 희망하시는 분들중 선별하여 월 100만원 벌수있도록 부업서비스를 무료로 제공",
+    features: ["무료 부업 컨설팅", "월 100벌기 프로젝트", "체계적인 운영 모델 구축"],
     iconBgClass: "bg-primary/20",
     textColorClass: "text-primary",
     checkColorClass: "text-primary",
@@ -71,7 +71,7 @@ const ServicesSection = () => {
             variants={fadeIn("up", 0.1)}
             className="text-3xl md:text-4xl font-bold mb-4"
           >
-            우리의 <span className="text-primary">서비스</span>
+            렌탈 <span className="text-primary">솔루션</span>
           </motion.h2>
           <motion.p 
             variants={fadeIn("up", 0.2)}
@@ -81,7 +81,7 @@ const ServicesSection = () => {
           </motion.p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -89,7 +89,7 @@ const ServicesSection = () => {
               whileInView="show"
               viewport={{ once: true, amount: 0.1 }}
               variants={fadeIn("up", 0.1 + index * 0.1)}
-              className="group glass-effect rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1"
+              className="group glass-effect rounded-xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 mx-auto w-full max-w-sm flex flex-col items-center text-center"
             >
               <div className={`w-16 h-16 rounded-full ${service.iconBgClass} flex items-center justify-center mb-6 mx-auto transition-all duration-300 transform group-hover:-translate-y-2`}>
                 {service.icon}
@@ -101,18 +101,18 @@ const ServicesSection = () => {
                 {service.description}
               </p>
               
-              <ul className="space-y-3 mb-6">
+              <ul className="space-y-3 mb-6 w-full">
                 {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-start">
+                  <li key={idx} className="flex items-start justify-center">
                     <Check className={`h-4 w-4 ${service.checkColorClass} mr-2 mt-1`} />
-                    <span className="text-gray-300 text-sm">{feature}</span>
+                    <span className="text-gray-300 text-sm text-left">{feature}</span>
                   </li>
                 ))}
               </ul>
               
               <button 
                 onClick={scrollToContact}
-                className={`block text-center py-2 px-4 bg-dark-light rounded-lg ${service.textColorClass} hover:bg-background transition-colors w-full`}
+                className={`block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full`}
               >
                 자세히 보기
               </button>

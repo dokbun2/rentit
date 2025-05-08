@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { name: "회사소개", href: "#about" },
   { name: "렌탈뉴스", href: "#news" },
-  { name: "서비스", href: "#services" },
+  { name: "렌탈솔루션", href: "#services" },
   { name: "문의하기", href: "#contact" },
 ];
 
@@ -44,9 +44,14 @@ const Navbar = () => {
     )}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-white flex items-center">
-            <span className="text-primary">Rent</span><span className="text-secondary">It</span>
-            <span className="ml-2 text-sm font-normal text-gray-300">렌잇</span>
+          <Link
+            href="/"
+            className="text-4xl text-white flex items-center"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <span className="text-primary" style={{ fontFamily: 'Paperlogy', fontWeight: 900 }}>Rent</span>
+            <span className="text-secondary" style={{ fontFamily: 'Paperlogy', fontWeight: 700 }}>It</span>
+            <span className="ml-2 text-2xl font-normal text-gray-300" style={{ fontFamily: 'Paperlogy', fontWeight: 400 }}>렌잇</span>
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">
@@ -54,7 +59,7 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => scrollToSection(link.href)}
-                className="text-gray-300 hover:text-white transition-colors"
+                className="nav-underline text-gray-300 hover:text-white transition-colors"
               >
                 {link.name}
               </button>
@@ -91,7 +96,7 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => scrollToSection(link.href)}
-                className="text-gray-300 hover:text-white py-2 transition-colors text-left"
+                className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left"
               >
                 {link.name}
               </button>

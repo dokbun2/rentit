@@ -71,39 +71,39 @@ const AboutSection = () => {
               시장 조사부터 비즈니스 모델 구축, 시스템 개발까지 종합적인 컨설팅 서비스로 고객의 니즈에 맞는 최적의 결과를 도출합니다.
             </p>
             
-            <div className="flex flex-col items-center gap-4 mb-8 w-full">
-              <div className="flex items-start justify-center w-full">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-3 mt-1">
+            <div className="flex flex-col items-start gap-4 mb-8 w-full max-w-md mx-auto pl-36">
+              <div className="flex items-center w-full">
+                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
                   <Trophy className="h-5 w-5 text-primary" />
                 </div>
-                <div className="text-left">
+                <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white mb-1">전문성</h4>
                   <p className="text-gray-400 text-sm">렌탈 분야 전문 컨설턴트</p>
                 </div>
               </div>
-              <div className="flex items-start justify-center w-full">
-                <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center mr-3 mt-1">
+              <div className="flex items-center w-full">
+                <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center mr-4 shrink-0">
                   <Handshake className="h-5 w-5 text-secondary" />
                 </div>
-                <div className="text-left">
+                <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white mb-1">신뢰성</h4>
                   <p className="text-gray-400 text-sm">200+ 성공 비즈니스 사례</p>
                 </div>
               </div>
-              <div className="flex items-start justify-center w-full">
-                <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-3 mt-1">
+              <div className="flex items-center w-full">
+                <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-4 shrink-0">
                   <Lightbulb className="h-5 w-5 text-amber-500" />
                 </div>
-                <div className="text-left">
+                <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white mb-1">혁신성</h4>
                   <p className="text-gray-400 text-sm">최신 렌탈 트렌드 반영</p>
                 </div>
               </div>
-              <div className="flex items-start justify-center w-full">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-3 mt-1">
+              <div className="flex items-center w-full">
+                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
                   <Users className="h-5 w-5 text-primary" />
                 </div>
-                <div className="text-left">
+                <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white mb-1">고객 중심</h4>
                   <p className="text-gray-400 text-sm">맞춤형 솔루션 제공</p>
                 </div>

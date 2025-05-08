@@ -4,11 +4,12 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/public/(.*)", "destination": "/$1" },
-    { "source": "/(.*)", "destination": "/$1" }
+    { "source": "/public/index.html", "destination": "/index.html" },
+    { "source": "/public/(.*)", "destination": "/$1" }
   ],
   "outputDirectory": "public",
   "redirects": [
-    { "source": "/", "destination": "/index.html", "permanent": true }
+    { "source": "/", "destination": "/index.html", "permanent": false },
+    { "source": "/public", "destination": "/index.html", "permanent": false }
   ]
 } 

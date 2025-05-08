@@ -49,7 +49,13 @@ npm run dev
    - `SESSION_SECRET`: 세션 암호화를 위한 비밀 키
    - `NODE_ENV`: production
 
-6. "Deploy" 버튼을 클릭합니다.
+6. 빌드 명령어를 `npm run build:vercel`로 변경하세요.
+
+7. "Deploy" 버튼을 클릭합니다.
+
+**[주의] 404 오류가 발생하는 경우:**
+- Express 서버가 Vercel의 Serverless 환경에서 올바르게 동작하기 위해 `api/index.js` 파일을 확인하세요
+- `vercel.json` 파일에서 라우팅 설정이 올바른지 확인하세요
 
 ## 프로젝트 구조
 

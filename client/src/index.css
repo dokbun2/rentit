@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --primary: 265 84% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 160 84% 39%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 35 92% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 240 4.9% 83.9%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 265 84% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 265 84% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
+
+    --chart-1: 265 84% 50%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 35 92% 50%;
+    --chart-4: 220 70% 50%;
+    --chart-5: 320 70% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
+  }
+
+  /* Custom Colors */
+  .primary-light {
+    @apply bg-purple-500 text-white;
+  }
+
+  .primary-dark {
+    @apply bg-purple-800 text-white;
+  }
+
+  .secondary-light {
+    @apply bg-emerald-400 text-white;
+  }
+
+  .secondary-dark {
+    @apply bg-emerald-700 text-white;
+  }
+
+  .accent-light {
+    @apply bg-amber-400 text-white;
+  }
+
+  .accent-dark {
+    @apply bg-amber-700 text-white;
+  }
+
+  /* Custom Utilities */
+  .glass-effect {
+    @apply backdrop-blur-md bg-black/30 border border-white/10;
+  }
+
+  .dark-card {
+    @apply bg-zinc-900/70;
+  }
+
+  .dark-lighter {
+    @apply bg-zinc-900;
+  }
+
+  .dark-light {
+    @apply bg-zinc-800;
+  }
+
+  /* Override shadcn button focus style */
+  .button:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-primary;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-md;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-purple-500;
+  }
+}
+
+/* For the gradient border animation */
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}

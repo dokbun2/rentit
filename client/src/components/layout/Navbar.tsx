@@ -49,8 +49,8 @@ const Navbar = () => {
             className="text-4xl text-white flex items-center"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <span className="text-primary" style={{ fontFamily: 'Paperlogy', fontWeight: 900 }}>Rent</span>
-            <span className="text-secondary" style={{ fontFamily: 'Paperlogy', fontWeight: 700 }}>It</span>
+            <span className="text-primary" style={{ fontFamily: 'Paperlogy', fontWeight: 900 }}>REN</span>
+            <span className="text-secondary" style={{ fontFamily: 'Paperlogy', fontWeight: 700 }}>'T</span>
             <span className="ml-2 text-2xl font-normal text-gray-300" style={{ fontFamily: 'Paperlogy', fontWeight: 400 }}>렌잇</span>
           </Link>
           

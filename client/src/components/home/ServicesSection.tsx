@@ -77,7 +77,7 @@ const ServicesSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌탈 비즈니스의 시작부터 성장까지, 전문적인 컨설팅으로 성공을 돕습니다.
+            렌탈 비즈니스의 시작부터 성장까지, 전문적인 컨설팅으로 보여드립니다.
           </motion.p>
         </motion.div>
         

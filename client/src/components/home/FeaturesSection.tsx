@@ -50,7 +50,7 @@ const FeaturesSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌탈 비즈니스의 성공을 위한 최고의 선택, 렌잇만의 특별한 가치를 확인하세요.
+            렌탈 비즈니스의 성공을 위한 최고의 선택, 렌잇만의 특별함을 확인하세요.
           </motion.p>
         </motion.div>
         

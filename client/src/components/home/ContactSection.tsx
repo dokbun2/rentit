@@ -31,6 +31,7 @@ import GlassEffect from "@/components/ui/glass-effect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름을 입력해주세요" }),
@@ -100,7 +101,7 @@ const ContactSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌탈 비즈니스에 대한 궁금증이나 상담 요청은 아래 양식을 통해 연락주세요.
+            렌탈 비즈니스에 대한 궁금증이나 상담 요청은 아래 양식으로 연락주세요.
           </motion.p>
         </motion.div>
         

@@ -15,6 +15,36 @@
     <!-- 파비콘 -->
     <link rel="icon" type="image/png" href="/favicon.ico" />
     
+    <!-- 폰트 프리로드 -->
+    <link rel="preload" href="./fonts/Paperlogy-4Regular.woff" as="font" type="font/woff" crossorigin="anonymous">
+    <link rel="preload" href="./fonts/Paperlogy-7Bold.woff" as="font" type="font/woff" crossorigin="anonymous">
+    <link rel="preload" href="./fonts/Paperlogy-9Black.woff" as="font" type="font/woff" crossorigin="anonymous">
+    
+    <!-- 인라인 폰트 스타일 -->
+    <style>
+      @font-face {
+        font-family: 'Paperlogy';
+        src: url('./fonts/Paperlogy-4Regular.woff') format('woff');
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Paperlogy';
+        src: url('./fonts/Paperlogy-7Bold.woff') format('woff');
+        font-weight: 700;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Paperlogy';
+        src: url('./fonts/Paperlogy-9Black.woff') format('woff');
+        font-weight: 900;
+        font-style: normal;
+        font-display: block;
+      }
+    </style>
+    
     <!-- Open Graph / 페이스북 메타 태그 -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://renit.dokbun2.com" />

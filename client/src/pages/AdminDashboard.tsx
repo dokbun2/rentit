@@ -156,7 +156,7 @@ function ContactsManager() {
       
       setLoading(true);
       const { data, error } = await supabase
-        .from('contact')
+        .from('contacts')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -174,7 +174,7 @@ function ContactsManager() {
       if (!supabase) return;
       
       const { error } = await supabase
-        .from('contact')
+        .from('contacts')
         .update({ processed: !currentStatus })
         .eq('id', id);
 
@@ -532,7 +532,7 @@ function NewsManager() {
                   name="title"
                   value={formData.title || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 />
               </div>
@@ -544,7 +544,7 @@ function NewsManager() {
                   name="image"
                   value={formData.image || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 />
               </div>
@@ -556,7 +556,7 @@ function NewsManager() {
                   name="category"
                   value={formData.category || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 />
               </div>
@@ -568,7 +568,7 @@ function NewsManager() {
                   name="tag"
                   value={formData.tag || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
               
@@ -578,7 +578,7 @@ function NewsManager() {
                   name="tag_color"
                   value={formData.tag_color || 'bg-primary/30'}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="bg-primary/30">보라색</option>
                   <option value="bg-secondary/30">초록색</option>
@@ -606,7 +606,7 @@ function NewsManager() {
                 value={formData.description || ''}
                 onChange={handleInputChange}
                 rows={6}
-                className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 required
               ></textarea>
             </div>

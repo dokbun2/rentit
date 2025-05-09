@@ -243,7 +243,7 @@ export default function NewsManagement() {
                   name="title"
                   value={editFormData.title}
                   onChange={handleEditFormChange}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 />
               </div>
               <div>
@@ -253,7 +253,7 @@ export default function NewsManagement() {
                   name="category"
                   value={editFormData.category}
                   onChange={handleEditFormChange}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 />
               </div>
               <div>
@@ -263,7 +263,7 @@ export default function NewsManagement() {
                   name="tag"
                   value={editFormData.tag || ''}
                   onChange={handleEditFormChange}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 />
               </div>
               <div>
@@ -273,7 +273,7 @@ export default function NewsManagement() {
                   name="publishDate"
                   value={editFormData.publishDate}
                   onChange={handleEditFormChange}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 />
               </div>
               <div>
@@ -282,7 +282,7 @@ export default function NewsManagement() {
                   name="status"
                   value={editFormData.status}
                   onChange={(e) => handleEditFormChange(e as any)}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 >
                   <option value="활성화">활성화</option>
                   <option value="비활성">비활성</option>
@@ -295,13 +295,13 @@ export default function NewsManagement() {
                   value={editFormData.content}
                   onChange={handleEditFormChange}
                   rows={5}
-                  className="w-full rounded-md border p-2"
+                  className="w-full rounded-md border p-2 text-black"
                 />
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline" onClick={() => setIsEditing(false)}>취소</Button>
-              <Button onClick={handleEditFormSubmit}>저장</Button>
+              <Button variant="outline" onClick={() => setIsEditing(false)} className="bg-white text-black hover:bg-gray-100">취소</Button>
+              <Button onClick={handleEditFormSubmit} className="bg-gradient-to-r from-primary to-purple-500 text-white">저장</Button>
             </div>
           </DialogContent>
         ) : selectedNews && (

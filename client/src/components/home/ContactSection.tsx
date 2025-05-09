@@ -31,7 +31,6 @@ import GlassEffect from "@/components/ui/glass-effect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
-import Link from "next/link";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름을 입력해주세요" }),
@@ -205,7 +204,8 @@ const ContactSection = () => {
                           <FormControl>
                             <Input 
                               placeholder="이름을 입력하세요" 
-                              className="bg-dark-light border-gray-700 focus:border-primary text-black" 
+                              className="bg-white border-gray-700 focus:border-primary" 
+                              style={{color: 'black'}}
                               {...field} 
                             />
                           </FormControl>
@@ -223,7 +223,8 @@ const ContactSection = () => {
                           <FormControl>
                             <Input 
                               placeholder="연락처를 입력하세요" 
-                              className="bg-dark-light border-gray-700 focus:border-primary text-black" 
+                              className="bg-white border-gray-700 focus:border-primary" 
+                              style={{color: 'black'}}
                               {...field} 
                             />
                           </FormControl>
@@ -243,7 +244,8 @@ const ContactSection = () => {
                           <Input 
                             type="email" 
                             placeholder="이메일을 입력하세요" 
-                            className="bg-dark-light border-gray-700 focus:border-primary text-black" 
+                            className="bg-white border-gray-700 focus:border-primary" 
+                            style={{color: 'black'}}
                             {...field} 
                           />
                         </FormControl>
@@ -260,16 +262,16 @@ const ContactSection = () => {
                         <FormLabel className="text-gray-400">관심 서비스 *</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="bg-dark-light border-gray-700 focus:border-primary text-black">
-                              <SelectValue placeholder="선택해주세요" />
+                            <SelectTrigger className="bg-white border-gray-700 focus:border-primary" style={{color: 'black'}}>
+                              <SelectValue placeholder="선택해주세요" style={{color: 'black'}} />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-dark-light border-gray-700 text-black">
-                            <SelectItem value="establishment">렌탈사 설립</SelectItem>
-                            <SelectItem value="partnership">렌탈업무 제휴</SelectItem>
-                            <SelectItem value="system">렌탈시스템 구축</SelectItem>
-                            <SelectItem value="parttime">렌탈 부업</SelectItem>
-                            <SelectItem value="other">기타</SelectItem>
+                          <SelectContent className="bg-white border-gray-700" style={{color: 'black'}}>
+                            <SelectItem value="establishment" style={{color: 'black'}}>렌탈사 설립</SelectItem>
+                            <SelectItem value="partnership" style={{color: 'black'}}>렌탈업무 제휴</SelectItem>
+                            <SelectItem value="system" style={{color: 'black'}}>렌탈시스템 구축</SelectItem>
+                            <SelectItem value="parttime" style={{color: 'black'}}>렌탈 부업</SelectItem>
+                            <SelectItem value="other" style={{color: 'black'}}>기타</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -286,8 +288,8 @@ const ContactSection = () => {
                         <FormControl>
                           <Textarea 
                             placeholder="문의 내용을 입력하세요" 
-                            className="bg-dark-light border-gray-700 focus:border-primary text-black" 
-                            rows={4}
+                            className="bg-white border-gray-700 focus:border-primary min-h-[120px]" 
+                            style={{color: 'black'}}
                             {...field} 
                           />
                         </FormControl>

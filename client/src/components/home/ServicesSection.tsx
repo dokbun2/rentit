@@ -4,7 +4,18 @@ import { Button } from "@/components/ui/button";
 import { fadeIn } from "@/lib/motion";
 import GlassEffect from "@/components/ui/glass-effect";
 
-const services = [
+interface Service {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  features: string[];
+  iconBgClass: string;
+  textColorClass: string;
+  checkColorClass: string;
+  link: string;
+}
+
+const services: Service[] = [
   {
     icon: <Building className="h-6 w-6 text-primary" />,
     title: "렌탈사 설립",
@@ -13,6 +24,7 @@ const services = [
     iconBgClass: "bg-primary/20",
     textColorClass: "text-primary",
     checkColorClass: "text-primary",
+    link: ""
   },
   {
     icon: <Handshake className="h-6 w-6 text-secondary" />,
@@ -22,6 +34,7 @@ const services = [
     iconBgClass: "bg-secondary/20",
     textColorClass: "text-secondary",
     checkColorClass: "text-secondary",
+    link: ""
   },
   {
     icon: <Laptop className="h-6 w-6 text-amber-500" />,
@@ -31,6 +44,7 @@ const services = [
     iconBgClass: "bg-amber-500/20",
     textColorClass: "text-amber-500",
     checkColorClass: "text-amber-500",
+    link: "https://jcob.dokbun2.com/"
   },
   {
     icon: <Coins className="h-6 w-6 text-primary" />,
@@ -40,6 +54,7 @@ const services = [
     iconBgClass: "bg-primary/20",
     textColorClass: "text-primary",
     checkColorClass: "text-primary",
+    link: ""
   },
 ];
 
@@ -52,6 +67,14 @@ const ServicesSection = () => {
         top: offsetTop,
         behavior: "smooth",
       });
+    }
+  };
+
+  const handleServiceClick = (service: Service) => {
+    if (service.link) {
+      window.open(service.link, "_blank");
+    } else {
+      scrollToContact();
     }
   };
 
@@ -111,11 +134,16 @@ const ServicesSection = () => {
               </ul>
               
               {service.title === "렌탈시스템 구축" ? (
-                <a
-                  href="https://jcob.dokbun2.com/"
-                  target="_blank"
+                <a 
+                  href="https://jcob.dokbun2.com/" 
+                  target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full"
+                  className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full no-underline" 
+                  style={{textDecoration: 'none'}}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open('https://jcob.dokbun2.com/', '_blank');
+                  }}
                 >
                   자세히 보기
                 </a>

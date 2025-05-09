@@ -6,6 +6,7 @@ import { fadeIn } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { NewsItem } from "@/lib/supabase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 // 기본 뉴스 아이템 (API 로딩 실패 시 보여줄 더미 데이터)
 const fallbackNewsItems = [
@@ -42,6 +43,10 @@ const NewsSection = () => {
   const [newsItems, setNewsItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  
+  // 선택된 뉴스와 다이얼로그 상태 관리
+  const [selectedNews, setSelectedNews] = useState<any | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   useEffect(() => {
     async function fetchNews() {
@@ -87,6 +92,13 @@ const NewsSection = () => {
     
     fetchNews();
   }, []);
+
+  // 자세히 보기 클릭 핸들러
+  const handleViewDetails = (newsItem: any, e: React.MouseEvent) => {
+    e.preventDefault();
+    setSelectedNews(newsItem);
+    setDialogOpen(true);
+  };
 
   // 날짜 포맷팅 함수
   function formatDate(dateString: string) {
@@ -173,7 +185,11 @@ const NewsSection = () => {
                     {item.description}
                   </p>
                   
-                  <a href="#" className="inline-flex items-center text-primary hover:opacity-80 transition-colors">
+                  <a 
+                    href="#" 
+                    className="inline-flex items-center text-primary hover:opacity-80 transition-colors"
+                    onClick={(e) => handleViewDetails(item, e)}
+                  >
                     자세히 보기 <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </div>
@@ -197,6 +213,62 @@ const NewsSection = () => {
           </Button>
         </motion.div>
       </div>
+
+      {/* 뉴스 자세히 보기 다이얼로그 */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        {selectedNews && (
+          <DialogContent className="sm:max-w-[650px] bg-background border border-gray-800">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle className="text-xl md:text-2xl">{selectedNews.title}</DialogTitle>
+                {selectedNews.tag && (
+                  <span className={`px-2 py-1 ${selectedNews.tag_color} rounded-md text-xs text-white`}>
+                    {selectedNews.tag}
+                  </span>
+                )}
+              </div>
+              <DialogDescription>
+                {selectedNews.category} | {formatDate(selectedNews.published_at)}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="mt-4">
+              {/* 뉴스 이미지 */}
+              <div className="relative h-[200px] sm:h-[300px] mb-6 rounded-md overflow-hidden">
+                <img 
+                  src={selectedNews.image} 
+                  alt={selectedNews.title} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                  }}
+                />
+              </div>
+              
+              {/* 뉴스 본문 */}
+              <div className="space-y-4">
+                <p className="text-gray-300 whitespace-pre-line">
+                  {selectedNews.description}
+                </p>
+                
+                {/* 뉴스 내용이 짧은 경우를 대비한 추가 컨텐츠 */}
+                <p className="text-gray-400">
+                  자세한 내용은 관리자에게 문의하시거나 공식 웹사이트를 참조하세요.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-6 flex justify-end">
+              <Button 
+                onClick={() => setDialogOpen(false)}
+                className="bg-gradient-to-r from-primary to-purple-500"
+              >
+                닫기
+              </Button>
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
     </section>
   );
 };

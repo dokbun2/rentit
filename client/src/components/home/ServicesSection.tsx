@@ -110,12 +110,23 @@ const ServicesSection = () => {
                 ))}
               </ul>
               
-              <button 
-                onClick={scrollToContact}
-                className={`block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full`}
-              >
-                자세히 보기
-              </button>
+              {service.title === "렌탈시스템 구축" ? (
+                <a
+                  href="https://jcob.dokbun2.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full"
+                >
+                  자세히 보기
+                </a>
+              ) : (
+                <button
+                  onClick={scrollToContact}
+                  className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full"
+                >
+                  자세히 보기
+                </button>
+              )}
             </motion.div>
           ))}
         </div>

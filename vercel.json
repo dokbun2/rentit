@@ -11,6 +11,14 @@
   ],
   "routes": [
     {
+      "src": "/Paperlogy/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable",
+        "content-type": "font/ttf"
+      },
+      "dest": "/Paperlogy/$1"
+    },
+    {
       "src": "/assets/(.*)",
       "headers": { "cache-control": "public, max-age=31536000, immutable" },
       "dest": "/assets/$1"

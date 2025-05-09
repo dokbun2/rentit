@@ -27,6 +27,18 @@ export default defineConfig({
   root: path.resolve(import.meta.dirname, "client"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist"),
-    emptyOutDir: true
+    emptyOutDir: true,
+    assetsDir: "assets",
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo as { name?: string };
+          if (info.name?.endsWith('.ttf')) {
+            return 'Paperlogy/[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    }
   }
 });

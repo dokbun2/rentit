@@ -334,6 +334,7 @@ function NewsManager() {
   const [newsList, setNewsList] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
+  const [, setLocation] = useLocation();
   const [formData, setFormData] = useState<Partial<NewsItem>>({
     title: '',
     category: '',
@@ -519,6 +520,26 @@ function NewsManager() {
 
   return (
     <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">뉴스 관리</h2>
+        <div className="flex space-x-3">
+          <Button onClick={() => setLocation('/admin/news')} variant="outline" className="flex items-center gap-2">
+            <FileText size={16} />
+            새 뉴스 관리 페이지로 이동
+          </Button>
+          {!editMode ? (
+            <Button onClick={handleCreateClick} className="flex items-center gap-2">
+              <Plus size={16} />
+              새 뉴스 작성
+            </Button>
+          ) : (
+            <Button onClick={handleCancelClick} variant="ghost" className="text-gray-400">
+              취소
+            </Button>
+          )}
+        </div>
+      </div>
+      
       {editMode ? (
         <GlassEffect className="p-6 rounded-xl">
           <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>

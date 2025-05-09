@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import NotFound from "@/pages/not-found";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import NewsManagement from "./pages/NewsManagement";
 
 function Router() {
   return (
@@ -13,6 +14,7 @@ function Router() {
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/adminlogin" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/admin/news" component={NewsManagement} />
       <Route component={NotFound} />
     </Switch>
   );

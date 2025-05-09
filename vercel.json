@@ -14,7 +14,7 @@
       "src": "/Paperlogy/(.*)",
       "headers": {
         "cache-control": "public, max-age=31536000, immutable",
-        "content-type": "font/ttf"
+        "content-type": "application/x-font-ttf"
       },
       "dest": "/Paperlogy/$1"
     },

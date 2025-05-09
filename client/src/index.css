@@ -42,6 +42,8 @@
     --chart-5: 320 70% 50%;
 
     font-family: 'Paperlogy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   * {
@@ -120,34 +122,39 @@
 /* 폰트 설정 */
 @font-face {
   font-family: 'Paperlogy';
-  src: local('Paperlogy'),
-       url('/Paperlogy/Paperlogy-4Regular.ttf') format('truetype');
+  src: url('/Paperlogy/Paperlogy-4Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @font-face {
   font-family: 'Paperlogy';
-  src: local('Paperlogy'),
-       url('/Paperlogy/Paperlogy-7Bold.ttf') format('truetype');
+  src: url('/Paperlogy/Paperlogy-7Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @font-face {
   font-family: 'Paperlogy';
-  src: local('Paperlogy'),
-       url('/Paperlogy/Paperlogy-9Black.ttf') format('truetype');
+  src: url('/Paperlogy/Paperlogy-9Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* 기본 폰트 설정 */
 :root {
   font-family: 'Paperlogy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* For the gradient border animation */
@@ -183,5 +190,7 @@
 @media (max-width: 768px) {
   :root {
     font-family: 'Paperlogy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

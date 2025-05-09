@@ -122,9 +122,7 @@
 /* 폰트 설정 */
 @font-face {
   font-family: 'Paperlogy';
-  src: url('/Paperlogy/Paperlogy-4Regular.woff2') format('woff2'),
-       url('/Paperlogy/Paperlogy-4Regular.woff') format('woff'),
-       url('/Paperlogy/Paperlogy-4Regular.ttf') format('truetype');
+  src: url('/assets/Paperlogy-4Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -134,9 +132,7 @@
 
 @font-face {
   font-family: 'Paperlogy';
-  src: url('/Paperlogy/Paperlogy-7Bold.woff2') format('woff2'),
-       url('/Paperlogy/Paperlogy-7Bold.woff') format('woff'),
-       url('/Paperlogy/Paperlogy-7Bold.ttf') format('truetype');
+  src: url('/assets/Paperlogy-7Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -146,9 +142,7 @@
 
 @font-face {
   font-family: 'Paperlogy';
-  src: url('/Paperlogy/Paperlogy-9Black.woff2') format('woff2'),
-       url('/Paperlogy/Paperlogy-9Black.woff') format('woff'),
-       url('/Paperlogy/Paperlogy-9Black.ttf') format('truetype');
+  src: url('/assets/Paperlogy-9Black.woff') format('woff');
   font-weight: 900;
   font-style: normal;
   font-display: swap;

@@ -411,3 +411,4 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 })();
+app.use(express2.static("dist/public"));

@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { PlusCircle } from "lucide-react";
 
 // 뉴스 타입 정의
 type News = {
@@ -21,6 +22,18 @@ type News = {
   publishDate: string;
   status: string;
   content: string;
+};
+
+// 새 뉴스 작성을 위한 기본 값
+const defaultNewsItem: News = {
+  id: "",
+  title: "",
+  category: "",
+  tag: "",
+  tagColor: "bg-blue-500",
+  publishDate: new Date().toISOString().split('T')[0],
+  status: "활성화",
+  content: ""
 };
 
 export default function NewsManagement() {
@@ -81,6 +94,11 @@ export default function NewsManagement() {
   // 뉴스 삭제 함수
   const handleDelete = (id: string) => {
     setNews(news.filter(item => item.id !== id));
+    // 만약 현재 선택된 뉴스가 삭제된 뉴스라면 다이얼로그를 닫습니다
+    if (selectedNews?.id === id) {
+      setDialogOpen(false);
+      setSelectedNews(null);
+    }
   };
 
   // 상세 내용 다이얼로그를 위한 상태
@@ -88,6 +106,8 @@ export default function NewsManagement() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState<News | null>(null);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newNewsItem, setNewNewsItem] = useState<News>({...defaultNewsItem});
 
   // 뉴스 카드 클릭 핸들러
   const handleCardClick = (newsItem: News) => {
@@ -105,7 +125,7 @@ export default function NewsManagement() {
   };
 
   // 수정 폼 입력 핸들러
-  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (editFormData) {
       setEditFormData({
@@ -114,13 +134,55 @@ export default function NewsManagement() {
       });
     }
   };
+  
+  // 새 뉴스 작성 폼 입력 핸들러
+  const handleNewFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setNewNewsItem({
+      ...newNewsItem,
+      [name]: value
+    });
+  };
+
+  // 새 뉴스 작성 핸들러
+  const handleCreateNews = () => {
+    // 필드 유효성 검사
+    if (!newNewsItem.title || !newNewsItem.category || !newNewsItem.content) {
+      alert("제목, 카테고리, 내용은 필수 입력 항목입니다.");
+      return;
+    }
+
+    // 새 ID 생성 (실제로는 백엔드에서 생성할 것입니다)
+    const newId = String(Date.now());
+    
+    // 뉴스 목록에 추가
+    const createdNews = {
+      ...newNewsItem,
+      id: newId
+    };
+    
+    setNews([createdNews, ...news]);
+    
+    // 초기화 및 다이얼로그 닫기
+    setNewNewsItem({...defaultNewsItem});
+    setCreateDialogOpen(false);
+  };
 
   // 수정 폼 저장 핸들러
   const handleEditFormSubmit = () => {
     if (editFormData) {
+      // 필드 유효성 검사
+      if (!editFormData.title || !editFormData.category || !editFormData.content) {
+        alert("제목, 카테고리, 내용은 필수 입력 항목입니다.");
+        return;
+      }
+      
+      // 뉴스 목록 업데이트
       setNews(news.map(item => 
         item.id === editFormData.id ? editFormData : item
       ));
+      
+      // 선택된 뉴스도 업데이트
       setSelectedNews(editFormData);
       setIsEditing(false);
     }
@@ -130,7 +192,9 @@ export default function NewsManagement() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">뉴스 목록</h1>
-        <Button>새 뉴스 작성</Button>
+        <Button onClick={() => setCreateDialogOpen(true)} className="bg-gradient-to-r from-primary to-purple-500">
+          <PlusCircle className="mr-2 h-4 w-4" /> 새 뉴스 작성
+        </Button>
       </div>
 
       {/* 뉴스 목록 테이블 */}
@@ -237,23 +301,25 @@ export default function NewsManagement() {
             </DialogHeader>
             <div className="mt-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">제목</label>
+                <label className="block text-sm font-medium mb-1">제목 *</label>
                 <input
                   type="text"
                   name="title"
                   value={editFormData.title}
                   onChange={handleEditFormChange}
                   className="w-full rounded-md border p-2 text-black"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">카테고리</label>
+                <label className="block text-sm font-medium mb-1">카테고리 *</label>
                 <input
                   type="text"
                   name="category"
                   value={editFormData.category}
                   onChange={handleEditFormChange}
                   className="w-full rounded-md border p-2 text-black"
+                  required
                 />
               </div>
               <div>
@@ -267,13 +333,29 @@ export default function NewsManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">발행일</label>
+                <label className="block text-sm font-medium mb-1">태그 색상</label>
+                <select
+                  name="tagColor"
+                  value={editFormData.tagColor || 'bg-blue-500'}
+                  onChange={handleEditFormChange}
+                  className="w-full rounded-md border p-2 text-black"
+                >
+                  <option value="bg-red-500">빨간색</option>
+                  <option value="bg-blue-500">파란색</option>
+                  <option value="bg-green-500">녹색</option>
+                  <option value="bg-yellow-500">노란색</option>
+                  <option value="bg-purple-500">보라색</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">발행일 *</label>
                 <input
-                  type="text"
+                  type="date"
                   name="publishDate"
                   value={editFormData.publishDate}
                   onChange={handleEditFormChange}
                   className="w-full rounded-md border p-2 text-black"
+                  required
                 />
               </div>
               <div>
@@ -289,13 +371,14 @@ export default function NewsManagement() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">내용</label>
+                <label className="block text-sm font-medium mb-1">내용 *</label>
                 <textarea
                   name="content"
                   value={editFormData.content}
                   onChange={handleEditFormChange}
                   rows={5}
                   className="w-full rounded-md border p-2 text-black"
+                  required
                 />
               </div>
             </div>
@@ -330,6 +413,116 @@ export default function NewsManagement() {
             </div>
           </DialogContent>
         )}
+      </Dialog>
+
+      {/* 새 뉴스 작성 다이얼로그 */}
+      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>새 뉴스 작성</DialogTitle>
+            <DialogDescription>
+              아래 양식을 작성하여 새 뉴스를 등록하세요.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">제목 *</label>
+              <input
+                type="text"
+                name="title"
+                value={newNewsItem.title}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">카테고리 *</label>
+              <input
+                type="text"
+                name="category"
+                value={newNewsItem.category}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">태그</label>
+              <input
+                type="text"
+                name="tag"
+                value={newNewsItem.tag || ''}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">태그 색상</label>
+              <select
+                name="tagColor"
+                value={newNewsItem.tagColor || 'bg-blue-500'}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+              >
+                <option value="bg-red-500">빨간색</option>
+                <option value="bg-blue-500">파란색</option>
+                <option value="bg-green-500">녹색</option>
+                <option value="bg-yellow-500">노란색</option>
+                <option value="bg-purple-500">보라색</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">발행일 *</label>
+              <input
+                type="date"
+                name="publishDate"
+                value={newNewsItem.publishDate}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">상태</label>
+              <select
+                name="status"
+                value={newNewsItem.status}
+                onChange={handleNewFormChange}
+                className="w-full rounded-md border p-2 text-black"
+              >
+                <option value="활성화">활성화</option>
+                <option value="비활성">비활성</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">내용 *</label>
+              <textarea
+                name="content"
+                value={newNewsItem.content}
+                onChange={handleNewFormChange}
+                rows={5}
+                className="w-full rounded-md border p-2 text-black"
+                required
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setCreateDialogOpen(false)} 
+              className="bg-white text-black hover:bg-gray-100"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleCreateNews} 
+              className="bg-gradient-to-r from-primary to-purple-500 text-white"
+            >
+              등록
+            </Button>
+          </div>
+        </DialogContent>
       </Dialog>
     </div>
   );

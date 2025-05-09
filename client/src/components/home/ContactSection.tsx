@@ -31,6 +31,7 @@ import GlassEffect from "@/components/ui/glass-effect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름을 입력해주세요" }),
@@ -61,22 +62,30 @@ const ContactSection = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // privacy 필드를 제외한 데이터를 서버로 전송
+      // privacy 필드를 제외한 데이터 준비
       const { privacy, ...contactData } = data;
       
-      // 직접 fetch 호출로 변경
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(contactData),
-      });
+      console.log('전송할 데이터:', contactData);
       
-      // 요청이 성공했는지 확인
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || '서버 오류가 발생했습니다');
+      // 현재 시간을 ISO 문자열로 추가
+      const contactWithTimestamp = {
+        ...contactData,
+        created_at: new Date().toISOString(),
+        is_processed: false
+      };
+      
+      // Supabase API 직접 사용
+      if (!supabase) {
+        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다');
+      }
+      
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([contactWithTimestamp]);
+      
+      if (error) {
+        console.error('Supabase 오류:', error);
+        throw new Error(error.message || '데이터 저장 중 오류가 발생했습니다');
       }
       
       toast({

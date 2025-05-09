@@ -29,8 +29,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import GlassEffect from "@/components/ui/glass-effect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름을 입력해주세요" }),
@@ -61,17 +61,31 @@ const ContactSection = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // This would be an API call to send the form data
-      await apiRequest("POST", "/api/contact", data);
+      // 직접 fetch 호출로 변경
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      // 요청이 성공했는지 확인
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '서버 오류가 발생했습니다');
+      }
+      
       toast({
         title: "상담 신청이 완료되었습니다",
         description: "빠른 시일 내에 연락드리겠습니다.",
       });
       form.reset();
     } catch (error) {
+      console.error('상담 신청 오류:', error);
       toast({
         title: "오류가 발생했습니다",
-        description: "잠시 후 다시 시도해주세요.",
+        description: error instanceof Error ? error.message : "잠시 후 다시 시도해주세요.",
         variant: "destructive",
       });
     } finally {

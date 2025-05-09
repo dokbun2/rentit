@@ -9,12 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 // 뉴스 타입 정의
 type News = {
   id: string;
   title: string;
   category: string;
+  tag?: string;
+  tagColor?: string;
   publishDate: string;
   status: string;
   content: string;
@@ -27,6 +30,8 @@ export default function NewsManagement() {
       id: "123",
       title: "123",
       category: "123",
+      tag: "중요",
+      tagColor: "bg-red-500",
       publishDate: "2025-05-09",
       status: "비활성",
       content: "뉴스 본문 내용이 여기에 표시됩니다. 자세한 내용은 클릭하여 확인하세요."
@@ -35,6 +40,8 @@ export default function NewsManagement() {
       id: "124",
       title: "새로운 서비스 출시 안내",
       category: "공지사항",
+      tag: "신규",
+      tagColor: "bg-blue-500",
       publishDate: "2025-05-10",
       status: "활성화",
       content: "저희 회사에서 새로운 서비스를 출시하게 되었습니다. 많은 관심 부탁드립니다."
@@ -43,6 +50,8 @@ export default function NewsManagement() {
       id: "125",
       title: "시스템 점검 안내",
       category: "점검",
+      tag: "예정",
+      tagColor: "bg-yellow-500",
       publishDate: "2025-05-11",
       status: "활성화",
       content: "시스템 점검으로, 2025년 5월 15일 오전 2시부터 4시까지 서비스 이용이 제한됩니다."
@@ -51,6 +60,8 @@ export default function NewsManagement() {
       id: "126",
       title: "이벤트 안내",
       category: "이벤트",
+      tag: "진행중",
+      tagColor: "bg-green-500",
       publishDate: "2025-05-12",
       status: "활성화",
       content: "여름 맞이 특별 이벤트가 진행됩니다. 다양한 혜택을 확인해보세요."
@@ -59,6 +70,8 @@ export default function NewsManagement() {
       id: "127",
       title: "업데이트 안내",
       category: "업데이트",
+      tag: "완료",
+      tagColor: "bg-purple-500",
       publishDate: "2025-05-13",
       status: "활성화",
       content: "서비스 개선을 위한 업데이트가 진행되었습니다. 주요 변경 사항을 확인하세요."
@@ -87,18 +100,76 @@ export default function NewsManagement() {
         <Button>새 뉴스 작성</Button>
       </div>
 
+      {/* 뉴스 목록 테이블 */}
+      <div className="bg-card rounded-lg border shadow-sm mb-6 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-muted/50">
+              <tr>
+                <th className="px-4 py-3 text-left text-sm font-semibold">제목</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold">카테고리</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold">발행일</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold">상태</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold">관리</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {news.map((item) => (
+                <tr key={item.id} className="hover:bg-muted/20 cursor-pointer" onClick={() => handleCardClick(item)}>
+                  <td className="px-4 py-3">
+                    <div className="font-medium">{item.title}</div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <span>{item.category}</span>
+                      {item.tag && (
+                        <Badge className={`${item.tagColor} text-white w-fit`}>{item.tag}</Badge>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">{item.publishDate}</td>
+                  <td className="px-4 py-3">
+                    <Badge variant={item.status === '활성화' ? 'default' : 'secondary'}>
+                      {item.status}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button variant="outline" size="sm" className="mr-2">수정</Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.id);
+                      }}
+                    >
+                      삭제
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* 뉴스 카드 그리드 - 한 줄에 4개 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {news.map((item) => (
           <Card key={item.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleCardClick(item)}>
-            <CardHeader>
-              <CardTitle>{item.title}</CardTitle>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <CardTitle className="text-lg">{item.title}</CardTitle>
+                {item.tag && (
+                  <Badge className={`${item.tagColor} text-white`}>{item.tag}</Badge>
+                )}
+              </div>
               <CardDescription>{item.category}</CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="truncate">{item.content}</p>
+            <CardContent className="pb-2">
+              <p className="truncate text-sm">{item.content}</p>
             </CardContent>
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex justify-between pt-0">
               <div className="text-sm text-gray-500">{item.publishDate}</div>
               <div className={`text-sm ${item.status === '활성화' ? 'text-green-500' : 'text-gray-500'}`}>
                 {item.status}
@@ -113,7 +184,12 @@ export default function NewsManagement() {
         {selectedNews && (
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle>{selectedNews.title}</DialogTitle>
+              <div className="flex justify-between items-center">
+                <DialogTitle>{selectedNews.title}</DialogTitle>
+                {selectedNews.tag && (
+                  <Badge className={`${selectedNews.tagColor} text-white`}>{selectedNews.tag}</Badge>
+                )}
+              </div>
               <DialogDescription>
                 카테고리: {selectedNews.category} | 발행일: {selectedNews.publishDate} | 상태: {selectedNews.status}
               </DialogDescription>

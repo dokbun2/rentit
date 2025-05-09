@@ -527,12 +527,12 @@ function NewsManager() {
             <FileText size={16} />
             새 뉴스 관리 페이지로 이동
           </Button>
-          {!editMode ? (
+          {!editMode && (
             <Button onClick={handleCreateClick} className="flex items-center gap-2">
               <Plus size={16} />
               새 뉴스 작성
             </Button>
-          ) : (
+          ) || (
             <Button onClick={handleCancelClick} variant="ghost" className="text-gray-400">
               취소
             </Button>
@@ -651,18 +651,6 @@ function NewsManager() {
         </GlassEffect>
       ) : (
         <div className="flex flex-col space-y-4">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-bold">뉴스 목록</h2>
-            <Button
-              onClick={handleCreateClick}
-              className="bg-gradient-to-r from-primary to-purple-500 flex items-center gap-2"
-              size="sm"
-            >
-              <Plus size={16} />
-              새 뉴스 작성
-            </Button>
-          </div>
-          
           <GlassEffect className="p-4 rounded-xl">
             {loading ? (
               <div className="flex justify-center py-6">

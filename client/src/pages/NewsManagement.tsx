@@ -86,11 +86,44 @@ export default function NewsManagement() {
   // 상세 내용 다이얼로그를 위한 상태
   const [selectedNews, setSelectedNews] = useState<News | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editFormData, setEditFormData] = useState<News | null>(null);
 
   // 뉴스 카드 클릭 핸들러
   const handleCardClick = (newsItem: News) => {
     setSelectedNews(newsItem);
     setDialogOpen(true);
+    setIsEditing(false);
+  };
+
+  // 수정 버튼 클릭 핸들러
+  const handleEditClick = () => {
+    if (selectedNews) {
+      setEditFormData({...selectedNews});
+      setIsEditing(true);
+    }
+  };
+
+  // 수정 폼 입력 핸들러
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (editFormData) {
+      setEditFormData({
+        ...editFormData,
+        [name]: value
+      });
+    }
+  };
+
+  // 수정 폼 저장 핸들러
+  const handleEditFormSubmit = () => {
+    if (editFormData) {
+      setNews(news.map(item => 
+        item.id === editFormData.id ? editFormData : item
+      ));
+      setSelectedNews(editFormData);
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -134,7 +167,20 @@ export default function NewsManagement() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button variant="outline" size="sm" className="mr-2">수정</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="mr-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedNews(item);
+                        setEditFormData(item);
+                        setIsEditing(true);
+                        setDialogOpen(true);
+                      }}
+                    >
+                      수정
+                    </Button>
                     <Button 
                       variant="destructive" 
                       size="sm"
@@ -181,7 +227,84 @@ export default function NewsManagement() {
 
       {/* 뉴스 상세 내용 다이얼로그 */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        {selectedNews && (
+        {isEditing && editFormData ? (
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>뉴스 수정</DialogTitle>
+              <DialogDescription>
+                아래 양식을 작성하여 뉴스를 수정하세요.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">제목</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={editFormData.title}
+                  onChange={handleEditFormChange}
+                  className="w-full rounded-md border p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">카테고리</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={editFormData.category}
+                  onChange={handleEditFormChange}
+                  className="w-full rounded-md border p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">태그</label>
+                <input
+                  type="text"
+                  name="tag"
+                  value={editFormData.tag || ''}
+                  onChange={handleEditFormChange}
+                  className="w-full rounded-md border p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">발행일</label>
+                <input
+                  type="text"
+                  name="publishDate"
+                  value={editFormData.publishDate}
+                  onChange={handleEditFormChange}
+                  className="w-full rounded-md border p-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">상태</label>
+                <select
+                  name="status"
+                  value={editFormData.status}
+                  onChange={(e) => handleEditFormChange(e as any)}
+                  className="w-full rounded-md border p-2"
+                >
+                  <option value="활성화">활성화</option>
+                  <option value="비활성">비활성</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">내용</label>
+                <textarea
+                  name="content"
+                  value={editFormData.content}
+                  onChange={handleEditFormChange}
+                  rows={5}
+                  className="w-full rounded-md border p-2"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button variant="outline" onClick={() => setIsEditing(false)}>취소</Button>
+              <Button onClick={handleEditFormSubmit}>저장</Button>
+            </div>
+          </DialogContent>
+        ) : selectedNews && (
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <div className="flex justify-between items-center">
@@ -199,7 +322,7 @@ export default function NewsManagement() {
               <p className="whitespace-pre-line">{selectedNews.content}</p>
             </div>
             <div className="flex justify-end gap-2 mt-4">
-              <Button variant="outline">수정</Button>
+              <Button variant="outline" onClick={handleEditClick}>수정</Button>
               <Button variant="destructive" onClick={() => {
                 handleDelete(selectedNews.id);
                 setDialogOpen(false);

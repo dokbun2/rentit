@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { supabase } from '../lib/supabaseClient';
-import ImageUploader from '../components/ImageUploader';
+import { supabase } from '../lib/supabase';
+import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2 } from 'lucide-react';
+import GlassEffect from '@/components/ui/glass-effect';
+import { Button } from '@/components/ui/button';
+import { Contact, NewsItem } from '../lib/supabase';
 
 export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null);
@@ -10,7 +13,14 @@ export default function AdminDashboard() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
+    document.documentElement.classList.add('dark');
+    
     const checkSession = async () => {
+      if (!supabase) {
+        setLocation('/admin/login');
+        return;
+      }
+      
       const { data } = await supabase.auth.getSession();
       setSession(data.session);
       setLoading(false);
@@ -30,9 +40,14 @@ export default function AdminDashboard() {
     };
     
     checkSession();
+    
+    return () => {
+      document.documentElement.classList.remove('dark');
+    };
   }, [setLocation]);
 
   const handleLogout = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
     setLocation('/admin/login');
   };
@@ -40,8 +55,11 @@ export default function AdminDashboard() {
   // 로딩 중
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-lg">로딩 중...</p>
+      <div className="flex min-h-screen items-center justify-center bg-background text-white">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status"></div>
+          <p className="mt-4 text-lg">로딩 중...</p>
+        </div>
       </div>
     );
   }
@@ -49,52 +67,59 @@ export default function AdminDashboard() {
   // 세션이 없으면 로딩 화면을 보여줌 (useEffect에서 리디렉션 처리함)
   if (!session) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background text-white">
         <p className="text-lg">로그인이 필요합니다. 리디렉션 중...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-white">
       {/* 헤더 */}
-      <header className="bg-primary-dark text-white">
+      <header className="glass-effect border-b border-white/10 backdrop-blur-lg fixed top-0 w-full z-50">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <h1 className="text-xl font-bold">렌트잇 관리자 대시보드</h1>
+          <h1 className="text-xl font-bold">
+            <span className="text-primary">렌잇</span> 관리자 대시보드
+          </h1>
           <div className="flex items-center space-x-4">
-            <span>{session.user.email}</span>
-            <button
+            <span className="text-gray-300">{session.user.email}</span>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={handleLogout}
-              className="rounded bg-white/20 px-3 py-1 text-sm hover:bg-white/30"
+              className="flex items-center gap-2 text-white hover:text-primary"
             >
+              <LogOut size={16} />
               로그아웃
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
       {/* 탭 메뉴 */}
-      <div className="border-b bg-white">
+      <div className="dark-lighter border-b border-gray-800 pt-20">
         <div className="container mx-auto px-4">
           <div className="flex space-x-4">
             <button
-              className={`border-b-2 px-4 py-3 ${
+              className={`border-b-2 px-4 py-3 flex items-center gap-2 transition-colors ${
                 activeTab === 'contacts'
-                  ? 'border-primary-dark text-primary-dark'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-400 hover:text-white'
               }`}
               onClick={() => setActiveTab('contacts')}
             >
+              <Users size={18} />
               문의 관리
             </button>
             <button
-              className={`border-b-2 px-4 py-3 ${
+              className={`border-b-2 px-4 py-3 flex items-center gap-2 transition-colors ${
                 activeTab === 'news'
-                  ? 'border-primary-dark text-primary-dark'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-400 hover:text-white'
               }`}
               onClick={() => setActiveTab('news')}
             >
+              <FileText size={18} />
               뉴스 관리
             </button>
           </div>
@@ -102,7 +127,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* 메인 콘텐츠 */}
-      <main className="container mx-auto p-4">
+      <main className="container mx-auto p-4 pt-6">
         {activeTab === 'contacts' ? (
           <ContactsManager />
         ) : (
@@ -115,9 +140,9 @@ export default function AdminDashboard() {
 
 // 문의 관리 컴포넌트
 function ContactsManager() {
-  const [contacts, setContacts] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedContact, setSelectedContact] = useState<any>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   useEffect(() => {
     fetchContacts();
@@ -125,9 +150,13 @@ function ContactsManager() {
 
   const fetchContacts = async () => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
+      }
+      
       setLoading(true);
       const { data, error } = await supabase
-        .from('contacts')
+        .from('contact')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -135,7 +164,6 @@ function ContactsManager() {
       setContacts(data || []);
     } catch (error) {
       console.error('문의 목록 조회 오류:', error);
-      alert('문의 목록을 불러오는 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }
@@ -143,8 +171,10 @@ function ContactsManager() {
 
   const handleProcessToggle = async (id: number, currentStatus: boolean) => {
     try {
+      if (!supabase) return;
+      
       const { error } = await supabase
-        .from('contacts')
+        .from('contact')
         .update({ processed: !currentStatus })
         .eq('id', id);
 
@@ -163,52 +193,58 @@ function ContactsManager() {
       }
     } catch (error) {
       console.error('처리 상태 업데이트 오류:', error);
-      alert('상태 업데이트 중 오류가 발생했습니다.');
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   };
 
   return (
     <div className="flex flex-col space-y-6 md:flex-row md:space-x-6 md:space-y-0">
       {/* 문의 목록 */}
       <div className="w-full md:w-1/2">
-        <div className="rounded-lg bg-white p-4 shadow-md">
+        <GlassEffect className="p-4 rounded-xl">
           <h2 className="mb-4 text-xl font-bold">문의 목록</h2>
           
           {loading ? (
-            <p className="py-4 text-center text-gray-500">로딩 중...</p>
+            <div className="flex justify-center py-6">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            </div>
           ) : contacts.length === 0 ? (
-            <p className="py-4 text-center text-gray-500">문의 내역이 없습니다.</p>
+            <p className="py-8 text-center text-gray-400">문의 내역이 없습니다.</p>
           ) : (
-            <div className="max-h-[600px] overflow-y-auto">
+            <div className="max-h-[600px] overflow-y-auto pr-2">
               <table className="w-full">
-                <thead className="border-b">
+                <thead className="border-b border-gray-800">
                   <tr>
-                    <th className="px-2 py-2 text-left">이름</th>
-                    <th className="px-2 py-2 text-left">서비스</th>
-                    <th className="px-2 py-2 text-left">날짜</th>
-                    <th className="px-2 py-2 text-left">상태</th>
+                    <th className="px-2 py-3 text-left text-gray-300">이름</th>
+                    <th className="px-2 py-3 text-left text-gray-300">서비스</th>
+                    <th className="px-2 py-3 text-left text-gray-300">날짜</th>
+                    <th className="px-2 py-3 text-left text-gray-300">상태</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-800">
                   {contacts.map((contact) => (
                     <tr 
                       key={contact.id} 
-                      className={`cursor-pointer border-b hover:bg-gray-50 ${
-                        selectedContact?.id === contact.id ? 'bg-gray-100' : ''
+                      className={`cursor-pointer transition-colors ${
+                        selectedContact?.id === contact.id ? 'bg-primary/10' : 'hover:bg-white/5'
                       }`}
                       onClick={() => setSelectedContact(contact)}
                     >
                       <td className="px-2 py-3">{contact.name}</td>
                       <td className="px-2 py-3">{contact.service}</td>
                       <td className="px-2 py-3">
-                        {new Date(contact.created_at).toLocaleDateString()}
+                        {formatDate(contact.created_at)}
                       </td>
                       <td className="px-2 py-3">
                         <span
                           className={`rounded-full px-2 py-1 text-xs ${
                             contact.processed 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-yellow-100 text-yellow-800'
+                              ? 'bg-primary/20 text-primary' 
+                              : 'bg-secondary/20 text-secondary'
                           }`}
                         >
                           {contact.processed ? '처리완료' : '대기중'}
@@ -220,67 +256,74 @@ function ContactsManager() {
               </table>
             </div>
           )}
-        </div>
+        </GlassEffect>
       </div>
       
       {/* 문의 상세 정보 */}
       <div className="w-full md:w-1/2">
-        <div className="rounded-lg bg-white p-4 shadow-md">
+        <GlassEffect className="p-4 rounded-xl">
           <h2 className="mb-4 text-xl font-bold">상세 정보</h2>
           
           {selectedContact ? (
             <div className="space-y-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <div>
                   <h3 className="text-lg font-medium">{selectedContact.name}</h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-400">
                     {new Date(selectedContact.created_at).toLocaleString()}
                   </p>
                 </div>
-                <button
+                <Button
                   onClick={() => handleProcessToggle(selectedContact.id, selectedContact.processed)}
-                  className={`rounded px-3 py-1 text-white ${
+                  className={`flex items-center gap-2 ${
                     selectedContact.processed 
-                      ? 'bg-yellow-500 hover:bg-yellow-600' 
-                      : 'bg-green-500 hover:bg-green-600'
+                      ? 'bg-secondary hover:bg-secondary/80' 
+                      : 'bg-primary hover:bg-primary/80'
                   }`}
+                  size="sm"
                 >
-                  {selectedContact.processed ? '미처리로 변경' : '처리 완료로 변경'}
-                </button>
+                  {selectedContact.processed ? (
+                    <>
+                      <XSquare size={16} />
+                      <span>미처리로 변경</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckSquare size={16} />
+                      <span>처리 완료로 변경</span>
+                    </>
+                  )}
+                </Button>
               </div>
               
-              <div className="grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-4">
-                <div>
-                  <p className="text-xs text-gray-500">이메일</p>
-                  <p>{selectedContact.email}</p>
+              <div className="space-y-3 mt-4">
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="col-span-1 text-gray-400">이메일</div>
+                  <div className="col-span-2">{selectedContact.email}</div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500">전화번호</p>
-                  <p>{selectedContact.phone}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="col-span-1 text-gray-400">전화번호</div>
+                  <div className="col-span-2">{selectedContact.phone}</div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500">서비스</p>
-                  <p>{selectedContact.service}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">상태</p>
-                  <p>{selectedContact.processed ? '처리완료' : '대기중'}</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="col-span-1 text-gray-400">서비스</div>
+                  <div className="col-span-2">{selectedContact.service}</div>
                 </div>
               </div>
               
-              <div>
-                <p className="mb-2 text-sm text-gray-500">문의 내용</p>
-                <div className="rounded-lg bg-gray-50 p-4">
-                  <p className="whitespace-pre-wrap">{selectedContact.message}</p>
+              <div className="mt-4">
+                <p className="text-gray-400 mb-1">메시지</p>
+                <div className="bg-dark-lighter rounded-lg p-3 text-gray-300">
+                  {selectedContact.message || '내용 없음'}
                 </div>
               </div>
             </div>
           ) : (
-            <p className="py-8 text-center text-gray-500">
-              왼쪽 목록에서 문의를 선택하세요.
-            </p>
+            <div className="flex flex-col items-center justify-center h-64">
+              <p className="text-gray-400 mb-2">좌측에서 문의를 선택하세요</p>
+            </div>
           )}
-        </div>
+        </GlassEffect>
       </div>
     </div>
   );
@@ -288,18 +331,17 @@ function ContactsManager() {
 
 // 뉴스 관리 컴포넌트
 function NewsManager() {
-  const [news, setNews] = useState<any[]>([]);
+  const [newsList, setNewsList] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedNews, setSelectedNews] = useState<any>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState<Partial<NewsItem>>({
     title: '',
     category: '',
     tag: '',
-    tag_color: 'bg-primary-dark/30',
+    tag_color: 'bg-primary/30',
     description: '',
     image: '',
-    active: true
+    active: true,
   });
 
   useEffect(() => {
@@ -308,6 +350,10 @@ function NewsManager() {
 
   const fetchNews = async () => {
     try {
+      if (!supabase) {
+        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
+      }
+      
       setLoading(true);
       const { data, error } = await supabase
         .from('news')
@@ -315,10 +361,9 @@ function NewsManager() {
         .order('published_at', { ascending: false });
 
       if (error) throw error;
-      setNews(data || []);
+      setNewsList(data || []);
     } catch (error) {
-      console.error('뉴스 목록 조회 오류:', error);
-      alert('뉴스 목록을 불러오는 중 오류가 발생했습니다.');
+      console.error('뉴스 데이터 로딩 오류:', error);
     } finally {
       setLoading(false);
     }
@@ -329,378 +374,357 @@ function NewsManager() {
       title: '',
       category: '',
       tag: '',
-      tag_color: 'bg-primary-dark/30',
+      tag_color: 'bg-primary/30',
       description: '',
       image: '',
-      active: true
+      active: true,
     });
-    setSelectedNews(null);
-    setIsEditing(false);
+    setEditMode(false);
   };
 
-  const handleEditClick = (news: any) => {
-    setSelectedNews(news);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    setFormData({ ...formData, [name]: updatedValue });
+  };
+
+  const handleEditClick = (news: NewsItem) => {
     setFormData({
+      id: news.id,
       title: news.title,
       category: news.category,
       tag: news.tag,
       tag_color: news.tag_color,
       description: news.description,
       image: news.image,
-      active: news.active
+      active: news.active,
     });
-    setIsEditing(true);
+    setEditMode(true);
   };
 
   const handleCreateClick = () => {
     resetForm();
-    setIsEditing(true);
+    setEditMode(true);
+  };
+
+  const handleCancelClick = () => {
+    resetForm();
+    setEditMode(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!supabase) return;
+
     try {
-      if (selectedNews) {
+      if (formData.id) {
         // 수정
         const { error } = await supabase
           .from('news')
           .update({
-            ...formData,
-            published_at: new Date().toISOString()
+            title: formData.title,
+            category: formData.category,
+            tag: formData.tag,
+            tag_color: formData.tag_color,
+            description: formData.description,
+            image: formData.image,
+            active: formData.active,
           })
-          .eq('id', selectedNews.id);
-          
+          .eq('id', formData.id);
+
         if (error) throw error;
-        alert('뉴스가 성공적으로 수정되었습니다.');
       } else {
         // 생성
         const { error } = await supabase
           .from('news')
           .insert([{
-            ...formData,
-            published_at: new Date().toISOString()
+            title: formData.title,
+            category: formData.category,
+            tag: formData.tag,
+            tag_color: formData.tag_color,
+            description: formData.description,
+            image: formData.image,
+            active: formData.active,
+            published_at: new Date().toISOString(),
           }]);
-          
+
         if (error) throw error;
-        alert('뉴스가 성공적으로 생성되었습니다.');
       }
-      
-      // 데이터 새로고침
-      await fetchNews();
+
+      // 성공 후 초기화 및 새로고침
       resetForm();
+      await fetchNews();
     } catch (error) {
       console.error('뉴스 저장 오류:', error);
-      alert('뉴스를 저장하는 중 오류가 발생했습니다.');
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('정말로 이 뉴스를 삭제하시겠습니까?')) return;
+    if (!confirm('정말 삭제하시겠습니까?')) return;
     
+    if (!supabase) return;
+
     try {
       const { error } = await supabase
         .from('news')
         .delete()
         .eq('id', id);
-        
+
       if (error) throw error;
       
       // 목록에서 제거
-      setNews(news.filter(item => item.id !== id));
+      setNewsList(newsList.filter(item => item.id !== id));
       
-      // 만약 삭제한 항목이 현재 선택된 항목이라면 선택 해제
-      if (selectedNews && selectedNews.id === id) {
+      // 수정 중이었다면 폼 초기화
+      if (formData.id === id) {
         resetForm();
       }
-      
-      alert('뉴스가 삭제되었습니다.');
     } catch (error) {
       console.error('뉴스 삭제 오류:', error);
-      alert('뉴스를 삭제하는 중 오류가 발생했습니다.');
     }
   };
 
   const handleToggleActive = async (id: number, currentStatus: boolean) => {
+    if (!supabase) return;
+    
     try {
       const { error } = await supabase
         .from('news')
         .update({ active: !currentStatus })
         .eq('id', id);
-        
+
       if (error) throw error;
       
       // 목록 업데이트
-      setNews(
-        news.map(item => 
-          item.id === id ? { ...item, active: !currentStatus } : item
+      setNewsList(
+        newsList.map(news => 
+          news.id === id ? { ...news, active: !currentStatus } : news
         )
       );
       
-      // 선택된 뉴스가 있고, 해당 ID와 일치하면 업데이트
-      if (selectedNews && selectedNews.id === id) {
-        setSelectedNews({ ...selectedNews, active: !currentStatus });
+      // 수정 중이었다면 폼도 업데이트
+      if (formData.id === id) {
         setFormData({ ...formData, active: !currentStatus });
       }
     } catch (error) {
       console.error('뉴스 상태 업데이트 오류:', error);
-      alert('상태 업데이트 중 오류가 발생했습니다.');
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  };
+
   return (
-    <div className="flex flex-col space-y-6 md:flex-row md:space-x-6 md:space-y-0">
-      {/* 뉴스 목록 */}
-      <div className="w-full md:w-1/2">
-        <div className="rounded-lg bg-white p-4 shadow-md">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-bold">뉴스 목록</h2>
-            <button
-              onClick={handleCreateClick}
-              className="rounded bg-primary-dark px-3 py-1 text-white hover:bg-primary"
-            >
-              + 새 뉴스 작성
-            </button>
-          </div>
+    <div>
+      {editMode ? (
+        <GlassEffect className="p-6 rounded-xl">
+          <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>
           
-          {loading ? (
-            <p className="py-4 text-center text-gray-500">로딩 중...</p>
-          ) : news.length === 0 ? (
-            <p className="py-4 text-center text-gray-500">등록된 뉴스가 없습니다.</p>
-          ) : (
-            <div className="max-h-[600px] overflow-y-auto">
-              <table className="w-full">
-                <thead className="border-b">
-                  <tr>
-                    <th className="px-2 py-2 text-left">제목</th>
-                    <th className="px-2 py-2 text-left">카테고리</th>
-                    <th className="px-2 py-2 text-left">날짜</th>
-                    <th className="px-2 py-2 text-left">상태</th>
-                    <th className="px-2 py-2 text-left">관리</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {news.map((item) => (
-                    <tr 
-                      key={item.id} 
-                      className="border-b hover:bg-gray-50"
-                    >
-                      <td className="max-w-[150px] truncate px-2 py-3">{item.title}</td>
-                      <td className="px-2 py-3">{item.category}</td>
-                      <td className="px-2 py-3">
-                        {new Date(item.published_at).toLocaleDateString()}
-                      </td>
-                      <td className="px-2 py-3">
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs ${
-                            item.active 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
-                        >
-                          {item.active ? '활성화' : '비활성화'}
-                        </span>
-                      </td>
-                      <td className="space-x-1 px-2 py-3">
-                        <button
-                          onClick={() => handleEditClick(item)}
-                          className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
-                        >
-                          수정
-                        </button>
-                        <button
-                          onClick={() => handleToggleActive(item.id, item.active)}
-                          className={`rounded px-2 py-1 text-xs text-white ${
-                            item.active
-                              ? 'bg-yellow-500 hover:bg-yellow-600'
-                              : 'bg-green-500 hover:bg-green-600'
-                          }`}
-                        >
-                          {item.active ? '비활성화' : '활성화'}
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600"
-                        >
-                          삭제
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* 뉴스 편집 폼 */}
-      <div className="w-full md:w-1/2">
-        <div className="rounded-lg bg-white p-4 shadow-md">
-          <h2 className="mb-4 text-xl font-bold">
-            {isEditing
-              ? selectedNews ? '뉴스 수정' : '새 뉴스 작성'
-              : '뉴스 작성'}
-          </h2>
-          
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="title" className="mb-1 block text-sm font-medium">
-                  제목 <span className="text-red-500">*</span>
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">제목</label>
                 <input
-                  id="title"
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full rounded-md border border-gray-300 p-2"
+                  name="title"
+                  value={formData.title || ''}
+                  onChange={handleInputChange}
+                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   required
                 />
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="category" className="mb-1 block text-sm font-medium">
-                    카테고리
-                  </label>
-                  <input
-                    id="category"
-                    type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="예: 일반, 소식, 이벤트 등"
-                    className="w-full rounded-md border border-gray-300 p-2"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="tag" className="mb-1 block text-sm font-medium">
-                    태그
-                  </label>
-                  <input
-                    id="tag"
-                    type="text"
-                    value={formData.tag}
-                    onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
-                    placeholder="예: 뉴스, 공지사항 등"
-                    className="w-full rounded-md border border-gray-300 p-2"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">이미지 URL</label>
+                <input
+                  type="url"
+                  name="image"
+                  value={formData.image || ''}
+                  onChange={handleInputChange}
+                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                />
               </div>
               
               <div>
-                <label htmlFor="tag_color" className="mb-1 block text-sm font-medium">
-                  태그 색상
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-1">카테고리</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category || ''}
+                  onChange={handleInputChange}
+                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">태그</label>
+                <input
+                  type="text"
+                  name="tag"
+                  value={formData.tag || ''}
+                  onChange={handleInputChange}
+                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">태그 색상</label>
                 <select
-                  id="tag_color"
-                  value={formData.tag_color}
-                  onChange={(e) => setFormData({ ...formData, tag_color: e.target.value })}
-                  className="w-full rounded-md border border-gray-300 p-2"
+                  name="tag_color"
+                  value={formData.tag_color || 'bg-primary/30'}
+                  onChange={handleInputChange}
+                  className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
-                  <option value="bg-primary-dark/30">기본 색상</option>
-                  <option value="bg-red-500/30">빨간색</option>
-                  <option value="bg-blue-500/30">파란색</option>
-                  <option value="bg-green-500/30">녹색</option>
-                  <option value="bg-yellow-500/30">노란색</option>
-                  <option value="bg-purple-500/30">보라색</option>
-                  <option value="bg-gray-500/30">회색</option>
+                  <option value="bg-primary/30">보라색</option>
+                  <option value="bg-secondary/30">초록색</option>
+                  <option value="bg-amber-700/30">주황색</option>
                 </select>
               </div>
               
-              <div>
-                <label className="mb-1 block text-sm font-medium">
-                  이미지 <span className="text-red-500">*</span>
-                </label>
-                {formData.image && (
-                  <div className="mb-2">
-                    <img 
-                      src={formData.image} 
-                      alt="뉴스 이미지 미리보기" 
-                      className="mb-2 h-32 w-auto rounded border object-cover" 
-                    />
-                  </div>
-                )}
-                
-                <div className="flex items-center">
-                  <ImageUploader 
-                    onUploadComplete={(url) => setFormData({ ...formData, image: url })} 
-                  />
-                  
-                  <span className="mx-2 text-gray-500">또는</span>
-                  
-                  <input
-                    id="image"
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="이미지 URL을 직접 입력하세요"
-                    className="w-full rounded-md border border-gray-300 p-2"
-                  />
-                </div>
-                <p className="mt-1 text-xs text-gray-500">
-                  이미지를 직접 업로드하거나 이미지 URL을 입력해주세요.
-                </p>
-              </div>
-              
-              <div>
-                <label htmlFor="description" className="mb-1 block text-sm font-medium">
-                  내용 <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="h-32 w-full rounded-md border border-gray-300 p-2"
-                  required
-                ></textarea>
-              </div>
-              
-              <div className="flex items-center">
+              <div className="flex items-center space-x-2">
                 <input
-                  id="active"
                   type="checkbox"
-                  checked={formData.active}
+                  id="active"
+                  name="active"
+                  checked={!!formData.active}
                   onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-gray-700 bg-dark-lighter text-primary"
                 />
-                <label htmlFor="active" className="ml-2 text-sm font-medium">
-                  활성화 (체크하면 웹사이트에 표시됨)
-                </label>
+                <label htmlFor="active" className="text-sm font-medium text-gray-300">활성화</label>
               </div>
-              
-              <div className="flex justify-end space-x-2 pt-2">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="rounded border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
-                >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  className="rounded bg-primary-dark px-4 py-2 text-white hover:bg-primary"
-                >
-                  {selectedNews ? '수정하기' : '등록하기'}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="py-8 text-center text-gray-500">
-              <p className="mb-4">
-                새 뉴스를 작성하거나 기존 뉴스를 수정하려면<br />
-                왼쪽 목록에서 '새 뉴스 작성' 버튼이나 뉴스의 '수정' 버튼을 클릭하세요.
-              </p>
-              <button
-                onClick={handleCreateClick}
-                className="rounded bg-primary-dark px-4 py-2 text-white hover:bg-primary"
-              >
-                새 뉴스 작성하기
-              </button>
             </div>
-          )}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">내용</label>
+              <textarea
+                name="description"
+                value={formData.description || ''}
+                onChange={handleInputChange}
+                rows={6}
+                className="w-full rounded-md border border-gray-700 bg-dark-lighter px-3 py-2 text-white shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                required
+              ></textarea>
+            </div>
+            
+            <div className="flex justify-end space-x-3 pt-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancelClick}
+              >
+                취소
+              </Button>
+              <Button
+                type="submit"
+                className="bg-gradient-to-r from-primary to-purple-500"
+              >
+                저장
+              </Button>
+            </div>
+          </form>
+        </GlassEffect>
+      ) : (
+        <div className="flex flex-col space-y-4">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-bold">뉴스 목록</h2>
+            <Button
+              onClick={handleCreateClick}
+              className="bg-gradient-to-r from-primary to-purple-500 flex items-center gap-2"
+              size="sm"
+            >
+              <Plus size={16} />
+              새 뉴스 작성
+            </Button>
+          </div>
+          
+          <GlassEffect className="p-4 rounded-xl">
+            {loading ? (
+              <div className="flex justify-center py-6">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+              </div>
+            ) : newsList.length === 0 ? (
+              <div className="py-10 text-center">
+                <p className="text-gray-400 mb-4">등록된 뉴스가 없습니다.</p>
+                <Button
+                  onClick={handleCreateClick}
+                  className="bg-gradient-to-r from-primary to-purple-500"
+                >
+                  첫 번째 뉴스 작성하기
+                </Button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="border-b border-gray-800">
+                    <tr>
+                      <th className="px-2 py-3 text-left text-gray-300">제목</th>
+                      <th className="px-2 py-3 text-left text-gray-300">카테고리</th>
+                      <th className="px-2 py-3 text-left text-gray-300">발행일</th>
+                      <th className="px-2 py-3 text-left text-gray-300">상태</th>
+                      <th className="px-2 py-3 text-right text-gray-300">관리</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-800">
+                    {newsList.map((news) => (
+                      <tr key={news.id} className="hover:bg-white/5 transition-colors">
+                        <td className="px-2 py-3">
+                          <div className="font-medium">{news.title}</div>
+                        </td>
+                        <td className="px-2 py-3">
+                          <div>{news.category}</div>
+                          {news.tag && (
+                            <span className={`inline-block px-2 py-1 text-xs rounded-full mt-1 ${news.tag_color}`}>
+                              {news.tag}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-2 py-3">{formatDate(news.published_at)}</td>
+                        <td className="px-2 py-3">
+                          <span className={`rounded-full px-2 py-1 text-xs ${news.active ? 'bg-primary/20 text-primary' : 'bg-gray-700 text-gray-300'}`}>
+                            {news.active ? '활성' : '비활성'}
+                          </span>
+                        </td>
+                        <td className="px-2 py-3 text-right space-x-2">
+                          <Button
+                            onClick={() => handleToggleActive(news.id, news.active)}
+                            variant="ghost"
+                            size="sm"
+                            className="text-gray-300 hover:text-white"
+                          >
+                            {news.active ? '비활성화' : '활성화'}
+                          </Button>
+                          <Button
+                            onClick={() => handleEditClick(news)}
+                            variant="outline"
+                            size="sm"
+                            className="text-primary hover:text-primary-foreground"
+                          >
+                            수정
+                          </Button>
+                          <Button
+                            onClick={() => handleDelete(news.id)}
+                            variant="destructive"
+                            size="sm"
+                            className="flex items-center"
+                          >
+                            <Trash2 size={14} className="mr-1" />
+                            삭제
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </GlassEffect>
         </div>
-      </div>
+      )}
     </div>
   );
 } 

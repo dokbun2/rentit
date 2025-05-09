@@ -2,6 +2,7 @@ import { users, type User, type InsertUser, contactSubmissions, type Contact, ty
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { neon } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
+import { createClient } from '@supabase/supabase-js';
 
 // modify the interface with any CRUD methods
 // you might need
@@ -136,7 +137,105 @@ export class PostgresStorage implements IStorage {
   }
 }
 
-// Use PostgresStorage in production, MemStorage in development
-export const storage = process.env.NODE_ENV === 'production' 
-  ? new PostgresStorage() 
+// Supabase Storage 클래스 추가
+export class SupabaseStorage implements IStorage {
+  private supabase;
+
+  constructor() {
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+      throw new Error("SUPABASE_URL and SUPABASE_ANON_KEY environment variables are required");
+    }
+    
+    this.supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+  }
+
+  async getUser(id: number): Promise<User | undefined> {
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .single();
+      
+    if (error) return undefined;
+    return data as unknown as User;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+      .eq('username', username)
+      .single();
+      
+    if (error) return undefined;
+    return data as unknown as User;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const { data, error } = await this.supabase
+      .from('users')
+      .insert(insertUser)
+      .select()
+      .single();
+      
+    if (error) throw error;
+    return data as unknown as User;
+  }
+  
+  // Contact form related methods
+  async createContactSubmission(insertContact: InsertContact): Promise<Contact> {
+    const { data, error } = await this.supabase
+      .from('contacts')  // Supabase에서는 테이블 이름이 contacts임
+      .insert({
+        ...insertContact,
+        created_at: new Date().toISOString(),
+        processed: false
+      })
+      .select()
+      .single();
+      
+    if (error) throw error;
+    return data as unknown as Contact;
+  }
+  
+  async getContactSubmissions(): Promise<Contact[]> {
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .select('*');
+      
+    if (error) throw error;
+    return data as unknown as Contact[];
+  }
+  
+  async getContactSubmission(id: number): Promise<Contact | undefined> {
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .select('*')
+      .eq('id', id)
+      .single();
+      
+    if (error) return undefined;
+    return data as unknown as Contact;
+  }
+  
+  async markContactAsProcessed(id: number): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from('contacts')
+      .update({ processed: true })
+      .eq('id', id)
+      .select();
+      
+    if (error) return false;
+    return data.length > 0;
+  }
+}
+
+// 환경 변수에 따라 적절한 스토리지 인스턴스 사용
+export const storage = process.env.NODE_ENV === "production" 
+  ? process.env.SUPABASE_URL 
+    ? new SupabaseStorage() 
+    : new PostgresStorage()
   : new MemStorage();

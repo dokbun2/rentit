@@ -110,15 +110,6 @@ const AboutSection = () => {
                 </div>
               </div>
             </div>
-            
-            <div className="mt-4 text-center">
-              <Button 
-                onClick={scrollToContact}
-                className="px-6 py-3 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all mx-auto block"
-              >
-                자세히 알아보기
-              </Button>
-            </div>
           </motion.div>
         </div>
       </div>

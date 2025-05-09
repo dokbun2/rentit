@@ -87,3 +87,5 @@ app.use((req, res, next) => {
     log(`serving on port ${port}`);
   });
 })();
+
+app.use(express.static('dist/public')); // 또는 다른 경로

@@ -40,7 +40,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="md:w-1/2 md:pr-8"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4">
               <span className="text-white">전문적인 </span>
               <span className="text-primary">렌탈 비즈니스</span>
               <span className="block md:hidden text-white"> 컨설팅</span>
@@ -52,7 +52,7 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
-              className="text-xl text-gray-300 mb-8"
+              className="text-2xl text-gray-300 mb-8"
             >
               렌탈사 설립부터 시스템 구축, 부업 컨설팅까지<br/>
               렌탈 비즈니스의 모든 것을 도와드립니다.
@@ -64,14 +64,14 @@ const HeroSection = () => {
             >
               <Button 
                 onClick={() => scrollToSection("#services")}
-                className="px-6 py-6 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
+                className="px-8 py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
                 렌탈솔루션이란?
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}
                 variant="outline" 
-                className="px-6 py-6 dark-light border-gray-700 rounded-full text-white font-medium hover:bg-dark-lighter transition-all"
+                className="px-8 py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
               >
                 상담 문의하기
               </Button>
@@ -102,8 +102,8 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">렌잇과 함께 성장하세요</h3>
-                    <p className="text-gray-400">성공적인 렌탈 비즈니스의 시작</p>
+                    <h3 className="text-2xl font-bold text-white">렌잇과 함께 성장하세요</h3>
+                    <p className="text-gray-400 text-lg">성공적인 렌탈 비즈니스의 시작</p>
                   </div>
                 </div>
                 
@@ -112,31 +112,31 @@ const HeroSection = () => {
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">렌탈사 설립 전문 컨설팅</span>
+                    <span className="text-gray-300 text-base">렌탈사 설립 전문 컨설팅</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">최신 렌탈 시스템 구축</span>
+                    <span className="text-gray-300 text-base">최신 렌탈 시스템 구축</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">업계 최고 렌탈 비즈니스 파트너십</span>
+                    <span className="text-gray-300 text-base">업계 최고 렌탈 비즈니스 파트너십</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300">부업으로 시작하는 렌탈 비즈니스</span>
+                    <span className="text-gray-300 text-base">부업으로 시작하는 렌탈 비즈니스</span>
                   </li>
                 </ul>
                 
                 <div className="mt-8 text-center">
-                  <span className="inline-block py-2 px-4 bg-purple-900/30 rounded-full text-sm text-purple-400">
-                    <Clock className="inline-block mr-2 h-4 w-4" /> 지금 상담하고 특별 할인 받기
+                  <span className="inline-block py-2 px-4 bg-purple-900/30 rounded-full text-base text-purple-400">
+                    <Clock className="inline-block mr-2 h-5 w-5" /> 지금 상담하고 특별 할인 받기
                   </span>
                 </div>
               </GlassEffect>

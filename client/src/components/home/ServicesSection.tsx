@@ -92,13 +92,13 @@ const ServicesSection = () => {
         >
           <motion.h2 
             variants={fadeIn("up", 0.1)}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-4xl md:text-5xl font-bold mb-4"
           >
             렌탈 <span className="text-primary">솔루션</span>
           </motion.h2>
           <motion.p 
             variants={fadeIn("up", 0.2)}
-            className="text-gray-400 max-w-2xl mx-auto"
+            className="text-lg text-gray-400 max-w-2xl mx-auto"
           >
             렌탈 비즈니스의 시작부터 성장까지,<br />
             전문적인 컨설팅으로 보여드립니다.
@@ -119,9 +119,9 @@ const ServicesSection = () => {
                 {service.icon}
               </div>
               
-              <h3 className="text-xl font-bold text-center mb-4">{service.title}</h3>
+              <h3 className="text-2xl font-bold text-center mb-4">{service.title}</h3>
               
-              <p className="text-gray-400 text-center mb-6">
+              <p className="text-gray-400 text-lg text-center mb-6">
                 {service.description}
               </p>
               
@@ -129,7 +129,7 @@ const ServicesSection = () => {
                 {service.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start justify-center">
                     <Check className={`h-4 w-4 ${service.checkColorClass} mr-2 mt-1`} />
-                    <span className="text-gray-300 text-sm text-left">{feature}</span>
+                    <span className="text-gray-300 text-base text-left">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -138,7 +138,7 @@ const ServicesSection = () => {
                 href="https://jcob.dokbun2.com/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full no-underline" 
+                className="block text-center py-2 px-4 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all w-full no-underline" 
                 style={{textDecoration: 'none'}}
                 onClick={(e) => {
                   e.preventDefault();
@@ -160,7 +160,7 @@ const ServicesSection = () => {
         >
           <Button 
             onClick={scrollToContact}
-            className="px-8 py-6 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
+            className="px-8 py-6 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
           >
             무료 상담 신청하기
           </Button>

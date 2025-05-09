@@ -123,13 +123,13 @@ const NewsSection = () => {
         >
           <motion.h2 
             variants={fadeIn("up", 0.1)}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-4xl md:text-5xl font-bold mb-4"
           >
             렌탈 <span className="text-primary">뉴스</span>
           </motion.h2>
           <motion.p 
             variants={fadeIn("up", 0.2)}
-            className="text-gray-400 max-w-2xl mx-auto"
+            className="text-lg text-gray-400 max-w-2xl mx-auto"
           >
             렌탈 시장의 최신 트렌드와 업계 소식을 확인하세요.
           </motion.p>
@@ -164,33 +164,33 @@ const NewsSection = () => {
                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
                     }}
                   />
-                  <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-xs text-gray-300">
+                  <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-sm text-gray-300">
                     {item.category}
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-3">
-                    <p className="text-gray-500 text-sm group-hover:text-primary transition-colors">
+                    <p className="text-gray-500 text-base group-hover:text-primary transition-colors">
                       {formatDate(item.published_at)}
                     </p>
                     <div className="flex space-x-2">
                       {item.tag && (
-                        <span className={`px-2 py-1 ${item.tag_color} rounded-md text-xs text-white`}>
+                        <span className={`px-2 py-1 ${item.tag_color} rounded-md text-sm text-white`}>
                           {item.tag}
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                  <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
                   
-                  <p className="text-gray-400 mb-6 line-clamp-3">
+                  <p className="text-gray-400 text-lg mb-6 line-clamp-3">
                     {item.description}
                   </p>
                   
                   <button 
-                    className="inline-flex items-center text-primary hover:opacity-80 transition-colors"
+                    className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-base"
                     onClick={(e) => {
                       e.stopPropagation(); // 이벤트 버블링 방지
                       handleViewDetails(item, e);
@@ -213,7 +213,7 @@ const NewsSection = () => {
         >
           <Button 
             variant="outline" 
-            className="px-6 py-3 dark-light rounded-lg text-white hover:bg-background border border-gray-700 transition-all inline-flex items-center"
+            className="px-6 py-3 dark-light rounded-lg text-white text-lg hover:bg-background transition-all"
             onClick={(e) => {
               e.preventDefault();
               // 뉴스 페이지로 이동하는 대신, 첫 번째 뉴스 아이템을 모달로 보여줍니다.

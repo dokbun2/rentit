@@ -26,7 +26,7 @@ const AboutSection = () => {
         >
           <motion.h2 
             variants={fadeIn("up", 0.1)}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-4xl md:text-5xl font-bold mb-4"
           >
             회사 <span className="text-primary">소개</span>
           </motion.h2>
@@ -65,9 +65,9 @@ const AboutSection = () => {
             variants={fadeIn("left", 0.3)}
             className="flex flex-col items-center text-center"
           >
-            <h3 className="text-2xl font-bold mb-6">렌탈 비즈니스의 <span className="text-primary">전문가</span></h3>
+            <h3 className="text-3xl font-bold mb-6">렌탈 비즈니스의 <span className="text-primary">전문가</span></h3>
             
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300 text-lg mb-6">
               렌잇은 렌탈 비즈니스 분야에서 10년 이상의 경험을 바탕으로 고객님의 성공적인 비즈니스를 위한 최고의 솔루션을 제공합니다. 
               시장 조사부터 비즈니스 모델 구축, 시스템 개발까지 종합적인 컨설팅 서비스로 고객의 니즈에 맞는 최적의 결과를 도출합니다.
             </p>
@@ -78,8 +78,8 @@ const AboutSection = () => {
                   <Trophy className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex flex-col items-start text-left">
-                  <h4 className="font-bold text-white mb-1">전문성</h4>
-                  <p className="text-gray-400 text-sm">렌탈 분야 전문 컨설턴트</p>
+                  <h4 className="font-bold text-white text-lg mb-1">전문성</h4>
+                  <p className="text-gray-400 text-base">렌탈 분야 전문 컨설턴트</p>
                 </div>
               </div>
               <div className="flex items-center w-full">
@@ -87,8 +87,8 @@ const AboutSection = () => {
                   <Handshake className="h-5 w-5 text-secondary" />
                 </div>
                 <div className="flex flex-col items-start text-left">
-                  <h4 className="font-bold text-white mb-1">신뢰성</h4>
-                  <p className="text-gray-400 text-sm">200+ 성공 비즈니스 사례</p>
+                  <h4 className="font-bold text-white text-lg mb-1">신뢰성</h4>
+                  <p className="text-gray-400 text-base">200+ 성공 비즈니스 사례</p>
                 </div>
               </div>
               <div className="flex items-center w-full">
@@ -96,8 +96,8 @@ const AboutSection = () => {
                   <Lightbulb className="h-5 w-5 text-amber-500" />
                 </div>
                 <div className="flex flex-col items-start text-left">
-                  <h4 className="font-bold text-white mb-1">혁신성</h4>
-                  <p className="text-gray-400 text-sm">최신 렌탈 트렌드 반영</p>
+                  <h4 className="font-bold text-white text-lg mb-1">혁신성</h4>
+                  <p className="text-gray-400 text-base">최신 렌탈 트렌드 반영</p>
                 </div>
               </div>
               <div className="flex items-center w-full">
@@ -105,8 +105,8 @@ const AboutSection = () => {
                   <Users className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex flex-col items-start text-left">
-                  <h4 className="font-bold text-white mb-1">고객 중심</h4>
-                  <p className="text-gray-400 text-sm">맞춤형 솔루션 제공</p>
+                  <h4 className="font-bold text-white text-lg mb-1">고객 중심</h4>
+                  <p className="text-gray-400 text-base">맞춤형 솔루션 제공</p>
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ const AboutSection = () => {
             <div className="mt-4 text-center">
               <Button 
                 onClick={scrollToContact}
-                className="px-6 py-3 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all mx-auto block"
+                className="px-6 py-3 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all mx-auto block"
               >
                 자세히 알아보기
               </Button>

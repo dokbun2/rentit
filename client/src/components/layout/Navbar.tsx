@@ -46,13 +46,13 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <Link
             href="/"
-            className="text-2xl text-white flex items-center"
+            className="text-3xl text-white flex items-center"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">
-              <span className="text-primary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 900 }}>REN</span>
-              <span className="text-secondary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 700 }}>'T</span>
-              <span className="ml-2 text-2xl font-normal text-gray-300 ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 400 }}>렌잇</span>
+              <span className="text-primary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 900, fontSize: '1.4em' }}>REN</span>
+              <span className="text-secondary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 700, fontSize: '1.4em' }}>'T</span>
+              <span className="ml-2 text-3xl font-normal text-gray-300 ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 400 }}>렌잇</span>
             </div>
           </Link>
           
@@ -61,14 +61,14 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => scrollToSection(link.href)}
-                className="nav-underline text-gray-300 hover:text-white transition-colors"
+                className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
               >
                 {link.name}
               </button>
             ))}
             <Button 
               onClick={() => scrollToSection("#contact")}
-              className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all"
+              className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
             >
               무료 상담
             </Button>
@@ -99,14 +99,14 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => scrollToSection(link.href)}
-                className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left"
+                className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
               >
                 {link.name}
               </button>
             ))}
             <Button 
               onClick={() => scrollToSection("#contact")}
-              className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all"
+              className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"
             >
               무료 상담
             </Button>

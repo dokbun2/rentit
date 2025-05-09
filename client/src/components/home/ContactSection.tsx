@@ -79,9 +79,9 @@ const ContactSection = () => {
       const timestamp = new Date().toISOString();
       
       try {
-        // 문의 데이터 저장 (contact_submissions 테이블)
+        // 문의 데이터 저장 (contacts 테이블)
         const { data: insertedData, error } = await supabase
-          .from('contact_submissions')
+          .from('contacts')
           .insert([{
             name: contactData.name,
             email: contactData.email, 

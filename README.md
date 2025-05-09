@@ -63,3 +63,43 @@ npm run dev
 - `/server`: 백엔드 코드
 - `/shared`: 프론트엔드와 백엔드 간 공유 코드
 - `/migrations`: 데이터베이스 마이그레이션 파일 
+
+## Supabase 관리자 대시보드 구현
+
+### 1. Supabase 설정하기
+
+1. [Supabase](https://supabase.com/) 계정을 생성하고 새 프로젝트를 만듭니다.
+2. `supabase/init.sql` 파일의 SQL을 Supabase SQL 에디터에서 실행하여 필요한 테이블과 권한을 설정합니다.
+3. Supabase URL과 Anon Key를 환경 변수로 설정합니다.
+
+```
+# .env 파일
+SUPABASE_URL=https://your-supabase-url.supabase.co
+SUPABASE_KEY=your-supabase-anon-key
+VITE_SUPABASE_URL=https://your-supabase-url.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+4. Storage에서 `rentit-media` 버킷을 생성하고 권한을 설정합니다.
+
+### 2. 관리자 계정 생성하기
+
+1. Supabase 대시보드에서 Authentication > Users로 이동하여 관리자 계정을 생성합니다.
+2. 이메일 주소와 비밀번호로 관리자 계정을 생성합니다.
+
+### 3. 관리자 대시보드 사용하기
+
+관리자 대시보드는 `/admin/login` 경로에서 접근할 수 있습니다.
+
+#### 3.1 문의 관리
+
+- 고객 문의 목록 확인
+- 문의 상세 정보 확인
+- 처리 상태 변경 (처리 완료/미처리)
+
+#### 3.2 뉴스 관리
+
+- 뉴스 목록 확인
+- 뉴스 추가, 수정, 삭제
+- 이미지 업로드
+- 뉴스 활성화/비활성화 

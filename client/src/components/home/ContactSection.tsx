@@ -113,7 +113,7 @@ const ContactSection = () => {
           >
             {/* Contact Information */}
             <GlassEffect className="rounded-xl p-8 mb-8">
-              <h3 className="text-2xl font-bold mb-6">연락처 정보</h3>
+              <h3 className="text-2xl font-bold mb-6">REN'T</h3>
               
               <div className="space-y-6">
                 <div className="flex items-start">
@@ -122,7 +122,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">주소</h4>
-                    <p className="text-gray-400">경기도 하남시 감일로 75번길 40 201호 렌잇빌딩 2층</p>
+                    <p className="text-gray-400">서울 성동구 아차산로17길 49(성수동2가) 15층 1504호</p>
                   </div>
                 </div>
                 
@@ -132,7 +132,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">전화번호</h4>
-                    <p className="text-gray-400">02-123-4567</p>
+                    <p className="text-gray-400">010-3180-0038</p>
                   </div>
                 </div>
                 
@@ -142,7 +142,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">이메일</h4>
-                    <p className="text-gray-400">info@rentit.co.kr</p>
+                    <p className="text-gray-400">ceo@rnpick.co.kr</p>
                   </div>
                 </div>
                 

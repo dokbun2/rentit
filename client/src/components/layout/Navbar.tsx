@@ -8,9 +8,8 @@ import { getPaperlogyStyle } from "@/lib/fonts";
 
 const navLinks = [
   { name: "회사소개", href: "#about" },
-  { name: "렌탈뉴스", href: "#news" },
   { name: "렌탈솔루션", href: "#services" },
-  { name: "문의하기", href: "#contact" },
+  { name: "렌탈뉴스", href: "#news" },
 ];
 
 const Navbar = () => {

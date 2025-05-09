@@ -133,12 +133,6 @@ const HeroSection = () => {
                     <span className="text-gray-300 text-base">부업으로 시작하는 렌탈 비즈니스</span>
                   </li>
                 </ul>
-                
-                <div className="mt-8 text-center">
-                  <span className="inline-block py-2 px-4 bg-purple-900/30 rounded-full text-base text-purple-400">
-                    <Clock className="inline-block mr-2 h-5 w-5" /> 지금 상담하고 특별 할인 받기
-                  </span>
-                </div>
               </GlassEffect>
             </GradientBorder>
           </motion.div>

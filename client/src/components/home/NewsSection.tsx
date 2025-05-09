@@ -95,7 +95,10 @@ const NewsSection = () => {
 
   // 자세히 보기 클릭 핸들러
   const handleViewDetails = (newsItem: any, e: React.MouseEvent) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setSelectedNews(newsItem);
     setDialogOpen(true);
   };
@@ -148,7 +151,8 @@ const NewsSection = () => {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={fadeIn("up", 0.2 + index * 0.1)}
-                className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+                className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer"
+                onClick={(e) => handleViewDetails(item, e)}
               >
                 <div className="relative h-48">
                   <img 
@@ -185,13 +189,15 @@ const NewsSection = () => {
                     {item.description}
                   </p>
                   
-                  <a 
-                    href="#" 
+                  <button 
                     className="inline-flex items-center text-primary hover:opacity-80 transition-colors"
-                    onClick={(e) => handleViewDetails(item, e)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // 이벤트 버블링 방지
+                      handleViewDetails(item, e);
+                    }}
                   >
                     자세히 보기 <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -208,6 +214,13 @@ const NewsSection = () => {
           <Button 
             variant="outline" 
             className="px-6 py-3 dark-light rounded-lg text-white hover:bg-background border border-gray-700 transition-all inline-flex items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              // 뉴스 페이지로 이동하는 대신, 첫 번째 뉴스 아이템을 모달로 보여줍니다.
+              if (newsItems.length > 0) {
+                handleViewDetails(newsItems[0], e as any);
+              }
+            }}
           >
             더 많은 뉴스 보기 <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -217,7 +230,7 @@ const NewsSection = () => {
       {/* 뉴스 자세히 보기 다이얼로그 */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         {selectedNews && (
-          <DialogContent className="sm:max-w-[650px] bg-background border border-gray-800">
+          <DialogContent className="sm:max-w-[650px] bg-background border border-gray-800 max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle className="text-xl md:text-2xl">{selectedNews.title}</DialogTitle>

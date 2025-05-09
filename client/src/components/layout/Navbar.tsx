@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getPaperlogyStyle } from "@/lib/fonts";
 
 const navLinks = [
   { name: "회사소개", href: "#about" },
@@ -50,9 +51,9 @@ const Navbar = () => {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">
-              <span className="text-primary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 900, fontSize: '1.4em' }}>REN</span>
-              <span className="text-secondary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 700, fontSize: '1.4em' }}>'T</span>
-              <span className="ml-2 text-3xl font-normal text-gray-300 ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 400 }}>렌잇</span>
+              <span className={cn("text-primary text-[1.4em]", getPaperlogyStyle('black'))}>REN</span>
+              <span className={cn("text-secondary text-[1.4em]", getPaperlogyStyle('bold'))}>'T</span>
+              <span className={cn("ml-2 text-3xl text-gray-300", getPaperlogyStyle('regular'))}>렌잇</span>
             </div>
           </Link>
           

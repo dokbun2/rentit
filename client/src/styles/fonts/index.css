@@ -1,0 +1,5 @@
+/* 모든 폰트 스타일을 import */
+@import "./paperlogy.css";
+
+/* 추가 폰트가 있다면 여기에 import */
+/* @import "./another-font.css"; */ 

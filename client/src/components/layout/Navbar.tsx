@@ -42,16 +42,18 @@ const Navbar = () => {
       "fixed top-0 w-full z-50 transition-all duration-300",
       scrolled ? "glass-effect py-3" : "bg-transparent py-5"
     )}>
-      <div className="container mx-auto pr-4 pl-2">
+      <div className="container mx-auto px-4 md:px-4">
         <div className="flex justify-between items-center">
           <Link
             href="/"
             className="text-2xl text-white flex items-center"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
-            <span className="text-primary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 900 }}>REN</span>
-            <span className="text-secondary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 700 }}>'T</span>
-            <span className="ml-0 md:ml-2 text-2xl font-normal text-gray-300 ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 400 }}>렌잇</span>
+            <div className="flex items-baseline">
+              <span className="text-primary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 900 }}>REN</span>
+              <span className="text-secondary ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 700 }}>'T</span>
+              <span className="ml-2 text-2xl font-normal text-gray-300 ios-font" style={{ fontFamily: 'Paperlogy, -apple-system, BlinkMacSystemFont', fontWeight: 400 }}>렌잇</span>
+            </div>
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">

@@ -35,6 +35,11 @@
       "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
       "dest": "/index.html" 
     },
+    { 
+      "src": "/adminlogin", 
+      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "dest": "/index.html" 
+    },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 } 

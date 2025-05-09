@@ -29,7 +29,7 @@ const HeroSection = () => {
         />
       </div>
       
-      <div className="container mx-auto pr-4 pl-2 relative z-10">
+      <div className="container mx-auto px-4 md:px-4 relative z-10">
         <motion.div 
           variants={staggerContainer}
           initial="hidden"

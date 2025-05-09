@@ -13,4 +13,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // 타입 내보내기
-export type { SupabaseClient } from '@supabase/supabase-js'; 
+export type { SupabaseClient } from '@supabase/supabase-js';
+
+// 추가 타입 정의
+export interface Contact {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  service: string;
+  message: string;
+  created_at: string;
+  processed: boolean;
+}
+
+export interface NewsItem {
+  id: number;
+  title: string;
+  category: string;
+  tag: string;
+  tag_color: string;
+  description: string;
+  image: string;
+  published_at: string;
+  active: boolean;
+} 

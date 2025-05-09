@@ -57,15 +57,24 @@ const Navbar = () => {
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => scrollToSection(link.href)}
-                className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
-              >
-                {link.name}
-              </button>
-            ))}
+            <button
+              onClick={() => scrollToSection("#about")}
+              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+            >
+              회사소개
+            </button>
+            <button
+              onClick={() => scrollToSection("#services")}
+              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+            >
+              렌탈솔루션
+            </button>
+            <button
+              onClick={() => scrollToSection("#news")}
+              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+            >
+              렌탈뉴스
+            </button>
             <Button 
               onClick={() => scrollToSection("#contact")}
               className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
@@ -95,15 +104,24 @@ const Navbar = () => {
           className="md:hidden dark-lighter py-4 px-4"
         >
           <div className="flex flex-col space-y-3">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => scrollToSection(link.href)}
-                className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
-              >
-                {link.name}
-              </button>
-            ))}
+            <button
+              onClick={() => scrollToSection("#about")}
+              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+            >
+              회사소개
+            </button>
+            <button
+              onClick={() => scrollToSection("#services")}
+              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+            >
+              렌탈솔루션
+            </button>
+            <button
+              onClick={() => scrollToSection("#news")}
+              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+            >
+              렌탈뉴스
+            </button>
             <Button 
               onClick={() => scrollToSection("#contact")}
               className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"

@@ -67,32 +67,50 @@ const ContactSection = () => {
       
       console.log('전송할 데이터:', contactData);
       
-      // 현재 시간을 ISO 문자열로 추가
-      const contactWithTimestamp = {
-        ...contactData,
-        created_at: new Date().toISOString(),
-        is_processed: false
-      };
-      
-      // Supabase API 직접 사용
+      // Supabase 클라이언트 존재 여부 확인
       if (!supabase) {
-        throw new Error('Supabase 클라이언트가 초기화되지 않았습니다');
+        console.error('Supabase 클라이언트가 초기화되지 않았습니다');
+        throw new Error('서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
       
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([contactWithTimestamp]);
+      console.log('Supabase 클라이언트 상태:', !!supabase);
       
-      if (error) {
-        console.error('Supabase 오류:', error);
-        throw new Error(error.message || '데이터 저장 중 오류가 발생했습니다');
+      // 현재 시간 정보 추가
+      const timestamp = new Date().toISOString();
+      
+      try {
+        // 문의 데이터 저장 (contact_submissions 테이블)
+        const { data: insertedData, error } = await supabase
+          .from('contact_submissions')
+          .insert([{
+            name: contactData.name,
+            email: contactData.email, 
+            phone: contactData.phone,
+            service: contactData.service,
+            message: contactData.message,
+            created_at: timestamp,
+            is_processed: false
+          }])
+          .select();
+        
+        console.log('Supabase 응답:', { data: insertedData, error });
+        
+        if (error) {
+          console.error('Supabase 삽입 오류:', error);
+          throw new Error('데이터 저장 중 오류가 발생했습니다: ' + error.message);
+        }
+        
+        // 성공 메시지
+        toast({
+          title: "상담 신청이 완료되었습니다",
+          description: "빠른 시일 내에 연락드리겠습니다.",
+        });
+        
+        form.reset();
+      } catch (insertError) {
+        console.error('데이터 삽입 도중 예외 발생:', insertError);
+        throw insertError;
       }
-      
-      toast({
-        title: "상담 신청이 완료되었습니다",
-        description: "빠른 시일 내에 연락드리겠습니다.",
-      });
-      form.reset();
     } catch (error) {
       console.error('상담 신청 오류:', error);
       toast({

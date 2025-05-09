@@ -61,13 +61,16 @@ const ContactSection = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
+      // privacy 필드를 제외한 데이터를 서버로 전송
+      const { privacy, ...contactData } = data;
+      
       // 직접 fetch 호출로 변경
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(contactData),
       });
       
       // 요청이 성공했는지 확인

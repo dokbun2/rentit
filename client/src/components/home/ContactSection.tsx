@@ -205,7 +205,7 @@ const ContactSection = () => {
                           <FormControl>
                             <Input 
                               placeholder="이름을 입력하세요" 
-                              className="bg-dark-light border-gray-700 focus:border-primary text-white" 
+                              className="bg-dark-light border-gray-700 focus:border-primary text-black" 
                               {...field} 
                             />
                           </FormControl>
@@ -223,7 +223,7 @@ const ContactSection = () => {
                           <FormControl>
                             <Input 
                               placeholder="연락처를 입력하세요" 
-                              className="bg-dark-light border-gray-700 focus:border-primary text-white" 
+                              className="bg-dark-light border-gray-700 focus:border-primary text-black" 
                               {...field} 
                             />
                           </FormControl>
@@ -243,7 +243,7 @@ const ContactSection = () => {
                           <Input 
                             type="email" 
                             placeholder="이메일을 입력하세요" 
-                            className="bg-dark-light border-gray-700 focus:border-primary text-white" 
+                            className="bg-dark-light border-gray-700 focus:border-primary text-black" 
                             {...field} 
                           />
                         </FormControl>
@@ -260,11 +260,11 @@ const ContactSection = () => {
                         <FormLabel className="text-gray-400">관심 서비스 *</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="bg-dark-light border-gray-700 focus:border-primary text-white">
+                            <SelectTrigger className="bg-dark-light border-gray-700 focus:border-primary text-black">
                               <SelectValue placeholder="선택해주세요" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-dark-light border-gray-700 text-white">
+                          <SelectContent className="bg-dark-light border-gray-700 text-black">
                             <SelectItem value="establishment">렌탈사 설립</SelectItem>
                             <SelectItem value="partnership">렌탈업무 제휴</SelectItem>
                             <SelectItem value="system">렌탈시스템 구축</SelectItem>
@@ -286,7 +286,7 @@ const ContactSection = () => {
                         <FormControl>
                           <Textarea 
                             placeholder="문의 내용을 입력하세요" 
-                            className="bg-dark-light border-gray-700 focus:border-primary text-white" 
+                            className="bg-dark-light border-gray-700 focus:border-primary text-black" 
                             rows={4}
                             {...field} 
                           />

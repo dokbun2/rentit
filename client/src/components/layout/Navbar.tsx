@@ -42,7 +42,7 @@ const Navbar = () => {
       "fixed top-0 w-full z-50 transition-all duration-300",
       scrolled ? "glass-effect py-3" : "bg-transparent py-5"
     )}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto pr-4 pl-2">
         <div className="flex justify-between items-center">
           <Link
             href="/"

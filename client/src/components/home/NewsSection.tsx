@@ -4,8 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fadeIn } from "@/lib/motion";
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient"; 
-import { NewsItem } from "../../lib/supabaseClient";
+import { supabase } from "@/lib/supabase";
+import { NewsItem } from "@/lib/supabase";
 
 // 기본 뉴스 아이템 (API 로딩 실패 시 보여줄 더미 데이터)
 const fallbackNewsItems = [
@@ -48,6 +48,12 @@ const NewsSection = () => {
       try {
         setLoading(true);
         
+        // Supabase 클라이언트 확인
+        if (!supabase) {
+          console.error('Supabase 클라이언트가 초기화되지 않았습니다.');
+          throw new Error('Supabase 클라이언트 초기화 오류');
+        }
+        
         // Supabase에서 활성화된 뉴스 데이터 가져오기
         const { data, error } = await supabase
           .from('news')
@@ -56,12 +62,17 @@ const NewsSection = () => {
           .order('published_at', { ascending: false })
           .limit(3);
         
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase 쿼리 오류:', error);
+          throw error;
+        }
+        
+        console.log('불러온 뉴스 데이터:', data);
         
         if (data && data.length > 0) {
           setNewsItems(data);
         } else {
-          // 데이터가 없으면 더미 데이터 사용
+          console.log('뉴스 데이터가 없어 더미 데이터를 사용합니다.');
           setNewsItems(fallbackNewsItems);
         }
       } catch (error) {
@@ -132,6 +143,10 @@ const NewsSection = () => {
                     src={item.image} 
                     alt={item.title} 
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // 이미지 로드 실패 시 대체 이미지 표시
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                    }}
                   />
                   <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-xs text-gray-300">
                     {item.category}
@@ -144,9 +159,11 @@ const NewsSection = () => {
                       {formatDate(item.published_at)}
                     </p>
                     <div className="flex space-x-2">
-                      <span className={`px-2 py-1 ${item.tag_color} rounded-md text-xs text-white`}>
-                        {item.tag}
-                      </span>
+                      {item.tag && (
+                        <span className={`px-2 py-1 ${item.tag_color} rounded-md text-xs text-white`}>
+                          {item.tag}
+                        </span>
+                      )}
                     </div>
                   </div>
                   

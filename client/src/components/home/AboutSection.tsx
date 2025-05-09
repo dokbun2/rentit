@@ -34,7 +34,8 @@ const AboutSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌잇은 렌탈 비즈니스의 설립부터 운영까지 필요한 모든 전문 서비스를 제공합니다.
+            렌잇은 렌탈 비즈니스의 설립부터 운영까지<br />
+            필요한 모든 전문 서비스를 제공합니다.
           </motion.p>
         </motion.div>
         

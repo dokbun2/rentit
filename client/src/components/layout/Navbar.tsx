@@ -46,12 +46,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <Link
             href="/"
-            className="text-lg md:text-2xl text-white flex items-center"
+            className="text-xl md:text-2xl text-white flex items-center"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <span className="text-primary" style={{ fontFamily: 'Paperlogy', fontWeight: 900 }}>REN</span>
             <span className="text-secondary" style={{ fontFamily: 'Paperlogy', fontWeight: 700 }}>'T</span>
-            <span className="ml-0 md:ml-2 text-base md:text-lg font-normal text-gray-300" style={{ fontFamily: 'Paperlogy', fontWeight: 400 }}>렌잇</span>
+            <span className="ml-2 text-lg md:text-lg font-normal text-gray-300" style={{ fontFamily: 'Paperlogy', fontWeight: 400 }}>렌잇</span>
           </Link>
           
           <div className="hidden md:flex space-x-8 items-center">

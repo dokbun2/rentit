@@ -43,11 +43,8 @@ const HeroSection = () => {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4">
               <span className="text-white">전문적인 </span>
               <span className="text-primary">렌탈 비즈니스</span>
-              <span className="block md:hidden text-white"> 컨설팅</span>
-              <span className="hidden md:inline text-white">
-                <br className="hidden md:block" />
-                컨설팅
-              </span>
+              <br />
+              <span className="text-white">컨설팅</span>
             </h1>
             
             <motion.p 

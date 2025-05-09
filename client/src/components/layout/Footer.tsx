@@ -50,7 +50,7 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <Link href="/" className="text-2xl font-bold text-white flex items-center mb-6">
-              <span className="text-primary">Rent</span><span className="text-secondary">It</span>
+              <span className="text-primary">REN</span><span className="text-secondary">'T</span>
               <span className="ml-2 text-sm font-normal text-gray-300">렌잇</span>
             </Link>
             
@@ -76,7 +76,7 @@ const Footer = () => {
           
           {/* Services Links */}
           <div>
-            <h4 className="text-xl font-bold mb-6">서비스</h4>
+            <h4 className="text-xl font-bold mb-6">렌탈솔루션</h4>
             
             <ul className="space-y-3">
               <li>
@@ -172,7 +172,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} 렌잇(RentIt). All rights reserved.
+              &copy; {new Date().getFullYear()} 렌잇(REN'T). All rights reserved.
             </p>
             
             <div className="flex space-x-4">

@@ -62,17 +62,15 @@ const FeaturesSection = () => {
               whileInView="show"
               viewport={{ once: true, amount: 0.1 }}
               variants={fadeIn("up", 0.2 + index * 0.1)}
-              className="glass-effect rounded-xl p-8 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
+              className="glass-effect rounded-xl p-8 flex items-center text-left transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
             >
-              <div className={`w-16 h-16 rounded-full ${feature.iconBgClass} flex items-center justify-center mb-6`}>
+              <div className={`w-16 h-16 rounded-full ${feature.iconBgClass} flex items-center justify-center mr-6 shrink-0`}>
                 {feature.icon}
               </div>
-              
-              <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
-              
-              <p className="text-gray-400">
-                {feature.description}
-              </p>
+              <div>
+                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                <p className="text-gray-400">{feature.description}</p>
+              </div>
             </motion.div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { supabase } from '../lib/supabaseClient';
 
@@ -9,6 +9,11 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   
   const [, setLocation] = useLocation();
+
+  // 강제로 다크모드 적용 (테스트용)
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,19 +37,19 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h2 className="mb-6 text-center text-2xl font-bold text-primary-dark">관리자 로그인</h2>
+    <div className="flex min-h-screen items-center justify-center bg-zinc-900 text-white">
+      <div className="w-full max-w-md rounded-xl bg-zinc-800 border border-zinc-700 p-8 shadow-xl">
+        <h2 className="mb-6 text-center text-2xl font-bold text-purple-400">관리자 로그인</h2>
         
         {error && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-red-700">
+          <div className="mb-4 rounded bg-red-900/50 border border-red-600 p-3 text-red-200">
             {error}
           </div>
         )}
         
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label htmlFor="email" className="mb-2 block text-sm font-medium">
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-200">
               이메일
             </label>
             <input
@@ -52,13 +57,13 @@ export default function AdminLogin() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-primary-dark focus:outline-none"
+              className="w-full rounded-md border border-zinc-600 bg-zinc-700/50 px-3 py-2 text-white shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
               required
             />
           </div>
           
-          <div className="mb-6">
-            <label htmlFor="password" className="mb-2 block text-sm font-medium">
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-200">
               비밀번호
             </label>
             <input
@@ -66,7 +71,7 @@ export default function AdminLogin() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-primary-dark focus:outline-none"
+              className="w-full rounded-md border border-zinc-600 bg-zinc-700/50 px-3 py-2 text-white shadow-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
               required
             />
           </div>
@@ -74,7 +79,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-primary-dark py-2 text-white hover:bg-primary transition disabled:opacity-70"
+            className="w-full rounded-md bg-purple-600 py-2 font-semibold text-white shadow-sm hover:bg-purple-500 transition disabled:opacity-70"
           >
             {loading ? '로그인 중...' : '로그인'}
           </button>

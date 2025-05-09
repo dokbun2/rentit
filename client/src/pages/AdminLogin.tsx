@@ -19,7 +19,7 @@ export default function AdminLogin() {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
     
-    if (!supabaseUrl || !supabaseKey) {
+    if (!supabaseUrl || !supabaseKey || !supabase) {
       setEnvError(true);
       setError('Supabase 환경 변수가 설정되지 않았습니다. 관리자에게 문의하세요.');
     }
@@ -33,8 +33,8 @@ export default function AdminLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (envError) {
-      return; // 환경 변수 오류가 있으면 로그인 시도하지 않음
+    if (envError || !supabase) {
+      return; // 환경 변수 오류가 있거나 supabase가 초기화되지 않은 경우 로그인 시도하지 않음
     }
     
     setLoading(true);

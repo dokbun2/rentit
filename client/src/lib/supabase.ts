@@ -9,8 +9,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase 환경 변수가 설정되지 않았습니다. 어드민 기능이 작동하지 않을 수 있습니다.');
 }
 
-// Supabase 클라이언트 생성
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Supabase 클라이언트 생성 (브라우저가 있는 경우에만)
+export const supabase = typeof window !== 'undefined' 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
 
 // 타입 내보내기
 export type { SupabaseClient } from '@supabase/supabase-js';

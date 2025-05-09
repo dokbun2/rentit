@@ -31,6 +31,16 @@
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { 
+      "src": "/admin/login", 
+      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "dest": "/index.html" 
+    },
+    { 
+      "src": "/admin/dashboard", 
+      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "dest": "/index.html" 
+    },
+    { 
       "src": "/admin/(.*)", 
       "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
       "dest": "/index.html" 

@@ -110,13 +110,13 @@ const HeroSection = () => {
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">렌탈사 설립 전문 컨설팅</span>
+                    <span className="text-gray-300 text-base">렌탈사설립 전문컨설팅</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">최신 렌탈 시스템 구축</span>
+                    <span className="text-gray-300 text-base">최신 렌탈전산 시스템 구축</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">

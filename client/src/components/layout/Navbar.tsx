@@ -48,10 +48,22 @@ const Navbar = () => {
       scrolled ? "glass-effect py-3" : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 md:px-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center md:justify-between">
+          {/* 모바일에서 메뉴 버튼 (왼쪽에 배치) */}
+          <div className="md:hidden flex items-center">
+            <button 
+              className="text-white focus:outline-none flex items-center h-full my-auto"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+          
+          {/* 로고 - 모바일에서는 중앙정렬 */}
           <Link
             href="/"
-            className="text-3xl text-white flex items-center"
+            className="text-3xl text-white flex items-center md:flex-none flex-grow md:flex-grow-0 justify-center md:justify-start"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">
@@ -61,6 +73,7 @@ const Navbar = () => {
             </div>
           </Link>
           
+          {/* PC 메뉴 */}
           <div className="hidden md:flex space-x-8 items-center">
             <button
               onClick={() => handleNavClick("#about")}
@@ -91,14 +104,8 @@ const Navbar = () => {
             </Button>
           </div>
           
-          <button 
-            className="md:hidden text-white focus:outline-none flex items-center h-full my-auto"
-            style={{ marginTop: '1px' }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* 모바일에서 빈 공간으로 균형 맞추기 */}
+          <div className="md:hidden w-6"></div>
         </div>
       </div>
       

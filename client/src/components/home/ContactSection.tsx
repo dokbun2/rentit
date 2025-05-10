@@ -5,10 +5,6 @@ import {
   Phone, 
   Mail, 
   Clock, 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Linkedin,
   BookOpen
 } from "lucide-react";
 import { 
@@ -156,7 +152,7 @@ const ContactSection = () => {
             variants={fadeIn("right", 0.3)}
           >
             {/* Contact Information */}
-            <GlassEffect className="rounded-xl p-8 mb-8">
+            <GlassEffect className="rounded-xl p-8">
               <h3 className="text-2xl font-bold mb-6">REN'T</h3>
               
               <div className="space-y-6">
@@ -199,29 +195,6 @@ const ContactSection = () => {
                     <p className="text-gray-400">월-금: 09:00 - 18:00<br/>토, 일, 공휴일: 휴무</p>
                   </div>
                 </div>
-              </div>
-            </GlassEffect>
-            
-            {/* Social Media Links */}
-            <GlassEffect className="rounded-xl p-8">
-              <h3 className="text-xl font-bold mb-6">소셜 미디어</h3>
-              
-              <div className="flex space-x-4">
-                <a href="#" className="w-12 h-12 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-primary hover:bg-dark-light transition-all">
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a href="#" className="w-12 h-12 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-primary hover:bg-dark-light transition-all">
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a href="#" className="w-12 h-12 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-primary hover:bg-dark-light transition-all">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="#" className="w-12 h-12 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-primary hover:bg-dark-light transition-all">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a href="#" className="w-12 h-12 rounded-full bg-background flex items-center justify-center text-gray-400 hover:text-primary hover:bg-dark-light transition-all">
-                  <BookOpen className="h-5 w-5" />
-                </a>
               </div>
             </GlassEffect>
           </motion.div>

@@ -44,16 +44,16 @@ const HeroSection = () => {
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
-              <span className="text-primary">렌잇이 </span>
-              <span className="text-white">알려드립니다.</span>
+              <span className="text-white">렌잇이 </span>
+              <span className="text-primary">알려드립니다.</span>
             </h1>
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
               className="text-lg md:text-xl text-gray-300 mb-8"
             >
-              렌탈사 설립, 렌탈전산구축, 렌탈부업<br/>
-              렌탈 비즈니스의 모든 것을 도와드립니다.
+              렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
+              렌탈비즈니스의 모든 것을 도와드립니다.
             </motion.p>
             
             <motion.div 
@@ -100,7 +100,7 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">렌잇과 함께 성장하세요</h3>
+                    <h3 className="text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
                     <p className="text-gray-400 text-lg">성공적인 렌탈 비즈니스의 시작</p>
                   </div>
                 </div>

@@ -3,35 +3,10 @@ import {
   Facebook, 
   Twitter, 
   Instagram, 
-  Linkedin, 
-  Send 
+  Linkedin
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
 
 const Footer = () => {
-  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const email = (form.elements[0] as HTMLInputElement).value;
-    
-    if (!email) {
-      toast({
-        title: "이메일을 입력해주세요",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // This would typically be an API call to subscribe
-    toast({
-      title: "뉴스레터 구독이 완료되었습니다",
-      description: "정기적인 업데이트를 받아보실 수 있습니다.",
-    });
-    form.reset();
-  };
-
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
@@ -46,7 +21,7 @@ const Footer = () => {
   return (
     <footer className="bg-background pt-16 pb-8 relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Company Info */}
           <div>
             <Link href="/" className="text-2xl font-bold text-white flex items-center mb-6">
@@ -57,21 +32,6 @@ const Footer = () => {
             <p className="text-gray-400 mb-6">
               렌탈 비즈니스의 성공적인 시작과 성장을 위한 전문 컨설팅 서비스를 제공합니다. 렌잇과 함께 성장하세요.
             </p>
-            
-            <div className="flex space-x-3">
-              <a href="#" className="w-10 h-10 rounded-full dark-light flex items-center justify-center text-gray-400 hover:text-primary transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full dark-light flex items-center justify-center text-gray-400 hover:text-primary transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full dark-light flex items-center justify-center text-gray-400 hover:text-primary transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full dark-light flex items-center justify-center text-gray-400 hover:text-primary transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </div>
           </div>
           
           {/* Services Links */}
@@ -138,33 +98,6 @@ const Footer = () => {
                 </a>
               </li>
             </ul>
-          </div>
-          
-          {/* Newsletter */}
-          <div>
-            <h4 className="text-xl font-bold mb-6">뉴스레터</h4>
-            
-            <p className="text-gray-400 mb-4">
-              최신 렌탈 시장 동향과 비즈니스 팁을 정기적으로 받아보세요.
-            </p>
-            
-            <form className="mb-4 flex" onSubmit={handleNewsletterSubmit}>
-              <Input 
-                type="email" 
-                placeholder="이메일 주소" 
-                className="flex-1 bg-dark-light border-gray-700 focus:border-primary text-white rounded-r-none"
-              />
-              <Button 
-                type="submit" 
-                className="bg-primary hover:bg-purple-600 rounded-l-none px-4"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
-            
-            <p className="text-gray-500 text-sm">
-              구독을 통해 이벤트 및 프로모션 정보를 수신하는 것에 동의합니다.
-            </p>
           </div>
         </div>
         

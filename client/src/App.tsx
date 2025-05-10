@@ -6,11 +6,13 @@ import NotFound from "@/pages/not-found";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NewsManagement from "./pages/NewsManagement";
+import RentalNews from "./pages/RentalNews";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/news" component={RentalNews} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/adminlogin" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />

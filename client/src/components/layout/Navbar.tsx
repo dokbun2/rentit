@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,13 @@ import { getPaperlogyStyle } from "@/lib/fonts";
 const navLinks = [
   { name: "회사소개", href: "#about" },
   { name: "렌탈솔루션", href: "#services" },
-  { name: "렌탈뉴스", href: "#news" },
+  { name: "렌탈뉴스", href: "/news" },
 ];
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,15 +26,19 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
+  const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    const element = document.querySelector(sectionId);
-    if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth",
-      });
+    if (href.startsWith("#")) {
+      const element = document.querySelector(href);
+      if (element) {
+        const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      setLocation(href);
     }
   };
 
@@ -58,25 +63,28 @@ const Navbar = () => {
           
           <div className="hidden md:flex space-x-8 items-center">
             <button
-              onClick={() => scrollToSection("#about")}
+              onClick={() => handleNavClick("#about")}
               className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
             >
               회사소개
             </button>
             <button
-              onClick={() => scrollToSection("#services")}
+              onClick={() => handleNavClick("#services")}
               className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
             >
               렌탈솔루션
             </button>
             <button
-              onClick={() => scrollToSection("#news")}
-              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+              onClick={() => handleNavClick("/news")}
+              className={cn(
+                "nav-underline text-gray-300 hover:text-white transition-colors text-lg",
+                location === "/news" && "text-primary"
+              )}
             >
               렌탈뉴스
             </button>
             <Button 
-              onClick={() => scrollToSection("#contact")}
+              onClick={() => handleNavClick("#contact")}
               className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
             >
               무료 상담
@@ -105,25 +113,28 @@ const Navbar = () => {
         >
           <div className="flex flex-col space-y-3">
             <button
-              onClick={() => scrollToSection("#about")}
+              onClick={() => handleNavClick("#about")}
               className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
             >
               회사소개
             </button>
             <button
-              onClick={() => scrollToSection("#services")}
+              onClick={() => handleNavClick("#services")}
               className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
             >
               렌탈솔루션
             </button>
             <button
-              onClick={() => scrollToSection("#news")}
-              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+              onClick={() => handleNavClick("/news")}
+              className={cn(
+                "nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg",
+                location === "/news" && "text-primary"
+              )}
             >
               렌탈뉴스
             </button>
             <Button 
-              onClick={() => scrollToSection("#contact")}
+              onClick={() => handleNavClick("#contact")}
               className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"
             >
               무료 상담

@@ -41,18 +41,18 @@ const HeroSection = () => {
             className="md:w-1/2 md:pr-8"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
-              <span className="text-primarywhite">렌탈 비즈니스 </span>
+              <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
-              <span className="text-white">렌잇과 </span>
-              <span className="text-primary">함께 해요!</span>
+              <span className="text-primary">렌잇이 </span>
+              <span className="text-white">알려드립니다.</span>
             </h1>
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
               className="text-lg md:text-xl text-gray-300 mb-8"
             >
-              렌탈사 설립부터 시스템 구축, 부업 컨설팅까지<br/>
+              렌탈사 설립, 렌탈전산구축, 렌탈부업<br/>
               렌탈 비즈니스의 모든 것을 도와드립니다.
             </motion.p>
             
@@ -64,14 +64,14 @@ const HeroSection = () => {
                 onClick={() => scrollToSection("#services")}
                 className="px-8 py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
-                렌탈솔루션이란?
+                렌탈솔루션
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}
                 variant="outline" 
                 className="px-8 py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
               >
-                상담 문의하기
+                무료상담신청
               </Button>
             </motion.div>
           </motion.div>

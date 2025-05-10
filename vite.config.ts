@@ -23,8 +23,8 @@ export default defineConfig({
       output: {
         assetFileNames: (assetInfo) => {
           const info = assetInfo as { name?: string };
-          if (info.name?.endsWith('.ttf')) {
-            return 'Paperlogy/[name][extname]';
+          if (info.name?.endsWith('.ttf') || info.name?.endsWith('.woff')) {
+            return 'fonts/[name][extname]';
           }
           return 'assets/[name]-[hash][extname]';
         }

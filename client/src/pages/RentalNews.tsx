@@ -4,10 +4,10 @@ import { getNews } from "@/lib/api/news";
 import { News } from "@/types/news";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 
 export default function RentalNews() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { data: news, isLoading } = useQuery<News[]>({
     queryKey: ["news"],
     queryFn: getNews,
@@ -28,7 +28,7 @@ export default function RentalNews() {
           <h1 className="text-4xl font-bold text-foreground">렌탈 뉴스</h1>
           <Button
             variant="outline"
-            onClick={() => navigate("/")}
+            onClick={() => setLocation("/")}
             className="hover:bg-primary hover:text-white transition-colors"
           >
             홈으로 돌아가기

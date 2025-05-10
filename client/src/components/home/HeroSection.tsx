@@ -40,7 +40,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="md:w-1/2 md:pr-8"
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
               <span className="text-white">전문적인 </span>
               <span className="text-primary">렌탈 비즈니스</span>
               <br />
@@ -49,7 +49,7 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
-              className="text-2xl text-gray-300 mb-8"
+              className="text-lg md:text-xl text-gray-300 mb-8"
             >
               렌탈사 설립부터 시스템 구축, 부업 컨설팅까지<br/>
               렌탈 비즈니스의 모든 것을 도와드립니다.

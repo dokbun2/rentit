@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
   ],
+  server: {
+    port: 5002,
+  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

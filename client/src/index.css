@@ -119,6 +119,52 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-purple-500;
   }
+
+  /* 폰트 클래스 직접 추가 */
+  .font-paperlogy-thin {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 100;
+  }
+
+  .font-paperlogy-extralight {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 200;
+  }
+
+  .font-paperlogy-light {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 300;
+  }
+
+  .font-paperlogy-regular {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 400;
+  }
+
+  .font-paperlogy-medium {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 500;
+  }
+
+  .font-paperlogy-semibold {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 600;
+  }
+
+  .font-paperlogy-bold {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 700;
+  }
+
+  .font-paperlogy-extrabold {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 800;
+  }
+
+  .font-paperlogy-black {
+    font-family: 'Paperlogy', sans-serif;
+    font-weight: 900;
+  }
 }
 
 /* For the gradient border animation */

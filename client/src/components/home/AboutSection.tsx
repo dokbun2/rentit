@@ -72,7 +72,7 @@ const AboutSection = () => {
               시장 조사부터 비즈니스 모델 구축, 시스템 개발까지 종합적인 컨설팅 서비스로 고객의 니즈에 맞는 최적의 결과를 도출합니다.
             </p>
             
-            <div className="flex flex-col items-start gap-4 mb-8 w-full max-w-md mx-auto pl-36">
+            <div className="flex flex-col items-start gap-4 mb-8 w-full max-w-md mx-auto pl-8 md:pl-36">
               <div className="flex items-center w-full">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
                   <Trophy className="h-5 w-5 text-primary" />

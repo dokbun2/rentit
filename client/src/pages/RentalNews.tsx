@@ -432,7 +432,7 @@ export default function RentalNews() {
                 initial="hidden"
                 animate="show"
                 variants={fadeIn("up", 0.2)}
-                className="grid grid-cols-1 gap-6"
+                className="grid grid-cols-1 gap-8"
               >
                 {(activeCategory ? news.filter(item => item.category === activeCategory) : news).map((item, index) => (
                   <motion.div
@@ -440,57 +440,61 @@ export default function RentalNews() {
                     initial="hidden"
                     animate="show"
                     variants={fadeIn("up", 0.2 + index * 0.05)}
-                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 flex flex-row items-stretch"
+                    className="group glass-effect rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 border border-gray-800/50 hover:border-primary/20 flex flex-row items-center p-4 md:p-6"
                     onClick={() => handleViewDetail(item)}
                   >
-                    {/* 이미지 컨테이너 - 정사각형 썸네일 (150x150) */}
-                    <div className="flex-shrink-0 w-[100px] h-[100px] md:w-[150px] md:h-[150px] relative overflow-hidden">
+                    {/* 이미지 컨테이너 - 더 큰 정사각형 썸네일 */}
+                    <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md mr-4 md:mr-6">
                       <img
-                        src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"}
+                        src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800"}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800";
                         }}
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
 
                     {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
-                    <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
+                    <div className="flex-1 flex flex-col justify-between h-full py-2">
                       <div>
-                        <h3 className="text-lg lg:text-xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1">
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight">
                           {item.title}
                         </h3>
-                        <p className="text-gray-400 text-sm mb-3 line-clamp-2 text-left">
+                        <p className="text-gray-400 text-sm md:text-base mb-4 line-clamp-2 text-left leading-relaxed">
                           {item.content}
                         </p>
                       </div>
                       
-                      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mt-auto">
-                        <div className="flex items-center gap-2">
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary`}>
+                      <div className="flex flex-wrap md:flex-row md:justify-between md:items-center gap-3 mt-auto">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <span className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-primary/20 text-primary backdrop-blur-sm`}>
                             {item.category || "정보"}
                           </span>
-                          <span className="text-xs text-gray-500">{formatDate(item.created_at)}</span>
+                          <span className="text-xs text-gray-400 flex items-center">
+                            <Calendar className="h-3 w-3 mr-1 inline-block" />
+                            {formatDate(item.created_at)}
+                          </span>
                         </div>
                         
                         <div className="flex justify-between items-center">
                           <button
-                            className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-sm font-medium"
+                            className="inline-flex items-center text-primary hover:text-white hover:bg-primary/80 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 group-hover:bg-primary/30"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleViewDetail(item);
                             }}
                           >
-                            더보기 <ArrowRight className="ml-1 h-4 w-4" />
+                            더보기 <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                           </button>
                           {isAdmin && (
-                            <div className="flex gap-1 ml-2">
+                            <div className="flex gap-2 ml-3">
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
-                                className="w-7 h-7 text-gray-500 hover:text-primary"
+                                className="w-8 h-8 rounded-full text-gray-400 hover:text-primary hover:bg-primary/10"
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
@@ -498,7 +502,7 @@ export default function RentalNews() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
-                                className="w-7 h-7 text-gray-500 hover:text-red-500"
+                                className="w-8 h-8 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-500/10"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>

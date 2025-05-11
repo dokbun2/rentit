@@ -355,14 +355,37 @@ function NewsManager() {
         throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
       }
       
+      console.log('Supabase URL 확인:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Supabase 클라이언트 확인:', !!supabase);
+      
       setLoading(true);
       const { data, error } = await supabase
         .from('news')
         .select('*')
-        .order('published_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setNewsList(data || []);
+      if (error) {
+        console.error('뉴스 조회 오류 상세:', error);
+        throw error;
+      }
+      
+      console.log('로드된 원본 뉴스 데이터:', data);
+      
+      // 필드 이름 매핑
+      const mappedData = data?.map(item => ({
+        id: item.id,
+        title: item.title,
+        category: item.category,
+        tag: item.tag,
+        tag_color: item.tag_color,
+        description: item.content,      // content -> description 매핑
+        image: item.image_url,         // image_url -> image 매핑
+        published_at: item.created_at, // created_at -> published_at 매핑
+        active: item.active,
+      })) || [];
+      
+      console.log('매핑된 뉴스 데이터:', mappedData);
+      setNewsList(mappedData);
     } catch (error) {
       console.error('뉴스 데이터 로딩 오류:', error);
     } finally {
@@ -419,38 +442,45 @@ function NewsManager() {
     if (!supabase) return;
 
     try {
+      console.log('Supabase URL 확인:', import.meta.env.VITE_SUPABASE_URL);
+      console.log('Supabase 클라이언트 확인:', !!supabase);
+      console.log('전송할 데이터:', formData);
+      
+      // NewsItem 인터페이스와 실제 테이블 필드 이름 간의 매핑
+      const newsData = {
+        title: formData.title,
+        category: formData.category,
+        tag: formData.tag,
+        tag_color: formData.tag_color,
+        content: formData.description, // description -> content 매핑
+        image_url: formData.image,    // image -> image_url 매핑
+        active: formData.active,
+      };
+      
       if (formData.id) {
         // 수정
         const { error } = await supabase
           .from('news')
-          .update({
-            title: formData.title,
-            category: formData.category,
-            tag: formData.tag,
-            tag_color: formData.tag_color,
-            description: formData.description,
-            image: formData.image,
-            active: formData.active,
-          })
+          .update(newsData)
           .eq('id', formData.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('뉴스 수정 오류 상세:', error);
+          throw error;
+        }
       } else {
         // 생성
         const { error } = await supabase
           .from('news')
           .insert([{
-            title: formData.title,
-            category: formData.category,
-            tag: formData.tag,
-            tag_color: formData.tag_color,
-            description: formData.description,
-            image: formData.image,
-            active: formData.active,
-            published_at: new Date().toISOString(),
+            ...newsData,
+            created_at: new Date().toISOString(), // published_at -> created_at 매핑
           }]);
 
-        if (error) throw error;
+        if (error) {
+          console.error('뉴스 생성 오류 상세:', error);
+          throw error;
+        }
       }
 
       // 성공 후 초기화 및 새로고침

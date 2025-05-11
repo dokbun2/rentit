@@ -5,12 +5,15 @@ import { News } from "@/types/news";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { motion } from "framer-motion";
+import { fadeIn } from "@/lib/motion";
 import { 
   Dialog, 
   DialogContent, 
   DialogHeader, 
   DialogTitle, 
-  DialogFooter
+  DialogFooter,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { 
   Form, 
@@ -26,7 +29,7 @@ import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PlusCircle, Edit, Trash2, Calendar } from "lucide-react";
+import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 // 뉴스 작성 폼 유효성 검사 스키마
@@ -35,6 +38,9 @@ const newsFormSchema = z.object({
   content: z.string().min(10, { message: "내용을 10자 이상 입력해주세요" }),
   image_url: z.string().url({ message: "유효한 URL을 입력해주세요" }).optional().or(z.literal('')),
   link: z.string().url({ message: "유효한 URL을 입력해주세요" }).optional().or(z.literal('')),
+  category: z.string().optional().or(z.literal('')),
+  tag: z.string().optional().or(z.literal('')),
+  tag_color: z.string().optional().or(z.literal('')),
 });
 
 type NewsFormValues = z.infer<typeof newsFormSchema>;
@@ -46,9 +52,21 @@ export default function RentalNews() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedNews, setSelectedNews] = useState<News | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [viewDetailMode, setViewDetailMode] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   // 사용자 인증 상태 확인
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // URL에서 ID 파라미터 가져오기
+  const getNewsIdFromUrl = () => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      return id ? parseInt(id, 10) : null;
+    }
+    return null;
+  };
 
   // 뉴스 데이터 불러오기
   const { data: news, isLoading, refetch } = useQuery<News[]>({
@@ -58,13 +76,56 @@ export default function RentalNews() {
 
   // 사용자 인증 상태 확인
   const checkAuthStatus = async () => {
-    const { data } = await supabase.auth.getSession();
-    setIsAdmin(!!data.session);
+    try {
+      const { data } = await supabase.auth.getSession();
+      
+      if (data.session) {
+        // 현재 사용자 정보 가져오기
+        const { user } = data.session;
+        
+        // 관리자 이메일 목록 - 실제 관리자 이메일로 변경하세요
+        const adminEmails = ['admin@rentit.com', 'ceo@rnpick.co.kr']; 
+        
+        // 사용자 메타데이터에서 역할 확인 또는 이메일로 관리자 여부 확인
+        const isAdminByEmail = adminEmails.includes(user.email || '');
+        const isAdminByMetadata = user.user_metadata?.role === 'admin';
+        
+        console.log('현재 로그인 사용자:', user.email);
+        console.log('관리자 여부 (이메일):', isAdminByEmail);
+        console.log('관리자 여부 (메타데이터):', isAdminByMetadata);
+        
+        // 관리자 상태 설정 (이메일 또는 메타데이터 기반)
+        setIsAdmin(isAdminByEmail || isAdminByMetadata);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('인증 상태 확인 오류:', error);
+      setIsAdmin(false);
+    }
   };
+
+  // URL에서 ID를 읽어 해당 뉴스 상세보기로 자동 이동
+  useEffect(() => {
+    const newsId = getNewsIdFromUrl();
+    if (newsId && news) {
+      const targetNews = news.find(item => item.id === newsId);
+      if (targetNews) {
+        setSelectedNews(targetNews);
+        setViewDetailMode(true);
+      }
+    }
+  }, [news]);
 
   // 컴포넌트 마운트 시 인증 상태 확인
   useEffect(() => {
     checkAuthStatus();
+    // dark 모드 적용
+    document.documentElement.classList.add('dark');
+    
+    return () => {
+      document.documentElement.classList.remove('dark');
+    };
   }, []);
 
   // 뉴스 작성 폼
@@ -75,6 +136,9 @@ export default function RentalNews() {
       content: "",
       image_url: "",
       link: "",
+      category: "렌탈뉴스",
+      tag: "",
+      tag_color: "bg-primary/30",
     },
   });
 
@@ -86,6 +150,9 @@ export default function RentalNews() {
       content: "",
       image_url: "",
       link: "",
+      category: "",
+      tag: "",
+      tag_color: "bg-primary/30",
     },
   });
 
@@ -101,6 +168,9 @@ export default function RentalNews() {
           content: data.content,
           image_url: data.image_url || null,
           link: data.link || null,
+          category: data.category || "렌탈뉴스",
+          tag: data.tag || null,
+          tag_color: data.tag_color || "bg-primary/30",
           created_at: new Date().toISOString(),
           active: true
         }])
@@ -144,6 +214,9 @@ export default function RentalNews() {
           content: data.content,
           image_url: data.image_url || null,
           link: data.link || null,
+          category: data.category || "렌탈뉴스",
+          tag: data.tag || null,
+          tag_color: data.tag_color || "bg-primary/30",
         })
         .eq('id', selectedNews.id)
         .select();
@@ -194,6 +267,7 @@ export default function RentalNews() {
       });
 
       setIsDeleteDialogOpen(false);
+      setViewDetailMode(false);
       refetch(); // 뉴스 목록 새로고침
     } catch (error) {
       console.error("뉴스 삭제 오류:", error);
@@ -215,6 +289,9 @@ export default function RentalNews() {
       content: item.content,
       image_url: item.image_url || "",
       link: item.link || "",
+      category: item.category || "렌탈뉴스",
+      tag: item.tag || "",
+      tag_color: item.tag_color || "bg-primary/30",
     });
     setIsEditDialogOpen(true);
   };
@@ -225,314 +302,674 @@ export default function RentalNews() {
     setIsDeleteDialogOpen(true);
   };
 
+  // 뉴스 상세 보기
+  const handleViewDetail = (item: News) => {
+    setSelectedNews(item);
+    setViewDetailMode(true);
+    window.scrollTo(0, 0);
+  };
+
+  // 뉴스 목록으로 돌아가기
+  const handleBackToList = () => {
+    setSelectedNews(null);
+    setViewDetailMode(false);
+    setActiveCategory(null); // 카테고리 필터 초기화
+    
+    // URL에서 ID 파라미터 제거
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('id');
+      window.history.replaceState({}, '', url.toString());
+    }
+    
+    window.scrollTo(0, 0);
+  };
+
+  // 카테고리 변경 시 애니메이션 리셋을 위한 키 값
+  const newsGridKey = activeCategory || 'all';
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+          <span className="sr-only">로딩 중...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-foreground">렌탈 뉴스</h1>
-          <div className="flex gap-4">
-            {isAdmin && (
-              <Button
-                onClick={() => setIsCreateDialogOpen(true)}
-                className="bg-primary hover:bg-primary/90 text-white"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" /> 새 글 작성
-              </Button>
-            )}
-            <Button
-              variant="outline"
-              onClick={() => setLocation("/")}
-              className="hover:bg-primary hover:text-white transition-colors"
+    <div className="min-h-screen bg-background pb-20 dark-lighter relative overflow-hidden">
+      {/* 배경 효과 */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full opacity-5 -ml-40 -mt-40"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full opacity-5 -mr-60 -mb-60"></div>
+      <div className="absolute top-1/3 right-10 w-48 h-48 bg-gradient-radial from-primary/20 to-transparent opacity-30"></div>
+      
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        {!viewDetailMode ? (
+          <>
+            {/* 헤더 섹션 */}
+            <motion.div
+              initial="hidden"
+              animate="show"
+              variants={fadeIn("down", 0.2)}
+              className="flex flex-col md:flex-row justify-between items-center mb-12"
             >
-              홈으로 돌아가기
-            </Button>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {news?.map((item) => (
-            <div
-              key={item.id}
-              className="bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col"
-            >
-              {item.image_url && (
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // 이미지 로드 실패 시 기본 이미지로 대체
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
-                    }}
-                  />
-                </div>
-              )}
-              <div className="p-6 flex-grow">
-                <h2 className="text-xl font-semibold mb-2 text-foreground">
-                  {item.title}
-                </h2>
-                <p className="text-muted-foreground mb-4 line-clamp-3">
-                  {item.content}
-                </p>
-                <div className="flex items-center text-sm text-muted-foreground mb-4">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  <span>{formatDate(item.created_at)}</span>
-                </div>
-              </div>
-              <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center">
-                <Button
-                  variant="ghost"
-                  onClick={() => item.link ? window.open(item.link, "_blank") : null}
-                  className="text-primary hover:text-primary/80"
-                  disabled={!item.link}
+              <div>
+                <motion.h1 
+                  variants={fadeIn("up", 0.1)}
+                  className="text-4xl md:text-5xl font-bold text-foreground mb-2"
                 >
-                  자세히 보기
+                  렌탈 <span className="text-primary">뉴스</span>
+                </motion.h1>
+                <motion.p 
+                  variants={fadeIn("up", 0.2)}
+                  className="text-gray-400"
+                >
+                  렌탈 시장의 최신 트렌드와 업계 소식을 확인하세요
+                </motion.p>
+              </div>
+              <motion.div 
+                variants={fadeIn("up", 0.3)}
+                className="flex gap-4 mt-4 md:mt-0"
+              >
+                <Button
+                  variant="outline"
+                  onClick={() => setLocation("/")}
+                  className="border-gray-700 hover:bg-primary hover:text-white hover:border-primary transition-all"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> 홈으로 돌아가기
+                </Button>
+              </motion.div>
+            </motion.div>
+            
+            {/* 카테고리 필터 (선택 사항) */}
+            {news && news.length > 0 && (
+              <motion.div
+                initial="hidden"
+                animate="show"
+                variants={fadeIn("up", 0.3)}
+                className="mb-8 overflow-x-auto pb-2"
+              >
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`rounded-full ${
+                      !activeCategory ? 'bg-primary text-white' : 'hover:bg-primary/10'
+                    }`}
+                    onClick={() => setActiveCategory(null)}
+                  >
+                    전체
+                  </Button>
+                  {Array.from(new Set(news.map(item => item.category))).map(
+                    (category, index) => (
+                      category && (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          className={`rounded-full whitespace-nowrap ${
+                            activeCategory === category 
+                              ? 'bg-primary text-white' 
+                              : 'hover:bg-primary/10'
+                          }`}
+                          onClick={() => setActiveCategory(category)}
+                        >
+                          {category}
+                        </Button>
+                      )
+                    )
+                  )}
+                </div>
+              </motion.div>
+            )}
+            
+            {/* 뉴스 그리드 */}
+            {news && news.length > 0 && (
+              <motion.div
+                key={newsGridKey}
+                initial="hidden"
+                animate="show"
+                variants={fadeIn("up", 0.2)}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              >
+                {(activeCategory ? news.filter(item => item.category === activeCategory) : news).map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial="hidden"
+                    animate="show"
+                    variants={fadeIn("up", 0.2 + index * 0.05)}
+                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer"
+                    onClick={() => handleViewDetail(item)}
+                  >
+                    <div className="relative h-48">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // 이미지 로드 실패 시 기본 이미지로 대체
+                          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                        }}
+                      />
+                      {/* 카테고리 뱃지 */}
+                      <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-sm text-gray-300">
+                        {item.category || "렌탈뉴스"}
+                      </div>
+                      {/* 그라데이션 오버레이 */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute bottom-0 left-0 p-4">
+                          <p className="text-white font-medium">자세히 보기</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-center mb-3">
+                        <p className="text-gray-500 text-base group-hover:text-primary transition-colors">
+                          {formatDate(item.created_at)}
+                        </p>
+                        <div className="flex space-x-2">
+                          {item.tag && (
+                            <span className={`px-2 py-1 ${item.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
+                              {item.tag}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">{item.title}</h3>
+                      
+                      <p className="text-gray-400 mb-6 line-clamp-3">
+                        {item.content}
+                      </p>
+                      
+                      <div className="flex justify-between items-center">
+                        <button 
+                          className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-base"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewDetail(item);
+                          }}
+                        >
+                          자세히 보기 <ArrowRight className="ml-2 h-4 w-4" />
+                        </button>
+                        
+                        {/* 관리자에게만 편집/삭제 버튼 표시 */}
+                        {isAdmin && (
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditClick(item);
+                              }}
+                              className="text-gray-500 hover:text-primary"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClick(item);
+                              }}
+                              className="text-gray-500 hover:text-red-500"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* 뉴스가 없을 경우 */}
+            {(!news || news.length === 0 || (activeCategory && news.filter(item => item.category === activeCategory).length === 0)) && (
+              <motion.div 
+                initial="hidden"
+                animate="show"
+                variants={fadeIn("up", 0.3)}
+                className="glass-effect rounded-xl p-12 text-center"
+              >
+                {activeCategory ? (
+                  <>
+                    <p className="text-muted-foreground text-lg mb-6">
+                      <span className="text-primary font-semibold">{activeCategory}</span> 카테고리에 등록된 뉴스가 없습니다.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="hover:bg-primary hover:text-white transition-colors"
+                      onClick={() => setActiveCategory(null)}
+                    >
+                      모든 뉴스 보기
+                    </Button>
+                  </>
+                ) : (
+                  <p className="text-muted-foreground text-lg mb-6">등록된 뉴스가 없습니다.</p>
+                )}
+              </motion.div>
+            )}
+          </>
+        ) : (
+          /* 상세 보기 모드 */
+          selectedNews && (
+            <motion.div
+              initial="hidden"
+              animate="show"
+              variants={fadeIn("up", 0.2)}
+              className="max-w-4xl mx-auto"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <Button
+                  variant="outline"
+                  onClick={handleBackToList}
+                  className="flex items-center gap-2 border-gray-700 hover:bg-background/50"
+                >
+                  <ArrowLeft className="h-4 w-4" /> 목록으로 돌아가기
                 </Button>
                 
+                {/* 관리자에게만 수정/삭제 버튼 표시 */}
                 {isAdmin && (
                   <div className="flex gap-2">
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleEditClick(item)}
-                      className="text-gray-500 hover:text-primary"
+                      variant="outline"
+                      onClick={() => handleEditClick(selectedNews)}
+                      className="flex items-center gap-2 border-gray-700 hover:text-primary"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-4 w-4" /> 수정하기
                     </Button>
                     <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteClick(item)}
-                      className="text-gray-500 hover:text-red-500"
+                      variant="destructive"
+                      onClick={() => handleDeleteClick(selectedNews)}
+                      className="flex items-center gap-2"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" /> 삭제하기
                     </Button>
                   </div>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 뉴스가 없을 경우 */}
-        {(!news || news.length === 0) && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg mb-4">등록된 뉴스가 없습니다.</p>
-            {isAdmin && (
-              <Button
-                onClick={() => setIsCreateDialogOpen(true)}
-                className="bg-primary hover:bg-primary/90 text-white"
-              >
-                <PlusCircle className="mr-2 h-4 w-4" /> 첫 뉴스 작성하기
-              </Button>
-            )}
-          </div>
+              
+              <div className="glass-effect rounded-xl overflow-hidden">
+                {/* 헤더 이미지 */}
+                <div className="relative h-[300px] md:h-[400px]">
+                  <img 
+                    src={selectedNews.image_url} 
+                    alt={selectedNews.title} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                    }}
+                  />
+                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="bg-background px-3 py-1 rounded-full text-sm text-gray-300">
+                        {selectedNews.category || "렌탈뉴스"}
+                      </span>
+                      {selectedNews.tag && (
+                        <span className={`px-2 py-1 ${selectedNews.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
+                          {selectedNews.tag}
+                        </span>
+                      )}
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white">{selectedNews.title}</h1>
+                    <div className="flex items-center mt-2 text-gray-300">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      {formatDate(selectedNews.created_at)}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 본문 내용 */}
+                <div className="p-8 md:p-12">
+                  <article className="prose prose-invert prose-lg md:prose-xl max-w-none">
+                    {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
+                    {selectedNews.content.split('\n\n').map((paragraph, idx) => (
+                      paragraph.trim() && (
+                        <p key={idx} className="text-gray-300 leading-relaxed mb-6">
+                          {paragraph}
+                        </p>
+                      )
+                    ))}
+                  </article>
+                  
+                  {/* 공유 및 링크 섹션 */}
+                  <div className="mt-12 pt-8 border-t border-gray-800">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+                      {/* 링크가 있는 경우 */}
+                      {selectedNews.link && (
+                        <div className="md:w-1/2">
+                          <Button 
+                            className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-400 py-6 text-lg"
+                            onClick={() => window.open(selectedNews.link, "_blank")}
+                          >
+                            상세 페이지 방문하기
+                          </Button>
+                        </div>
+                      )}
+                      
+                      {/* 관련 정보 섹션 */}
+                      <div className="flex flex-col space-y-2 md:text-right">
+                        <p className="text-gray-400">카테고리: <span className="text-primary">{selectedNews.category || "렌탈뉴스"}</span></p>
+                        <p className="text-gray-400">작성일: <span className="text-white">{formatDate(selectedNews.created_at)}</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* 관련 뉴스 */}
+              {news && news.length > 1 && (
+                <div className="mt-16">
+                  <h2 className="text-2xl font-bold mb-6">다른 <span className="text-primary">뉴스</span> 보기</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {news
+                      .filter(item => item.id !== selectedNews.id)
+                      .slice(0, 3)
+                      .map((item, index) => (
+                        <motion.div
+                          key={item.id}
+                          initial="hidden"
+                          animate="show"
+                          variants={fadeIn("up", 0.1 + index * 0.1)}
+                          className="glass-effect rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:shadow-primary/10 transition-all"
+                          onClick={() => handleViewDetail(item)}
+                        >
+                          <div className="h-40 relative">
+                            <img 
+                              src={item.image_url} 
+                              alt={item.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
+                              }}
+                            />
+                            {item.category && (
+                              <div className="absolute top-2 left-2 bg-background px-2 py-1 rounded text-xs text-gray-300">
+                                {item.category}
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-4">
+                            <h3 className="font-bold text-lg mb-2 line-clamp-2">{item.title}</h3>
+                            <p className="text-gray-400 text-sm">{formatDate(item.created_at)}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )
         )}
-
-        {/* 새 글 작성 다이얼로그 */}
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>새 뉴스 작성</DialogTitle>
-            </DialogHeader>
-            <Form {...createForm}>
-              <form onSubmit={createForm.handleSubmit(handleCreateSubmit)} className="space-y-6">
-                <FormField
-                  control={createForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>제목</FormLabel>
-                      <FormControl>
-                        <Input placeholder="뉴스 제목을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={createForm.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>내용</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="뉴스 내용을 입력하세요" 
-                          className="min-h-[200px]" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={createForm.control}
-                  name="image_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>이미지 URL (선택사항)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={createForm.control}
-                  name="link"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>링크 URL (선택사항)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="링크 URL을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <DialogFooter>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsCreateDialogOpen(false)}
-                    disabled={isSubmitting}
-                  >
-                    취소
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "처리 중..." : "등록하기"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-
-        {/* 글 수정 다이얼로그 */}
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>뉴스 수정</DialogTitle>
-            </DialogHeader>
-            <Form {...editForm}>
-              <form onSubmit={editForm.handleSubmit(handleEditSubmit)} className="space-y-6">
-                <FormField
-                  control={editForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>제목</FormLabel>
-                      <FormControl>
-                        <Input placeholder="뉴스 제목을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="content"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>내용</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="뉴스 내용을 입력하세요" 
-                          className="min-h-[200px]" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="image_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>이미지 URL (선택사항)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="link"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>링크 URL (선택사항)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="링크 URL을 입력하세요" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <DialogFooter>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    onClick={() => setIsEditDialogOpen(false)}
-                    disabled={isSubmitting}
-                  >
-                    취소
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "처리 중..." : "수정하기"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-
-        {/* 글 삭제 확인 다이얼로그 */}
-        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>뉴스 삭제</DialogTitle>
-            </DialogHeader>
-            <div className="py-4">
-              <p>정말로 이 뉴스를 삭제하시겠습니까?</p>
-              <p className="font-semibold mt-2">{selectedNews?.title}</p>
-            </div>
-            <DialogFooter>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => setIsDeleteDialogOpen(false)}
-                disabled={isSubmitting}
-              >
-                취소
-              </Button>
-              <Button 
-                type="button" 
-                variant="destructive" 
-                onClick={handleDelete}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "처리 중..." : "삭제하기"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
       </div>
+
+      {/* 새 글 작성 다이얼로그 */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl">새 뉴스 작성</DialogTitle>
+            <DialogDescription>렌탈 시장의 최신 소식을 작성해주세요</DialogDescription>
+          </DialogHeader>
+          <Form {...createForm}>
+            <form onSubmit={createForm.handleSubmit(handleCreateSubmit)} className="space-y-6">
+              <FormField
+                control={createForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>제목</FormLabel>
+                    <FormControl>
+                      <Input placeholder="뉴스 제목을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={createForm.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>카테고리</FormLabel>
+                      <FormControl>
+                        <Input placeholder="카테고리를 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={createForm.control}
+                  name="tag"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>태그 (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="태그를 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={createForm.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>내용</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="뉴스 내용을 입력하세요" 
+                        className="min-h-[200px]" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={createForm.control}
+                name="image_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>이미지 URL (선택사항)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={createForm.control}
+                name="link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>링크 URL (선택사항)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="링크 URL을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsCreateDialogOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  취소
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-400"
+                >
+                  {isSubmitting ? "처리 중..." : "등록하기"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* 글 수정 다이얼로그 */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl">뉴스 수정</DialogTitle>
+            <DialogDescription>뉴스 내용을 수정해주세요</DialogDescription>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(handleEditSubmit)} className="space-y-6">
+              <FormField
+                control={editForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>제목</FormLabel>
+                    <FormControl>
+                      <Input placeholder="뉴스 제목을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>카테고리</FormLabel>
+                      <FormControl>
+                        <Input placeholder="카테고리를 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="tag"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>태그 (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="태그를 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={editForm.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>내용</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="뉴스 내용을 입력하세요" 
+                        className="min-h-[200px]" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
+                name="image_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>이미지 URL (선택사항)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
+                name="link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>링크 URL (선택사항)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="링크 URL을 입력하세요" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsEditDialogOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  취소
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-400"
+                >
+                  {isSubmitting ? "처리 중..." : "수정하기"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* 글 삭제 확인 다이얼로그 */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-background border border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl">뉴스 삭제</DialogTitle>
+            <DialogDescription>이 작업은 되돌릴 수 없습니다</DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="mb-2">정말로 이 뉴스를 삭제하시겠습니까?</p>
+            <p className="font-semibold text-primary">{selectedNews?.title}</p>
+          </div>
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={isSubmitting}
+            >
+              취소
+            </Button>
+            <Button 
+              type="button" 
+              variant="destructive" 
+              onClick={handleDelete}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "처리 중..." : "삭제하기"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 

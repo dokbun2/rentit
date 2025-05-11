@@ -103,8 +103,13 @@ const NewsSection = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-    setSelectedNews(newsItem);
-    setDialogOpen(true);
+    
+    // 다이얼로그 대신 뉴스 페이지로 이동하면서 뉴스 ID 포함
+    if (newsItem.id) {
+      setLocation(`/news?id=${newsItem.id}`);
+    } else {
+      setLocation("/news");
+    }
   };
   
   return (
@@ -150,7 +155,7 @@ const NewsSection = () => {
                 viewport={{ once: true, amount: 0.1 }}
                 variants={fadeIn("up", 0.2 + index * 0.1)}
                 className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer"
-                onClick={(e) => handleViewDetails(item, e)}
+                onClick={() => item.id ? setLocation(`/news?id=${item.id}`) : setLocation("/news")}
               >
                 <div className="relative h-48">
                   <img 
@@ -218,70 +223,6 @@ const NewsSection = () => {
           </Button>
         </motion.div>
       </div>
-
-      {/* 뉴스 자세히 보기 다이얼로그 */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        {selectedNews && (
-          <DialogContent className="sm:max-w-[650px] bg-background border border-gray-800 max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <div className="flex items-center justify-between">
-                <DialogTitle className="text-xl md:text-2xl">{selectedNews.title}</DialogTitle>
-                {selectedNews.tag && (
-                  <span className={`px-2 py-1 ${selectedNews.tag_color || "bg-primary/30"} rounded-md text-xs text-white`}>
-                    {selectedNews.tag}
-                  </span>
-                )}
-              </div>
-              <DialogDescription>
-                {selectedNews.category || "렌탈뉴스"} | {formatDate(selectedNews.created_at)}
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="mt-4">
-              {/* 뉴스 이미지 */}
-              <div className="relative h-[200px] sm:h-[300px] mb-6 rounded-md overflow-hidden">
-                <img 
-                  src={selectedNews.image_url} 
-                  alt={selectedNews.title} 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
-                  }}
-                />
-              </div>
-              
-              {/* 뉴스 내용 */}
-              <div className="text-gray-300 prose prose-invert prose-p:text-gray-300 max-w-none">
-                <p className="whitespace-pre-line">{selectedNews.content}</p>
-              </div>
-              
-              {/* 상세 페이지 링크가 있는 경우 */}
-              {selectedNews.link && (
-                <div className="mt-6">
-                  <Button 
-                    variant="default" 
-                    className="w-full py-2 bg-primary hover:bg-primary/90"
-                    onClick={() => window.open(selectedNews.link, '_blank')}
-                  >
-                    상세 페이지 보기
-                  </Button>
-                </div>
-              )}
-              
-              {/* 뉴스 목록 페이지로 이동하는 버튼 */}
-              <div className="mt-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full py-2"
-                  onClick={() => setLocation("/news")}
-                >
-                  모든 뉴스 보기
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        )}
-      </Dialog>
     </section>
   );
 };

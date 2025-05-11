@@ -345,7 +345,7 @@ export default function RentalNews() {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full opacity-5 -mr-60 -mb-60"></div>
       <div className="absolute top-1/3 right-10 w-48 h-48 bg-gradient-radial from-primary/20 to-transparent opacity-30"></div>
       
-      <div className="container mx-auto px-4 py-12 pt-24 md:pt-28 relative z-10">
+      <div className="container mx-auto px-4 py-12 pt-14 md:pt-16 relative z-10">
         {!viewDetailMode ? (
           <>
             {/* 헤더 섹션 */}
@@ -353,18 +353,18 @@ export default function RentalNews() {
               initial="hidden"
               animate="show"
               variants={fadeIn("down", 0.2)}
-              className="flex flex-col md:flex-row justify-between items-center mb-12"
+              className="flex flex-col md:flex-row justify-start items-start md:items-center mb-12 md:justify-between"
             >
               <div>
                 <motion.h1 
                   variants={fadeIn("up", 0.1)}
-                  className="text-4xl md:text-5xl font-bold text-foreground mb-2"
+                  className="text-4xl md:text-5xl font-bold text-foreground mb-2 text-left"
                 >
                   렌탈 <span className="text-primary">뉴스</span>
                 </motion.h1>
                 <motion.p 
                   variants={fadeIn("up", 0.2)}
-                  className="text-gray-400"
+                  className="text-gray-400 text-left"
                 >
                   렌탈 시장의 최신 트렌드와 업계 소식을 확인하세요
                 </motion.p>
@@ -440,88 +440,67 @@ export default function RentalNews() {
                     initial="hidden"
                     animate="show"
                     variants={fadeIn("up", 0.2 + index * 0.05)}
-                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer"
+                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 flex flex-col sm:flex-col md:flex-row items-stretch"
                     onClick={() => handleViewDetail(item)}
                   >
-                    <div className="relative h-48">
+                    {/* Image Container - PC에서는 너비 1/3, 모바일에서는 전체 너비 */}
+                    <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden md:flex-shrink-0">
                       <img
-                        src={item.image_url}
+                        src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"}
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         onError={(e) => {
-                          // 이미지 로드 실패 시 기본 이미지로 대체
                           (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
                         }}
                       />
-                      {/* 카테고리 뱃지 */}
-                      <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-sm text-gray-300">
-                        {item.category || "렌탈뉴스"}
-                      </div>
-                      {/* 그라데이션 오버레이 */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="absolute bottom-0 left-0 p-4">
-                          <p className="text-white font-medium">자세히 보기</p>
-                        </div>
-                      </div>
                     </div>
-                    <div className="p-6">
-                      <div className="flex justify-between items-center mb-3">
-                        <p className="text-gray-500 text-base group-hover:text-primary transition-colors">
-                          {formatDate(item.created_at)}
-                        </p>
-                        <div className="flex space-x-2">
-                          {item.tag && (
-                            <span className={`px-2 py-1 ${item.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
-                              {item.tag}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">{item.title}</h3>
-                      
-                      <p className="text-gray-400 mb-6 line-clamp-3">
+
+                    {/* Text Content Container - PC에서는 너비 2/3, 모바일에서는 전체 너비 */}
+                    <div className="w-full md:w-2/3 p-4 md:p-5 flex flex-col">
+                      <h3 className="text-lg lg:text-xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm mb-3 line-clamp-3 text-left flex-grow">
                         {item.content}
                       </p>
-                      
-                      <div className="flex justify-between items-center">
-                        <button 
-                          className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-base"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewDetail(item);
-                          }}
-                        >
-                          자세히 보기 <ArrowRight className="ml-2 h-4 w-4" />
-                        </button>
-                        
-                        {/* 관리자에게만 편집/삭제 버튼 표시 */}
-                        {isAdmin && (
-                          <div className="flex gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditClick(item);
-                              }}
-                              className="text-gray-500 hover:text-primary"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteClick(item);
-                              }}
-                              className="text-gray-500 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
+                      <div className="mt-auto pt-3"> {/* Footer for text content */}
+                        <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
+                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary`}>
+                            {item.category || "정보"}
+                          </span>
+                          <span>{formatDate(item.created_at)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <button
+                            className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-sm font-medium"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDetail(item);
+                            }}
+                          >
+                            더보기 <ArrowRight className="ml-1 h-4 w-4" />
+                          </button>
+                          {isAdmin && (
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
+                                className="w-7 h-7 text-gray-500 hover:text-primary"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
+                                className="w-7 h-7 text-gray-500 hover:text-red-500"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -535,11 +514,11 @@ export default function RentalNews() {
                 initial="hidden"
                 animate="show"
                 variants={fadeIn("up", 0.3)}
-                className="glass-effect rounded-xl p-12 text-center"
+                className="glass-effect rounded-xl p-12 text-left"
               >
                 {activeCategory ? (
                   <>
-                    <p className="text-muted-foreground text-lg mb-6">
+                    <p className="text-muted-foreground text-lg mb-6 text-left">
                       <span className="text-primary font-semibold">{activeCategory}</span> 카테고리에 등록된 뉴스가 없습니다.
                     </p>
                     <Button
@@ -551,7 +530,7 @@ export default function RentalNews() {
                     </Button>
                   </>
                 ) : (
-                  <p className="text-muted-foreground text-lg mb-6">등록된 뉴스가 없습니다.</p>
+                  <p className="text-muted-foreground text-lg mb-6 text-left">등록된 뉴스가 없습니다.</p>
                 )}
               </motion.div>
             )}
@@ -617,7 +596,7 @@ export default function RentalNews() {
                         </span>
                       )}
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white">{selectedNews.title}</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white text-left">{selectedNews.title}</h1>
                     <div className="flex items-center mt-2 text-gray-300">
                       <Calendar className="h-4 w-4 mr-2" />
                       {formatDate(selectedNews.created_at)}
@@ -627,11 +606,11 @@ export default function RentalNews() {
                 
                 {/* 본문 내용 */}
                 <div className="p-8 md:p-12">
-                  <article className="prose prose-invert prose-lg md:prose-xl max-w-none">
+                  <article className="prose prose-invert prose-lg md:prose-xl max-w-none text-left">
                     {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
                     {selectedNews.content.split('\n\n').map((paragraph, idx) => (
                       paragraph.trim() && (
-                        <p key={idx} className="text-gray-300 leading-relaxed mb-6">
+                        <p key={idx} className="text-gray-300 leading-relaxed mb-6 text-left">
                           {paragraph}
                         </p>
                       )
@@ -666,7 +645,7 @@ export default function RentalNews() {
               {/* 관련 뉴스 */}
               {news && news.length > 1 && (
                 <div className="mt-16">
-                  <h2 className="text-2xl font-bold mb-6">다른 <span className="text-primary">뉴스</span> 보기</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-left">다른 <span className="text-primary">뉴스</span> 보기</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {news
                       .filter(item => item.id !== selectedNews.id)
@@ -696,8 +675,8 @@ export default function RentalNews() {
                             )}
                           </div>
                           <div className="p-4">
-                            <h3 className="font-bold text-lg mb-2 line-clamp-2">{item.title}</h3>
-                            <p className="text-gray-400 text-sm">{formatDate(item.created_at)}</p>
+                            <h3 className="font-bold text-lg mb-2 line-clamp-2 text-left">{item.title}</h3>
+                            <p className="text-gray-400 text-sm text-left">{formatDate(item.created_at)}</p>
                           </div>
                         </motion.div>
                       ))}
@@ -712,9 +691,9 @@ export default function RentalNews() {
       {/* 새 글 작성 다이얼로그 */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
-          <DialogHeader>
-            <DialogTitle className="text-xl">새 뉴스 작성</DialogTitle>
-            <DialogDescription>렌탈 시장의 최신 소식을 작성해주세요</DialogDescription>
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-xl text-left">새 뉴스 작성</DialogTitle>
+            <DialogDescription className="text-left">렌탈 시장의 최신 소식을 작성해주세요</DialogDescription>
           </DialogHeader>
           <Form {...createForm}>
             <form onSubmit={createForm.handleSubmit(handleCreateSubmit)} className="space-y-6">
@@ -827,9 +806,9 @@ export default function RentalNews() {
       {/* 글 수정 다이얼로그 */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
-          <DialogHeader>
-            <DialogTitle className="text-xl">뉴스 수정</DialogTitle>
-            <DialogDescription>뉴스 내용을 수정해주세요</DialogDescription>
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-xl text-left">뉴스 수정</DialogTitle>
+            <DialogDescription className="text-left">뉴스 내용을 수정해주세요</DialogDescription>
           </DialogHeader>
           <Form {...editForm}>
             <form onSubmit={editForm.handleSubmit(handleEditSubmit)} className="space-y-6">
@@ -942,13 +921,13 @@ export default function RentalNews() {
       {/* 글 삭제 확인 다이얼로그 */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px] bg-background border border-gray-800">
-          <DialogHeader>
-            <DialogTitle className="text-xl">뉴스 삭제</DialogTitle>
-            <DialogDescription>이 작업은 되돌릴 수 없습니다</DialogDescription>
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-xl text-left">뉴스 삭제</DialogTitle>
+            <DialogDescription className="text-left">이 작업은 되돌릴 수 없습니다</DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <p className="mb-2">정말로 이 뉴스를 삭제하시겠습니까?</p>
-            <p className="font-semibold text-primary">{selectedNews?.title}</p>
+          <div className="py-4 text-left">
+            <p className="mb-2 text-left">정말로 이 뉴스를 삭제하시겠습니까?</p>
+            <p className="font-semibold text-primary text-left">{selectedNews?.title}</p>
           </div>
           <DialogFooter>
             <Button 

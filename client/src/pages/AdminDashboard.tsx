@@ -344,6 +344,7 @@ function NewsManager() {
     image: '',
     active: true,
   });
+  const [htmlPreview, setHtmlPreview] = useState<string>('');
 
   useEffect(() => {
     fetchNews();
@@ -404,12 +405,17 @@ function NewsManager() {
       active: true,
     });
     setEditMode(false);
+    setHtmlPreview('');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
     setFormData({ ...formData, [name]: updatedValue });
+    
+    if (name === 'description') {
+      setHtmlPreview(value);
+    }
   };
 
   const handleEditClick = (news: NewsItem) => {
@@ -423,11 +429,13 @@ function NewsManager() {
       image: news.image,
       active: news.active,
     });
+    setHtmlPreview(news.description || '');
     setEditMode(true);
   };
 
   const handleCreateClick = () => {
     resetForm();
+    setHtmlPreview('');
     setEditMode(true);
   };
 
@@ -571,114 +579,133 @@ function NewsManager() {
       </div>
       
       {editMode ? (
-        <GlassEffect className="p-6 rounded-xl">
-          <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 왼쪽 컨테이너 - 뉴스 정보 및 내용 입력 */}
+          <GlassEffect className="p-6 rounded-xl h-full">
+            <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">제목</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">이미지 URL</label>
+                  <input
+                    type="url"
+                    name="image"
+                    value={formData.image || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">카테고리</label>
+                  <input
+                    type="text"
+                    name="category"
+                    value={formData.category || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">태그</label>
+                  <input
+                    type="text"
+                    name="tag"
+                    value={formData.tag || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">태그 색상</label>
+                  <select
+                    name="tag_color"
+                    value={formData.tag_color || 'bg-primary/30'}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="bg-primary/30">보라색</option>
+                    <option value="bg-secondary/30">초록색</option>
+                    <option value="bg-amber-700/30">주황색</option>
+                  </select>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    name="active"
+                    checked={!!formData.active}
+                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-700 bg-dark-lighter text-primary"
+                  />
+                  <label htmlFor="active" className="text-sm font-medium text-gray-300">활성화</label>
+                </div>
+              </div>
+              
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">제목</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title || ''}
+                <label className="block text-sm font-medium text-gray-300 mb-1">내용</label>
+                <p className="text-xs text-gray-400 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                <textarea
+                  name="description"
+                  value={formData.description || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  rows={16}
+                  style={{ minHeight: '500px' }}
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-mono text-sm"
                   required
-                />
+                ></textarea>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">이미지 URL</label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">카테고리</label>
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">태그</label>
-                <input
-                  type="text"
-                  name="tag"
-                  value={formData.tag || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">태그 색상</label>
-                <select
-                  name="tag_color"
-                  value={formData.tag_color || 'bg-primary/30'}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              <div className="flex justify-end space-x-3 pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCancelClick}
                 >
-                  <option value="bg-primary/30">보라색</option>
-                  <option value="bg-secondary/30">초록색</option>
-                  <option value="bg-amber-700/30">주황색</option>
-                </select>
+                  취소
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-gradient-to-r from-primary to-purple-500"
+                >
+                  저장
+                </Button>
               </div>
-              
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="active"
-                  name="active"
-                  checked={!!formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-700 bg-dark-lighter text-primary"
-                />
-                <label htmlFor="active" className="text-sm font-medium text-gray-300">활성화</label>
-              </div>
+            </form>
+          </GlassEffect>
+          
+          {/* 오른쪽 컨테이너 - HTML 미리보기 */}
+          <GlassEffect className="p-6 rounded-xl h-full flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">HTML 미리보기</h2>
+              <span className="text-xs text-gray-400">입력한 내용의 실제 표시 모습</span>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">내용</label>
-              <textarea
-                name="description"
-                value={formData.description || ''}
-                onChange={handleInputChange}
-                rows={6}
-                className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-              ></textarea>
+            <div className="flex-grow rounded-md border border-gray-700 bg-white p-6 text-black shadow-sm overflow-y-auto" style={{ minHeight: '700px' }}>
+              <div className="prose max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: htmlPreview }} />
+              </div>
             </div>
-            
-            <div className="flex justify-end space-x-3 pt-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancelClick}
-              >
-                취소
-              </Button>
-              <Button
-                type="submit"
-                className="bg-gradient-to-r from-primary to-purple-500"
-              >
-                저장
-              </Button>
-            </div>
-          </form>
-        </GlassEffect>
+          </GlassEffect>
+        </div>
       ) : (
         <div className="flex flex-col space-y-4">
           <GlassEffect className="p-4 rounded-xl">
@@ -728,32 +755,34 @@ function NewsManager() {
                             {news.active ? '활성' : '비활성'}
                           </span>
                         </td>
-                        <td className="px-2 py-3 text-right space-x-2">
-                          <Button
-                            onClick={() => handleToggleActive(news.id, news.active)}
-                            variant="ghost"
-                            size="sm"
-                            className="text-gray-300 hover:text-white"
-                          >
-                            {news.active ? '비활성화' : '활성화'}
-                          </Button>
-                          <Button
-                            onClick={() => handleEditClick(news)}
-                            variant="outline"
-                            size="sm"
-                            className="text-primary hover:text-primary-foreground"
-                          >
-                            수정
-                          </Button>
-                          <Button
-                            onClick={() => handleDelete(news.id)}
-                            variant="destructive"
-                            size="sm"
-                            className="flex items-center"
-                          >
-                            <Trash2 size={14} className="mr-1" />
-                            삭제
-                          </Button>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              onClick={() => handleToggleActive(news.id, news.active)}
+                              variant="ghost"
+                              size="sm"
+                              className="text-gray-300 hover:text-white"
+                            >
+                              {news.active ? '비활성화' : '활성화'}
+                            </Button>
+                            <Button
+                              onClick={() => handleEditClick(news)}
+                              variant="outline"
+                              size="sm"
+                              className="text-primary hover:text-primary-foreground"
+                            >
+                              수정
+                            </Button>
+                            <Button
+                              onClick={() => handleDelete(news.id)}
+                              variant="destructive"
+                              size="sm"
+                              className="flex items-center"
+                            >
+                              <Trash2 size={14} className="mr-1" />
+                              삭제
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

@@ -54,6 +54,9 @@ export default function RentalNews() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewDetailMode, setViewDetailMode] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  // 미리보기 상태 추가
+  const [createPreviewContent, setCreatePreviewContent] = useState<string>("");
+  const [editPreviewContent, setEditPreviewContent] = useState<string>("");
 
   // 사용자 인증 상태 확인
   const [isAdmin, setIsAdmin] = useState(false);
@@ -142,6 +145,16 @@ export default function RentalNews() {
     },
   });
 
+  // 미리보기 내용 업데이트 (작성 폼)
+  useEffect(() => {
+    const subscription = createForm.watch((value) => {
+      if (value.content) {
+        setCreatePreviewContent(value.content);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [createForm.watch]);
+
   // 뉴스 수정 폼
   const editForm = useForm<NewsFormValues>({
     resolver: zodResolver(newsFormSchema),
@@ -155,6 +168,16 @@ export default function RentalNews() {
       tag_color: "bg-primary/30",
     },
   });
+
+  // 미리보기 내용 업데이트 (수정 폼)
+  useEffect(() => {
+    const subscription = editForm.watch((value) => {
+      if (value.content) {
+        setEditPreviewContent(value.content);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [editForm.watch]);
 
   // 뉴스 작성 제출 처리
   const handleCreateSubmit = async (data: NewsFormValues) => {
@@ -293,6 +316,7 @@ export default function RentalNews() {
       tag: item.tag || "",
       tag_color: item.tag_color || "bg-primary/30",
     });
+    setEditPreviewContent(item.content); // 미리보기 내용 초기화
     setIsEditDialogOpen(true);
   };
 
@@ -700,7 +724,7 @@ export default function RentalNews() {
 
       {/* 새 글 작성 다이얼로그 */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+        <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">새 뉴스 작성</DialogTitle>
             <DialogDescription className="text-left">렌탈 시장의 최신 소식을 작성해주세요</DialogDescription>
@@ -748,50 +772,65 @@ export default function RentalNews() {
                   )}
                 />
               </div>
-              <FormField
-                control={createForm.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>내용</FormLabel>
-                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="뉴스 내용을 입력하세요" 
-                        className="min-h-[200px]" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이미지 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>링크 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="링크 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={createForm.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>내용</FormLabel>
+                      <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="뉴스 내용을 입력하세요" 
+                          className="min-h-[400px] font-mono text-sm" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="col-span-1">
+                  <div className="mb-2 flex justify-between items-center">
+                    <span className="font-medium">미리보기</span>
+                    <span className="text-xs text-gray-500">HTML이 적용된 모습을 확인해보세요</span>
+                  </div>
+                  <div className="border rounded-md p-4 min-h-[400px] bg-white text-gray-800 overflow-auto">
+                    <div className="prose prose-sm max-w-none">
+                      <div dangerouslySetInnerHTML={{ __html: createPreviewContent }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={createForm.control}
+                  name="image_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이미지 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={createForm.control}
+                  name="link"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>링크 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="링크 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button 
                   type="button" 
@@ -816,7 +855,7 @@ export default function RentalNews() {
 
       {/* 글 수정 다이얼로그 */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+        <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">뉴스 수정</DialogTitle>
             <DialogDescription className="text-left">뉴스 내용을 수정해주세요</DialogDescription>
@@ -864,50 +903,65 @@ export default function RentalNews() {
                   )}
                 />
               </div>
-              <FormField
-                control={editForm.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>내용</FormLabel>
-                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="뉴스 내용을 입력하세요" 
-                        className="min-h-[200px]" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이미지 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>링크 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="링크 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={editForm.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>내용</FormLabel>
+                      <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="뉴스 내용을 입력하세요" 
+                          className="min-h-[400px] font-mono text-sm" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="col-span-1">
+                  <div className="mb-2 flex justify-between items-center">
+                    <span className="font-medium">미리보기</span>
+                    <span className="text-xs text-gray-500">HTML이 적용된 모습을 확인해보세요</span>
+                  </div>
+                  <div className="border rounded-md p-4 min-h-[400px] bg-white text-gray-800 overflow-auto">
+                    <div className="prose prose-sm max-w-none">
+                      <div dangerouslySetInnerHTML={{ __html: editPreviewContent }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="image_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이미지 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="link"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>링크 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="링크 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button 
                   type="button" 

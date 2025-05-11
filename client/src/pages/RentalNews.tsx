@@ -621,20 +621,14 @@ export default function RentalNews() {
                 </div>
                 
                 {/* 본문 내용 */}
-                <div className="p-6 md:p-8">
-                  <article className="prose prose-invert prose-lg md:prose-xl max-w-none text-left">
-                    {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
-                    {selectedNews.content.split('\n\n').map((paragraph, idx) => (
-                      paragraph.trim() && (
-                        <p key={idx} className="text-gray-300 leading-relaxed mb-6 text-left">
-                          {paragraph}
-                        </p>
-                      )
-                    ))}
+                <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl mx-4 md:mx-6 shadow-lg">
+                  <article className="prose prose-lg md:prose-xl max-w-none text-left text-gray-800">
+                    {/* HTML 내용 렌더링 */}
+                    <div dangerouslySetInnerHTML={{ __html: selectedNews.content }} />
                   </article>
                   
                   {/* 공유 및 링크 섹션 */}
-                  <div className="mt-12 pt-8 border-t border-gray-800">
+                  <div className="mt-12 pt-8 border-t border-gray-200">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (
@@ -650,8 +644,8 @@ export default function RentalNews() {
                       
                       {/* 관련 정보 섹션 */}
                       <div className="flex flex-col space-y-2 md:text-right">
-                        <p className="text-gray-400">카테고리: <span className="text-primary">{selectedNews.category || "렌탈뉴스"}</span></p>
-                        <p className="text-gray-400">작성일: <span className="text-white">{formatDate(selectedNews.created_at)}</span></p>
+                        <p className="text-gray-600">카테고리: <span className="text-primary">{selectedNews.category || "렌탈뉴스"}</span></p>
+                        <p className="text-gray-600">작성일: <span className="text-gray-800">{formatDate(selectedNews.created_at)}</span></p>
                       </div>
                     </div>
                   </div>
@@ -760,6 +754,7 @@ export default function RentalNews() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>내용</FormLabel>
+                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
                     <FormControl>
                       <Textarea 
                         placeholder="뉴스 내용을 입력하세요" 
@@ -875,6 +870,7 @@ export default function RentalNews() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>내용</FormLabel>
+                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
                     <FormControl>
                       <Textarea 
                         placeholder="뉴스 내용을 입력하세요" 

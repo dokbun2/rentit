@@ -538,16 +538,19 @@ export default function NewsManagement() {
                 
                 {/* 뉴스 본문 */}
                 {isEditing ? (
-                  <textarea
-                    name="description"
-                    value={editFormData?.description || ''}
-                    onChange={handleEditFormChange}
-                    className="w-full px-3 py-2 border rounded min-h-[200px] bg-background"
-                    placeholder="뉴스 내용을 입력하세요"
-                  />
+                  <>
+                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                    <textarea
+                      name="description"
+                      value={editFormData?.description || ''}
+                      onChange={handleEditFormChange}
+                      className="w-full px-3 py-2 border rounded min-h-[200px] bg-background"
+                      placeholder="뉴스 내용을 입력하세요"
+                    />
+                  </>
                 ) : (
                   <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <p className="whitespace-pre-line">{selectedNews.description}</p>
+                    <div dangerouslySetInnerHTML={{ __html: selectedNews.description }} />
                   </div>
                 )}
               </div>
@@ -659,6 +662,7 @@ export default function NewsManagement() {
             </div>
             <div className="md:col-span-2">
               <label className="block text-sm mb-1">내용 *</label>
+              <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
               <textarea
                 name="description"
                 value={newNewsItem.description}

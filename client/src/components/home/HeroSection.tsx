@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import GradientBorder from "@/components/ui/gradient-border";
 import GlassEffect from "@/components/ui/glass-effect";
 import { fadeIn, staggerContainer } from "@/lib/motion";
+import { supabase } from "@/lib/supabase";
 
 const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {

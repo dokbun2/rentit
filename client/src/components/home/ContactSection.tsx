@@ -93,7 +93,16 @@ const ContactSection = () => {
         
         if (error) {
           console.error('Supabase 삽입 오류:', error);
-          throw new Error('데이터 저장 중 오류가 발생했습니다: ' + error.message);
+          // 오류 메시지를 더 구체적으로 처리
+          if (error.code === '42501' || error.message.includes('row-level security policy') || error.message.includes('permission denied')) {
+            throw new Error('보안 정책으로 인해 데이터를 저장할 수 없습니다. 관리자에게 문의하세요.');
+          } else if (error.code === '23505') {
+            throw new Error('이미 등록된 데이터입니다.');
+          } else if (error.code === '23502') {
+            throw new Error('필수 입력 필드가 누락되었습니다.');
+          } else {
+            throw new Error('데이터 저장 중 오류가 발생했습니다: ' + error.message);
+          }
         }
         
         // 성공 메시지

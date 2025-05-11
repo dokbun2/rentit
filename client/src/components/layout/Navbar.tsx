@@ -69,9 +69,9 @@ const Navbar = () => {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">
-              <span className={cn("text-primary text-[1.4em]", getPaperlogyStyle('black'))}>REN</span>
-              <span className={cn("text-secondary text-[1.4em]", getPaperlogyStyle('bold'))}>'T</span>
-              <span className={cn("ml-2 text-3xl text-gray-300", getPaperlogyStyle('regular'))}>렌잇</span>
+              <span className={cn("text-primary text-[1.1em]", getPaperlogyStyle('black'))}>REN</span>
+              <span className={cn("text-secondary text-[1.1em]", getPaperlogyStyle('bold'))}>'T</span>
+              <span className={cn("ml-2 text-[23px] text-gray-300", getPaperlogyStyle('regular'))}>렌잇</span>
             </div>
           </Link>
           

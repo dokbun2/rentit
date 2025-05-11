@@ -19,7 +19,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      setScrolled(window.scrollY > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -31,11 +31,21 @@ const Navbar = () => {
     if (href.startsWith("#")) {
       const element = document.querySelector(href);
       if (element) {
-        const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+        const offset = href === "#contact" ? 120 : 80;
+        const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({
           top: offsetTop,
           behavior: "smooth",
         });
+        
+        if (href === "#contact") {
+          setTimeout(() => {
+            const contactForm = document.querySelector('#contact-form');
+            if (contactForm) {
+              contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 500);
+        }
       }
     } else {
       setLocation(href);
@@ -45,7 +55,7 @@ const Navbar = () => {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-      scrolled ? "glass-effect py-3" : "bg-transparent py-5"
+      scrolled ? "bg-[#121212] py-3" : "bg-transparent py-5"
     )}>
       <div className="container mx-auto px-4 md:px-4">
         <div className="flex justify-between items-center md:justify-between">
@@ -116,7 +126,7 @@ const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="md:hidden dark-lighter py-4 px-4"
+          className="md:hidden bg-[#121212] py-4 px-4"
         >
           <div className="flex flex-col space-y-3">
             <button

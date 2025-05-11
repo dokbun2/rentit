@@ -345,7 +345,7 @@ export default function RentalNews() {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full opacity-5 -mr-60 -mb-60"></div>
       <div className="absolute top-1/3 right-10 w-48 h-48 bg-gradient-radial from-primary/20 to-transparent opacity-30"></div>
       
-      <div className="container mx-auto px-4 py-12 relative z-10">
+      <div className="container mx-auto px-4 py-12 pt-24 md:pt-28 relative z-10">
         {!viewDetailMode ? (
           <>
             {/* 헤더 섹션 */}
@@ -374,9 +374,9 @@ export default function RentalNews() {
                 className="flex gap-4 mt-4 md:mt-0"
               >
                 <Button
-                  variant="outline"
+                  variant="default"
                   onClick={() => setLocation("/")}
-                  className="border-gray-700 hover:bg-primary hover:text-white hover:border-primary transition-all"
+                  className="bg-primary hover:bg-primary/90 text-white transition-all"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" /> 홈으로 돌아가기
                 </Button>
@@ -565,11 +565,11 @@ export default function RentalNews() {
               variants={fadeIn("up", 0.2)}
               className="max-w-4xl mx-auto"
             >
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6 mt-4">
                 <Button
-                  variant="outline"
+                  variant="default"
                   onClick={handleBackToList}
-                  className="flex items-center gap-2 border-gray-700 hover:bg-background/50"
+                  className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
                 >
                   <ArrowLeft className="h-4 w-4" /> 목록으로 돌아가기
                 </Button>

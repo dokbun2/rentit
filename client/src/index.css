@@ -53,7 +53,7 @@
   }
 
   body {
-    @apply antialiased bg-background text-foreground overflow-x-hidden;
+    @apply antialiased bg-[#121212] text-foreground overflow-x-hidden;
   }
 
   /* Custom Colors */
@@ -83,19 +83,19 @@
 
   /* Custom Utilities */
   .glass-effect {
-    @apply backdrop-blur-md bg-black/30 border border-white/10;
+    @apply backdrop-blur-md bg-[#121212]/90 z-10;
   }
 
   .dark-card {
-    @apply bg-zinc-900/70;
+    @apply bg-[#121212]/70;
   }
 
   .dark-lighter {
-    @apply bg-zinc-900;
+    @apply bg-[#121212] !important;
   }
 
   .dark-light {
-    @apply bg-zinc-800;
+    @apply bg-zinc-800 !important;
   }
 
   /* Override shadcn button focus style */

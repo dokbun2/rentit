@@ -230,7 +230,7 @@ const ContactSection = () => {
             variants={fadeIn("left", 0.3)}
           >
             <GlassEffect className="rounded-xl p-8">
-              <h3 className="text-2xl font-bold mb-6">무료 상담 신청</h3>
+              <h3 className="text-2xl font-bold mb-6" id="contact-form">무료 상담 신청</h3>
               
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

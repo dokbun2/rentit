@@ -79,7 +79,7 @@ const ServicesSection = () => {
   };
 
   return (
-    <section id="services" className="py-20 dark-lighter relative overflow-hidden">
+    <section id="services" className="py-20 pt-20 bg-[#121212] relative overflow-hidden">
       <div className="absolute top-0 right-0 w-72 h-72 bg-primary rounded-full opacity-5 -mr-20 -mt-20"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary rounded-full opacity-5 -ml-40 -mb-40"></div>
       

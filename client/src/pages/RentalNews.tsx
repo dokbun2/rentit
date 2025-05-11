@@ -440,11 +440,11 @@ export default function RentalNews() {
                     initial="hidden"
                     animate="show"
                     variants={fadeIn("up", 0.2 + index * 0.05)}
-                    className="group bg-white dark:bg-white/95 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 border border-gray-200 hover:border-primary/30 flex flex-row items-center p-4 md:p-6 relative"
+                    className="group bg-white dark:bg-white/95 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 border border-gray-200 hover:border-primary/30 flex flex-row items-center p-4 md:p-6 gap-4 md:gap-6 relative"
                     onClick={() => handleViewDetail(item)}
                   >
                     {/* 이미지 컨테이너 - 더 큰 정사각형 썸네일 */}
-                    <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md mr-4 md:mr-6 border-2 border-gray-100">
+                    <div className="flex-shrink-0 w-[140px] h-[140px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md border-2 border-gray-100">
                       <img
                         src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800"}
                         alt={item.title}
@@ -457,17 +457,17 @@ export default function RentalNews() {
                     </div>
 
                     {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
-                    <div className="flex-1 flex flex-col justify-between h-full py-2 pr-10">
+                    <div className="flex-1 flex flex-col h-[140px] md:h-[180px] justify-between py-2 pr-10">
                       <div>
-                        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-                        <p className="text-gray-600 text-base md:text-lg mb-4 line-clamp-2 text-left leading-relaxed">
+                        <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
                           {item.content}
                         </p>
                       </div>
                       
-                      <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-3 mt-auto">
                         <div className="flex items-center gap-3 flex-wrap">
                           <span className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary`}>
                             {item.category || "정보"}

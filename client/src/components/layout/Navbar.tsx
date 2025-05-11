@@ -59,10 +59,13 @@ const Navbar = () => {
     )}>
       <div className="container mx-auto px-4 md:px-4">
         <div className="flex justify-between items-center">
-          {/* 로고 - 모바일에서는 왼쪽 정렬 */}
+          {/* 모바일에서 왼쪽에 빈 공간 (로고 중앙 정렬용) */}
+          <div className="md:hidden w-6"></div> 
+
+          {/* 로고 - 모바일에서는 중앙, PC에서는 왼쪽 */}
           <Link
             href="/"
-            className="text-3xl text-white flex items-center"
+            className="text-3xl text-white flex items-center md:flex-none flex-grow md:flex-grow-0 justify-center md:justify-start"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">

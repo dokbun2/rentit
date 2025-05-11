@@ -586,36 +586,42 @@ export default function RentalNews() {
               
               <div className="glass-effect rounded-xl overflow-hidden">
                 {/* 헤더 이미지 */}
-                <div className="relative h-[300px] md:h-[400px]">
+                <div className="relative rounded-xl overflow-hidden mx-4 md:mx-6">
                   <img 
                     src={selectedNews.image_url} 
                     alt={selectedNews.title} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto block object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
                     }}
                   />
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="bg-background px-3 py-1 rounded-full text-sm text-gray-300">
+                </div>
+                
+                {/* 뉴스 정보 (이미지 아래로 이동) */}
+                <div className="p-6 md:p-8 bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-800/90 border-t border-purple-500/30 mt-4 md:mt-6 rounded-xl shadow-lg mx-4 md:mx-6">
+                  <h1 className="text-3xl md:text-4xl font-bold text-left mb-4 text-white drop-shadow-sm">{selectedNews.title}</h1>
+                  
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="bg-purple-500/20 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs text-purple-100 font-medium border border-purple-500/30">
                         {selectedNews.category || "렌탈뉴스"}
                       </span>
                       {selectedNews.tag && (
-                        <span className={`px-2 py-1 ${selectedNews.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
+                        <span className={`px-2.5 py-1 bg-indigo-500/30 backdrop-blur-sm rounded-full text-xs text-indigo-100 border border-indigo-500/30`}>
                           {selectedNews.tag}
                         </span>
                       )}
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white text-left">{selectedNews.title}</h1>
-                    <div className="flex items-center mt-2 text-gray-300">
-                      <Calendar className="h-4 w-4 mr-2" />
+                    
+                    <div className="text-purple-300 text-xs flex items-center">
+                      <Calendar className="h-3.5 w-3.5 mr-1.5 text-purple-300" />
                       {formatDate(selectedNews.created_at)}
                     </div>
                   </div>
                 </div>
                 
                 {/* 본문 내용 */}
-                <div className="p-8 md:p-12">
+                <div className="p-6 md:p-8">
                   <article className="prose prose-invert prose-lg md:prose-xl max-w-none text-left">
                     {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
                     {selectedNews.content.split('\n\n').map((paragraph, idx) => (

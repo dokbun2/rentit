@@ -274,16 +274,18 @@ export default function RentalNews() {
     
     setIsSubmitting(true);
     try {
-      // Supabase를 통해 뉴스 삭제
-      const { error } = await supabase
+      console.log('삭제 요청 ID:', selectedNews.id, typeof selectedNews.id);
+      
+      const { data, error } = await supabase
         .from('news')
         .delete()
-        .eq('id', selectedNews.id);
+        .eq('id', selectedNews.id)
+        .select();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      console.log('삭제 응답:', data, error);
 
+      if (error) throw error;
+      
       toast({
         title: "뉴스가 성공적으로 삭제되었습니다",
         variant: "default",

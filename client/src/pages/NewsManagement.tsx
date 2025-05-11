@@ -425,84 +425,15 @@ export default function NewsManagement() {
 
       {/* 상세 보기 다이얼로그 */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-5xl">
           {selectedNews && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex justify-between items-center">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="title"
-                      value={editFormData?.title || ''}
-                      onChange={handleEditFormChange}
-                      className="w-full px-3 py-2 border rounded bg-background"
-                      placeholder="제목을 입력하세요"
-                    />
-                  ) : (
-                    selectedNews.title
-                  )}
+                <DialogTitle>
+                  {isEditing ? "뉴스 수정" : selectedNews.title}
                 </DialogTitle>
-                <DialogDescription className="flex justify-between items-center">
-                  {isEditing ? (
-                    <div className="grid grid-cols-2 gap-4 w-full mt-4">
-                      <div>
-                        <label className="block text-sm mb-1">카테고리</label>
-                        <input
-                          type="text"
-                          name="category"
-                          value={editFormData?.category || ''}
-                          onChange={handleEditFormChange}
-                          className="w-full px-3 py-2 border rounded bg-background"
-                          placeholder="카테고리"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm mb-1">태그</label>
-                        <input
-                          type="text"
-                          name="tag"
-                          value={editFormData?.tag || ''}
-                          onChange={handleEditFormChange}
-                          className="w-full px-3 py-2 border rounded bg-background"
-                          placeholder="태그"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm mb-1">태그 색상</label>
-                        <input
-                          type="text"
-                          name="tag_color"
-                          value={editFormData?.tag_color || ''}
-                          onChange={handleEditFormChange}
-                          className="w-full px-3 py-2 border rounded bg-background"
-                          placeholder="예: bg-primary/30"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm mb-1">상태</label>
-                        <select
-                          value={editFormData?.active ? '활성화' : '비활성화'}
-                          onChange={(e) => handleStatusChange(e, 'edit')}
-                          className="w-full px-3 py-2 border rounded bg-background"
-                        >
-                          <option value="활성화">활성화</option>
-                          <option value="비활성화">비활성화</option>
-                        </select>
-                      </div>
-                      <div className="col-span-2">
-                        <label className="block text-sm mb-1">이미지 URL</label>
-                        <input
-                          type="text"
-                          name="image"
-                          value={editFormData?.image || ''}
-                          onChange={handleEditFormChange}
-                          className="w-full px-3 py-2 border rounded bg-background"
-                          placeholder="이미지 URL"
-                        />
-                      </div>
-                    </div>
-                  ) : (
+                <DialogDescription>
+                  {isEditing ? "뉴스 내용을 수정하세요. HTML 태그를 사용하여 서식을 적용할 수 있습니다." : 
                     <>
                       <div>
                         <span>{selectedNews.category}</span>
@@ -516,7 +447,7 @@ export default function NewsManagement() {
                         {selectedNews.active ? '활성화' : '비활성화'}
                       </Badge>
                     </>
-                  )}
+                  }
                 </DialogDescription>
               </DialogHeader>
               
@@ -536,18 +467,116 @@ export default function NewsManagement() {
                   </div>
                 )}
                 
-                {/* 뉴스 본문 */}
+                {/* 수정 폼 */}
                 {isEditing ? (
-                  <>
-                    <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
-                    <textarea
-                      name="description"
-                      value={editFormData?.description || ''}
-                      onChange={handleEditFormChange}
-                      className="w-full px-3 py-2 border rounded min-h-[200px] bg-background"
-                      placeholder="뉴스 내용을 입력하세요"
-                    />
-                  </>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* 왼쪽: 입력 폼 */}
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm mb-1">제목 *</label>
+                        <input
+                          type="text"
+                          name="title"
+                          value={editFormData?.title || ''}
+                          onChange={handleEditFormChange}
+                          className="w-full px-3 py-2 border rounded bg-background"
+                          placeholder="제목을 입력하세요"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm mb-1">카테고리 *</label>
+                          <input
+                            type="text"
+                            name="category"
+                            value={editFormData?.category || ''}
+                            onChange={handleEditFormChange}
+                            className="w-full px-3 py-2 border rounded bg-background"
+                            placeholder="카테고리"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm mb-1">태그</label>
+                          <input
+                            type="text"
+                            name="tag"
+                            value={editFormData?.tag || ''}
+                            onChange={handleEditFormChange}
+                            className="w-full px-3 py-2 border rounded bg-background"
+                            placeholder="태그"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm mb-1">태그 색상</label>
+                          <input
+                            type="text"
+                            name="tag_color"
+                            value={editFormData?.tag_color || ''}
+                            onChange={handleEditFormChange}
+                            className="w-full px-3 py-2 border rounded bg-background"
+                            placeholder="예: bg-primary/30"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm mb-1">상태</label>
+                          <select
+                            value={editFormData?.active ? '활성화' : '비활성화'}
+                            onChange={(e) => handleStatusChange(e, 'edit')}
+                            className="w-full px-3 py-2 border rounded bg-background"
+                          >
+                            <option value="활성화">활성화</option>
+                            <option value="비활성화">비활성화</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm mb-1">이미지 URL</label>
+                        <input
+                          type="text"
+                          name="image"
+                          value={editFormData?.image || ''}
+                          onChange={handleEditFormChange}
+                          className="w-full px-3 py-2 border rounded bg-background"
+                          placeholder="이미지 URL"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm mb-1">내용 *</label>
+                        <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                        <textarea
+                          name="description"
+                          value={editFormData?.description || ''}
+                          onChange={handleEditFormChange}
+                          className="w-full px-3 py-2 border rounded min-h-[300px] bg-background"
+                          placeholder="뉴스 내용을 입력하세요"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* 오른쪽: HTML 미리보기 */}
+                    <div>
+                      <div className="mb-2 font-medium">HTML 미리보기</div>
+                      <div className="input-with-inner-html">
+                        <div className="bg-white text-black p-4 rounded-md border overflow-y-auto min-h-[500px]">
+                          <h1 className="text-2xl font-bold mb-4">{editFormData?.title || '제목'}</h1>
+                          <div className="prose prose-sm max-w-none">
+                            <div dangerouslySetInnerHTML={{ __html: editFormData?.description || '내용이 여기에 표시됩니다.' }} />
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted-foreground mt-2 text-right">
+                          {editFormData?.active ? '활성화 상태' : '비활성화 상태'} | 
+                          카테고리: {editFormData?.category || '없음'} |
+                          태그: {editFormData?.tag || '없음'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="prose prose-sm dark:prose-invert max-w-none">
                     <div dangerouslySetInnerHTML={{ __html: selectedNews.description }} />
@@ -585,91 +614,120 @@ export default function NewsManagement() {
 
       {/* 새 뉴스 작성 다이얼로그 */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent className="max-w-5xl">
           <DialogHeader>
             <DialogTitle>새 뉴스 작성</DialogTitle>
             <DialogDescription>
-              아래 양식을 작성하여 새 뉴스를 등록하세요.
+              아래 양식을 작성하여 새 뉴스를 등록하세요. HTML 태그를 사용하여 서식을 적용할 수 있습니다.
             </DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div className="md:col-span-2">
-              <label className="block text-sm mb-1">제목 *</label>
-              <input
-                type="text"
-                name="title"
-                value={newNewsItem.title}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded bg-background"
-                placeholder="제목을 입력하세요"
-              />
+            {/* 왼쪽: 입력 폼 */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm mb-1">제목 *</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={newNewsItem.title}
+                  onChange={handleNewFormChange}
+                  className="w-full px-3 py-2 border rounded bg-background"
+                  placeholder="제목을 입력하세요"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm mb-1">카테고리 *</label>
+                  <input
+                    type="text"
+                    name="category"
+                    value={newNewsItem.category}
+                    onChange={handleNewFormChange}
+                    className="w-full px-3 py-2 border rounded bg-background"
+                    placeholder="카테고리"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">태그</label>
+                  <input
+                    type="text"
+                    name="tag"
+                    value={newNewsItem.tag}
+                    onChange={handleNewFormChange}
+                    className="w-full px-3 py-2 border rounded bg-background"
+                    placeholder="태그"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm mb-1">태그 색상</label>
+                  <input
+                    type="text"
+                    name="tag_color"
+                    value={newNewsItem.tag_color}
+                    onChange={handleNewFormChange}
+                    className="w-full px-3 py-2 border rounded bg-background"
+                    placeholder="예: bg-primary/30"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm mb-1">상태</label>
+                  <select
+                    value={newNewsItem.active ? '활성화' : '비활성화'}
+                    onChange={(e) => handleStatusChange(e, 'new')}
+                    className="w-full px-3 py-2 border rounded bg-background"
+                  >
+                    <option value="활성화">활성화</option>
+                    <option value="비활성화">비활성화</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm mb-1">이미지 URL</label>
+                <input
+                  type="text"
+                  name="image"
+                  value={newNewsItem.image}
+                  onChange={handleNewFormChange}
+                  className="w-full px-3 py-2 border rounded bg-background"
+                  placeholder="이미지 URL"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm mb-1">내용 *</label>
+                <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                <textarea
+                  name="description"
+                  value={newNewsItem.description}
+                  onChange={handleNewFormChange}
+                  className="w-full px-3 py-2 border rounded min-h-[300px] bg-background"
+                  placeholder="뉴스 내용을 입력하세요"
+                />
+              </div>
             </div>
+            
+            {/* 오른쪽: HTML 미리보기 */}
             <div>
-              <label className="block text-sm mb-1">카테고리 *</label>
-              <input
-                type="text"
-                name="category"
-                value={newNewsItem.category}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded bg-background"
-                placeholder="카테고리"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">태그</label>
-              <input
-                type="text"
-                name="tag"
-                value={newNewsItem.tag}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded bg-background"
-                placeholder="태그"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">태그 색상</label>
-              <input
-                type="text"
-                name="tag_color"
-                value={newNewsItem.tag_color}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded bg-background"
-                placeholder="예: bg-primary/30"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">상태</label>
-              <select
-                value={newNewsItem.active ? '활성화' : '비활성화'}
-                onChange={(e) => handleStatusChange(e, 'new')}
-                className="w-full px-3 py-2 border rounded bg-background"
-              >
-                <option value="활성화">활성화</option>
-                <option value="비활성화">비활성화</option>
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm mb-1">이미지 URL</label>
-              <input
-                type="text"
-                name="image"
-                value={newNewsItem.image}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded bg-background"
-                placeholder="이미지 URL"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm mb-1">내용 *</label>
-              <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
-              <textarea
-                name="description"
-                value={newNewsItem.description}
-                onChange={handleNewFormChange}
-                className="w-full px-3 py-2 border rounded min-h-[200px] bg-background"
-                placeholder="뉴스 내용을 입력하세요"
-              />
+              <div className="mb-2 font-medium">HTML 미리보기</div>
+              <div className="input-with-inner-html">
+                <div className="bg-white text-black p-4 rounded-md border overflow-y-auto min-h-[500px]">
+                  <h1 className="text-2xl font-bold mb-4">{newNewsItem.title || '제목'}</h1>
+                  <div className="prose prose-sm max-w-none">
+                    <div dangerouslySetInnerHTML={{ __html: newNewsItem.description || '내용이 여기에 표시됩니다.' }} />
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground mt-2 text-right">
+                  {newNewsItem.active ? '활성화 상태' : '비활성화 상태'} | 
+                  카테고리: {newNewsItem.category || '없음'} |
+                  태그: {newNewsItem.tag || '없음'}
+                </div>
+              </div>
             </div>
           </div>
           

@@ -510,7 +510,7 @@ export default function RentalNews() {
                       }}
                     >
                       <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-primary/10 group-hover:bg-primary flex items-center justify-center transition-all duration-300 cursor-pointer">
-                        <ArrowRight className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1" />
+                        <ArrowRight className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white transition-all duration-300" />
                       </div>
                     </div>
                   </motion.div>

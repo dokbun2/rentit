@@ -32,6 +32,20 @@ import { useForm } from "react-hook-form";
 import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+// HTML 태그 제거 함수
+const stripHtmlTags = (html: string) => {
+  // 빈 문자열이나 null, undefined 체크
+  if (!html) return '';
+  
+  // HTML 태그 제거 (정규식 사용)
+  const strippedText = html.replace(/<[^>]*>/g, '');
+  
+  // HTML 엔티티 디코딩 (예: &amp; -> &, &lt; -> <)
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = strippedText;
+  return tempDiv.textContent || tempDiv.innerText || '';
+};
+
 // 뉴스 작성 폼 유효성 검사 스키마
 const newsFormSchema = z.object({
   title: z.string().min(2, { message: "제목을 입력해주세요" }),
@@ -489,7 +503,7 @@ export default function RentalNews() {
                           {item.title}
                         </h3>
                         <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
-                          {item.content}
+                          {stripHtmlTags(item.content)}
                         </p>
                       </div>
                       

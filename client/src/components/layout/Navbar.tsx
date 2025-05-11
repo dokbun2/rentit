@@ -31,7 +31,7 @@ const Navbar = () => {
     if (href.startsWith("#")) {
       const element = document.querySelector(href);
       if (element) {
-        const offset = href === "#contact" ? 120 : 80;
+        const offset = href === "#contact" ? 140 : 100;
         const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({
           top: offsetTop,
@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-      scrolled ? "bg-[#121212] py-3" : "bg-transparent py-5"
+      scrolled ? "bg-[#121212] py-2 md:py-3" : "bg-transparent py-4 md:py-5"
     )}>
       <div className="container mx-auto px-4 md:px-4">
         <div className="flex justify-between items-center md:justify-between">

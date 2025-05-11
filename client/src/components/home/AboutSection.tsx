@@ -7,7 +7,7 @@ const AboutSection = () => {
   const scrollToContact = () => {
     const contactSection = document.querySelector("#contact");
     if (contactSection) {
-      const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - 80;
+      const offsetTop = contactSection.getBoundingClientRect().top + window.pageYOffset - 140;
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",

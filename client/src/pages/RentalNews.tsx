@@ -638,7 +638,7 @@ export default function RentalNews() {
                 </div>
                 
                 {/* 뉴스 정보 (이미지 아래로 이동) */}
-                <div className="p-6 md:p-8 bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-800/90 border-t border-purple-500/30 mt-4 md:mt-6 rounded-xl shadow-lg mx-4 md:mx-6">
+                <div className="p-6 md:p-8 bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-800/90 border-t border-purple-500/30 mt-4 md:mt-6 rounded-xl rounded-bl-none rounded-br-none shadow-lg mx-4 md:mx-6">
                   <h1 className="text-3xl md:text-4xl font-bold text-left mb-4 text-white drop-shadow-sm">{selectedNews.title}</h1>
                   
                   <div className="flex justify-between items-center mt-4">
@@ -661,7 +661,7 @@ export default function RentalNews() {
                 </div>
                 
                 {/* 본문 내용 */}
-                <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl mx-4 md:mx-6 shadow-lg">
+                <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl rounded-tl-none rounded-tr-none mx-4 md:mx-6 shadow-lg mt-0 border-t-0">
                   <article className="prose prose-lg md:prose-xl max-w-none text-left text-gray-800">
                     {/* HTML 내용 렌더링 */}
                     <div dangerouslySetInnerHTML={{ __html: selectedNews.content }} />

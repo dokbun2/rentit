@@ -268,8 +268,8 @@ var sendConfirmationEmail = async (formData) => {
 
 // server/services/supabaseClient.ts
 import { createClient as createClient2 } from "@supabase/supabase-js";
-var supabaseUrl = process.env.SUPABASE_URL || "https://your-supabase-url.supabase.co";
-var supabaseKey = process.env.SUPABASE_KEY || "your-supabase-anon-key";
+var supabaseUrl = "https://sarpiggygpqzitvcdiqk.supabase.co";
+var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnBpZ2d5Z3Bxeml0dmNkaXFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MzAxMjQsImV4cCI6MjA2MjUwNjEyNH0.7n07LjbdZ4qqXQ4Lis40LWSGgNFynUB8tHqlUosceAM";
 var supabase = createClient2(supabaseUrl, supabaseKey);
 async function saveContact(contactData) {
   const { data, error } = await supabase.from("contacts").insert([{ ...contactData, processed: false }]).select();

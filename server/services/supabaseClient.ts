@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase URL과 API 키를 환경 변수에서 가져옵니다.
-// 실제 배포 시에는 실제 URL과 API 키를 환경 변수로 설정해야 합니다.
-const supabaseUrl = process.env.SUPABASE_URL || 'https://your-supabase-url.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY || 'your-supabase-anon-key';
+// Supabase URL과 API 키를 직접 지정합니다.
+const supabaseUrl = 'https://sarpiggygpqzitvcdiqk.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnBpZ2d5Z3Bxeml0dmNkaXFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MzAxMjQsImV4cCI6MjA2MjUwNjEyNH0.7n07LjbdZ4qqXQ4Lis40LWSGgNFynUB8tHqlUosceAM';
 
 // Supabase 클라이언트 생성
 export const supabase = createClient(supabaseUrl, supabaseKey);

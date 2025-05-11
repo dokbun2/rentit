@@ -66,22 +66,31 @@ const ContactSection = () => {
       // Supabase 클라이언트 존재 여부 확인
       if (!supabase) {
         console.error('Supabase 클라이언트가 초기화되지 않았습니다');
-        // 폼 제출은 성공으로 처리
-        toast({
-          title: "상담 신청이 완료되었습니다",
-          description: "빠른 시일 내에 연락드리겠습니다.",
-        });
-        form.reset();
-        return;
+        throw new Error('서버 연결에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       }
       
       console.log('Supabase 클라이언트 상태:', !!supabase);
+      // supabase URL을 안전하게 로깅
+      console.log('Supabase 연결 확인 중...');
+      
       // 현재 시간 정보 추가
       const timestamp = new Date().toISOString();
       
       try {
-        // 문의 데이터 저장 시도
-        const { error } = await supabase
+        // Supabase 연결 확인
+        const { data: connectionTest, error: connectionError } = await supabase
+          .from('contacts')
+          .select('id')
+          .limit(1);
+        
+        // 연결 오류 확인
+        if (connectionError && connectionError.code !== 'PGRST116') {
+          console.error('Supabase 연결 확인 오류:', connectionError);
+          throw new Error('데이터베이스 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
+        }
+        
+        // 문의 데이터 저장 (contacts 테이블)
+        const { data: insertedData, error } = await supabase
           .from('contacts')
           .insert([{
             name: contactData.name,
@@ -91,11 +100,23 @@ const ContactSection = () => {
             message: contactData.message,
             created_at: timestamp,
             is_processed: false
-          }]);
+          }])
+          .select();
+        
+        console.log('Supabase 응답:', { data: insertedData, error });
         
         if (error) {
-          console.error('Supabase 저장 오류:', error);
-          // 에러가 있어도 사용자에게는 성공 메시지 표시
+          console.error('Supabase 삽입 오류:', error);
+          // 오류 메시지를 더 구체적으로 처리
+          if (error.code === '42501' || error.message.includes('row-level security policy') || error.message.includes('permission denied')) {
+            throw new Error('보안 정책으로 인해 데이터를 저장할 수 없습니다. 관리자에게 문의하세요.');
+          } else if (error.code === '23505') {
+            throw new Error('이미 등록된 데이터입니다.');
+          } else if (error.code === '23502') {
+            throw new Error('필수 입력 필드가 누락되었습니다.');
+          } else {
+            throw new Error('데이터 저장 중 오류가 발생했습니다: ' + error.message);
+          }
         }
         
         // 성공 메시지
@@ -106,22 +127,16 @@ const ContactSection = () => {
         
         form.reset();
       } catch (insertError) {
-        console.error('데이터 저장 중 오류:', insertError);
-        // 에러가 있어도 사용자에게는 성공 메시지 표시
-        toast({
-          title: "상담 신청이 완료되었습니다",
-          description: "빠른 시일 내에 연락드리겠습니다.",
-        });
-        form.reset();
+        console.error('데이터 삽입 도중 예외 발생:', insertError);
+        throw insertError;
       }
     } catch (error) {
-      console.error('상담 신청 중 오류:', error);
-      // 사용자에게 오류 대신 성공 메시지 표시
+      console.error('상담 신청 오류:', error);
       toast({
-        title: "상담 신청이 완료되었습니다",
-        description: "빠른 시일 내에 연락드리겠습니다.",
+        title: "오류가 발생했습니다",
+        description: error instanceof Error ? error.message : "잠시 후 다시 시도해주세요.",
+        variant: "destructive",
       });
-      form.reset();
     } finally {
       setIsSubmitting(false);
     }

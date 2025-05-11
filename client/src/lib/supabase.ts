@@ -1,40 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase 접속 정보 - 하드코딩하여 연결 안정성 향상
-const supabaseUrl = 'https://zixuzfhxdajmdlsqnfw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppeHV6Zmh4ZGFqbWRsc3FuZnciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTcxNTQxNDQwNiwiZXhwIjoyMDMwOTkwNDA2fQ.nNNXnxIcMYUxpOZBgysXxhbMZpFbYbR2PS1_F4VVrOU';
+// Supabase 접속 정보 (직접 하드코딩)
+const supabaseUrl = 'https://sarpiggygpqzitvcdiqk.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnBpZ2d5Z3Bxeml0dmNkaXFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MzAxMjQsImV4cCI6MjA2MjUwNjEyNH0.7n07LjbdZ4qqXQ4Lis40LWSGgNFynUB8tHqlUosceAM';
 
-// 콘솔 로깅 최소화
-console.log('Supabase 클라이언트 초기화 시작');
+// 콘솔에 정보 출력 (디버깅용)
+console.log('SUPABASE_URL (디버깅):', supabaseUrl);
+console.log('SUPABASE_ANON_KEY 설정 여부:', supabaseAnonKey ? '설정됨' : '설정되지 않음');
 
-// Supabase 클라이언트 생성 - 연결 옵션 개선
-let supabaseClient;
-try {
-  supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-    global: {
-      // 네트워크 연결 재시도 설정
-      fetch: (url, options) => {
-        return fetch(url, {
-          ...options,
-          // 타임아웃 증가
-          signal: AbortSignal.timeout(30000),
-          // 크로스도메인 쿠키 허용
-          credentials: 'include',
-        });
-      },
-    },
-  });
-  console.log('Supabase 클라이언트 초기화 성공');
-} catch (error) {
-  console.error('Supabase 클라이언트 초기화 오류:', error);
-  supabaseClient = null;
-}
+// Supabase 클라이언트 생성
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export const supabase = supabaseClient;
+console.log('Supabase 클라이언트 초기화 상태:', !!supabase);
+// URL 로깅 (프라이빗 프로퍼티 접근 대신 문자열로 표시)
+console.log('현재 사용 중인 Supabase URL:', supabaseUrl);
 
 export default supabase;
 

@@ -440,11 +440,11 @@ export default function RentalNews() {
                     initial="hidden"
                     animate="show"
                     variants={fadeIn("up", 0.2 + index * 0.05)}
-                    className="group glass-effect rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 border border-gray-800/50 hover:border-primary/20 flex flex-row items-center p-4 md:p-6"
+                    className="group bg-white dark:bg-white/95 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 border border-gray-200 hover:border-primary/30 flex flex-row items-center p-4 md:p-6 relative"
                     onClick={() => handleViewDetail(item)}
                   >
                     {/* 이미지 컨테이너 - 더 큰 정사각형 썸네일 */}
-                    <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md mr-4 md:mr-6">
+                    <div className="flex-shrink-0 w-[120px] h-[120px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md mr-4 md:mr-6 border-2 border-gray-100">
                       <img
                         src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800"}
                         alt={item.title}
@@ -457,58 +457,60 @@ export default function RentalNews() {
                     </div>
 
                     {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
-                    <div className="flex-1 flex flex-col justify-between h-full py-2">
+                    <div className="flex-1 flex flex-col justify-between h-full py-2 pr-10">
                       <div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight">
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-                        <p className="text-gray-400 text-sm md:text-base mb-4 line-clamp-2 text-left leading-relaxed">
+                        <p className="text-gray-600 text-sm md:text-base mb-4 line-clamp-2 text-left leading-relaxed">
                           {item.content}
                         </p>
                       </div>
                       
-                      <div className="flex flex-wrap md:flex-row md:justify-between md:items-center gap-3 mt-auto">
+                      <div className="flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <span className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-primary/20 text-primary backdrop-blur-sm`}>
+                          <span className={`inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary`}>
                             {item.category || "정보"}
                           </span>
-                          <span className="text-xs text-gray-400 flex items-center">
+                          <span className="text-xs text-gray-500 flex items-center">
                             <Calendar className="h-3 w-3 mr-1 inline-block" />
                             {formatDate(item.created_at)}
                           </span>
                         </div>
                         
-                        <div className="flex justify-between items-center">
-                          <button
-                            className="inline-flex items-center text-primary hover:text-white hover:bg-primary/80 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 group-hover:bg-primary/30"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewDetail(item);
-                            }}
-                          >
-                            더보기 <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                          </button>
-                          {isAdmin && (
-                            <div className="flex gap-2 ml-3">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
-                                className="w-8 h-8 rounded-full text-gray-400 hover:text-primary hover:bg-primary/10"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
-                                className="w-8 h-8 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-500/10"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
+                        {isAdmin && (
+                          <div className="flex gap-2 ml-auto">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); handleEditClick(item); }}
+                              className="w-8 h-8 rounded-full text-gray-600 hover:text-primary hover:bg-primary/10"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); handleDeleteClick(item); }}
+                              className="w-8 h-8 rounded-full text-gray-600 hover:text-red-500 hover:bg-red-500/10"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* 우측 중앙에 큰 화살표 아이콘 */}
+                    <div 
+                      className="absolute right-2 top-1/2 -translate-y-1/2 transition-all"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetail(item);
+                      }}
+                    >
+                      <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-primary/10 group-hover:bg-primary flex items-center justify-center transition-all duration-300 cursor-pointer">
+                        <ArrowRight className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1" />
                       </div>
                     </div>
                   </motion.div>

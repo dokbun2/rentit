@@ -70,11 +70,25 @@ const ContactSection = () => {
       }
       
       console.log('Supabase 클라이언트 상태:', !!supabase);
+      // supabase URL을 안전하게 로깅
+      console.log('Supabase 연결 확인 중...');
       
       // 현재 시간 정보 추가
       const timestamp = new Date().toISOString();
       
       try {
+        // Supabase 연결 확인
+        const { data: connectionTest, error: connectionError } = await supabase
+          .from('contacts')
+          .select('id')
+          .limit(1);
+        
+        // 연결 오류 확인
+        if (connectionError && connectionError.code !== 'PGRST116') {
+          console.error('Supabase 연결 확인 오류:', connectionError);
+          throw new Error('데이터베이스 연결에 문제가 있습니다. 잠시 후 다시 시도해주세요.');
+        }
+        
         // 문의 데이터 저장 (contacts 테이블)
         const { data: insertedData, error } = await supabase
           .from('contacts')

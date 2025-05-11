@@ -432,7 +432,7 @@ export default function RentalNews() {
                 initial="hidden"
                 animate="show"
                 variants={fadeIn("up", 0.2)}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                className="grid grid-cols-1 gap-6"
               >
                 {(activeCategory ? news.filter(item => item.category === activeCategory) : news).map((item, index) => (
                   <motion.div
@@ -440,11 +440,11 @@ export default function RentalNews() {
                     initial="hidden"
                     animate="show"
                     variants={fadeIn("up", 0.2 + index * 0.05)}
-                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 flex flex-col sm:flex-col md:flex-row items-stretch"
+                    className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 flex flex-row items-stretch"
                     onClick={() => handleViewDetail(item)}
                   >
-                    {/* Image Container - PC에서는 너비 1/3, 모바일에서는 전체 너비 */}
-                    <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden md:flex-shrink-0">
+                    {/* 이미지 컨테이너 - 정사각형 썸네일 (150x150) */}
+                    <div className="flex-shrink-0 w-[100px] h-[100px] md:w-[150px] md:h-[150px] relative overflow-hidden">
                       <img
                         src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500"}
                         alt={item.title}
@@ -455,21 +455,25 @@ export default function RentalNews() {
                       />
                     </div>
 
-                    {/* Text Content Container - PC에서는 너비 2/3, 모바일에서는 전체 너비 */}
-                    <div className="w-full md:w-2/3 p-4 md:p-5 flex flex-col">
-                      <h3 className="text-lg lg:text-xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm mb-3 line-clamp-3 text-left flex-grow">
-                        {item.content}
-                      </p>
-                      <div className="mt-auto pt-3"> {/* Footer for text content */}
-                        <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
+                    {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
+                    <div className="flex-1 p-4 md:p-5 flex flex-col justify-between">
+                      <div>
+                        <h3 className="text-lg lg:text-xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-gray-400 text-sm mb-3 line-clamp-2 text-left">
+                          {item.content}
+                        </p>
+                      </div>
+                      
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mt-auto">
+                        <div className="flex items-center gap-2">
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary`}>
                             {item.category || "정보"}
                           </span>
-                          <span>{formatDate(item.created_at)}</span>
+                          <span className="text-xs text-gray-500">{formatDate(item.created_at)}</span>
                         </div>
+                        
                         <div className="flex justify-between items-center">
                           <button
                             className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-sm font-medium"
@@ -481,7 +485,7 @@ export default function RentalNews() {
                             더보기 <ArrowRight className="ml-1 h-4 w-4" />
                           </button>
                           {isAdmin && (
-                            <div className="flex gap-1">
+                            <div className="flex gap-1 ml-2">
                               <Button
                                 variant="ghost"
                                 size="icon"

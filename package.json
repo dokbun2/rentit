@@ -4,8 +4,8 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "npx vite build && npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "dev": "vite --port 3000",
+    "build": "tsc && vite build",
     "build:vercel": "npx vite build",
     "vercel-build": "npx vite build",
     "start": "NODE_ENV=production node dist/index.js",

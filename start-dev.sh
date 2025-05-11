@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Supabase 환경 변수 설정
-export VITE_SUPABASE_URL="https://zizuzfbixdajmdstagfw.supabase.co"
-export VITE_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppenV6ZmJpeGRham1kc3RhZ2Z3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3NDcxMjIsImV4cCI6MjA2MjMyMzEyMn0.wr9_JeKV1j5-LnQQNRjOlOkuyMt8otEHv2oziSUmQk8"
+export VITE_SUPABASE_URL="https://sarpiggygpqzitvcdiqk.supabase.co"
+export VITE_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnBpZ2d5Z3Bxeml0dmNkaXFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MzAxMjQsImV4cCI6MjA2MjUwNjEyNH0.7n07LjbdZ4qqXQ4Lis40LWSGgNFynUB8tHqlUosceAM"
 
 # 실행 중인 5002 포트 프로세스 찾고 종료
 echo "실행 중인 5002 포트 프로세스 확인 중..."

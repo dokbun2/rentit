@@ -7,45 +7,49 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { NewsItem } from "@/lib/supabase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { News } from "@/types/news";
+import { formatDate } from "@/lib/utils";
+import { useLocation } from "wouter";
 
 // 기본 뉴스 아이템 (API 로딩 실패 시 보여줄 더미 데이터)
 const fallbackNewsItems = [
   {
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
+    image_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
     category: "시장 동향",
     tag: "렌탈 트렌드",
     tag_color: "bg-primary-dark/30",
     title: "2023년 하반기 렌탈 시장 동향 분석",
-    description: "코로나19 이후 변화된 소비 패턴과 렌탈 시장의 새로운 기회에 대해 알아봅니다. 구독 경제의 성장과 함께 주목받는 렌탈 비즈니스의 미래 전망을 분석합니다.",
-    published_at: "2023-09-15T00:00:00Z",
+    content: "코로나19 이후 변화된 소비 패턴과 렌탈 시장의 새로운 기회에 대해 알아봅니다. 구독 경제의 성장과 함께 주목받는 렌탈 비즈니스의 미래 전망을 분석합니다.",
+    created_at: "2023-09-15T00:00:00Z",
   },
   {
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
+    image_url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
     category: "기술 혁신",
     tag: "디지털 전환",
     tag_color: "bg-secondary-dark/30",
     title: "디지털 기술로 진화하는 렌탈 비즈니스",
-    description: "AI와 빅데이터를 활용한 렌탈 관리 시스템의 발전 사례와 디지털 전환을 통해 성공한 렌탈 기업들의 전략을 소개합니다. 비대면 시대에 맞는 효율적인 운영 방안을 알아봅니다.",
-    published_at: "2023-08-22T00:00:00Z",
+    content: "AI와 빅데이터를 활용한 렌탈 관리 시스템의 발전 사례와 디지털 전환을 통해 성공한 렌탈 기업들의 전략을 소개합니다. 비대면 시대에 맞는 효율적인 운영 방안을 알아봅니다.",
+    created_at: "2023-08-22T00:00:00Z",
   },
   {
-    image: "https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
+    image_url: "https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500",
     category: "비즈니스 전략",
     tag: "파트너십",
     tag_color: "bg-amber-700/30",
     title: "성공적인 렌탈 비즈니스 파트너십 구축 방법",
-    description: "렌탈 비즈니스의 성장을 위한 전략적 파트너십 구축 사례와 성공 요인을 분석합니다. 효과적인 협력 모델과 상호 이익을 창출하는 비즈니스 제휴 방안을 소개합니다.",
-    published_at: "2023-07-10T00:00:00Z",
+    content: "렌탈 비즈니스의 성장을 위한 전략적 파트너십 구축 사례와 성공 요인을 분석합니다. 효과적인 협력 모델과 상호 이익을 창출하는 비즈니스 제휴 방안을 소개합니다.",
+    created_at: "2023-07-10T00:00:00Z",
   },
 ];
 
 const NewsSection = () => {
-  const [newsItems, setNewsItems] = useState<any[]>([]);
+  const [, setLocation] = useLocation();
+  const [newsItems, setNewsItems] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   
   // 선택된 뉴스와 다이얼로그 상태 관리
-  const [selectedNews, setSelectedNews] = useState<any | null>(null);
+  const [selectedNews, setSelectedNews] = useState<News | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
   useEffect(() => {
@@ -64,7 +68,7 @@ const NewsSection = () => {
           .from('news')
           .select('*')
           .eq('active', true)
-          .order('published_at', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(3);
         
         if (error) {
@@ -75,16 +79,16 @@ const NewsSection = () => {
         console.log('불러온 뉴스 데이터:', data);
         
         if (data && data.length > 0) {
-          setNewsItems(data);
+          setNewsItems(data as News[]);
         } else {
           console.log('뉴스 데이터가 없어 더미 데이터를 사용합니다.');
-          setNewsItems(fallbackNewsItems);
+          setNewsItems(fallbackNewsItems as News[]);
         }
       } catch (error) {
         console.error('뉴스 데이터 로딩 오류:', error);
         setError(true);
         // 에러 발생 시 더미 데이터 사용
-        setNewsItems(fallbackNewsItems);
+        setNewsItems(fallbackNewsItems as News[]);
       } finally {
         setLoading(false);
       }
@@ -94,7 +98,7 @@ const NewsSection = () => {
   }, []);
 
   // 자세히 보기 클릭 핸들러
-  const handleViewDetails = (newsItem: any, e: React.MouseEvent) => {
+  const handleViewDetails = (newsItem: News, e: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -102,12 +106,6 @@ const NewsSection = () => {
     setSelectedNews(newsItem);
     setDialogOpen(true);
   };
-
-  // 날짜 포맷팅 함수
-  function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-  }
   
   return (
     <section id="news" className="py-20 dark-lighter relative overflow-hidden">
@@ -156,7 +154,7 @@ const NewsSection = () => {
               >
                 <div className="relative h-48">
                   <img 
-                    src={item.image} 
+                    src={item.image_url} 
                     alt={item.title} 
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -165,18 +163,18 @@ const NewsSection = () => {
                     }}
                   />
                   <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-sm text-gray-300">
-                    {item.category}
+                    {item.category || "렌탈뉴스"}
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-3">
                     <p className="text-gray-500 text-base group-hover:text-primary transition-colors">
-                      {formatDate(item.published_at)}
+                      {formatDate(item.created_at)}
                     </p>
                     <div className="flex space-x-2">
                       {item.tag && (
-                        <span className={`px-2 py-1 ${item.tag_color} rounded-md text-sm text-white`}>
+                        <span className={`px-2 py-1 ${item.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
                           {item.tag}
                         </span>
                       )}
@@ -186,7 +184,7 @@ const NewsSection = () => {
                   <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
                   
                   <p className="text-gray-400 text-lg mb-6 line-clamp-3">
-                    {item.description}
+                    {item.content}
                   </p>
                   
                   <button 
@@ -214,13 +212,7 @@ const NewsSection = () => {
           <Button 
             variant="outline" 
             className="px-6 py-3 dark-light rounded-lg text-white text-lg hover:bg-background transition-all"
-            onClick={(e) => {
-              e.preventDefault();
-              // 뉴스 페이지로 이동하는 대신, 첫 번째 뉴스 아이템을 모달로 보여줍니다.
-              if (newsItems.length > 0) {
-                handleViewDetails(newsItems[0], e as any);
-              }
-            }}
+            onClick={() => setLocation("/news")}
           >
             더 많은 뉴스 보기 <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -235,13 +227,13 @@ const NewsSection = () => {
               <div className="flex items-center justify-between">
                 <DialogTitle className="text-xl md:text-2xl">{selectedNews.title}</DialogTitle>
                 {selectedNews.tag && (
-                  <span className={`px-2 py-1 ${selectedNews.tag_color} rounded-md text-xs text-white`}>
+                  <span className={`px-2 py-1 ${selectedNews.tag_color || "bg-primary/30"} rounded-md text-xs text-white`}>
                     {selectedNews.tag}
                   </span>
                 )}
               </div>
               <DialogDescription>
-                {selectedNews.category} | {formatDate(selectedNews.published_at)}
+                {selectedNews.category || "렌탈뉴스"} | {formatDate(selectedNews.created_at)}
               </DialogDescription>
             </DialogHeader>
             
@@ -249,7 +241,7 @@ const NewsSection = () => {
               {/* 뉴스 이미지 */}
               <div className="relative h-[200px] sm:h-[300px] mb-6 rounded-md overflow-hidden">
                 <img 
-                  src={selectedNews.image} 
+                  src={selectedNews.image_url} 
                   alt={selectedNews.title} 
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -258,26 +250,34 @@ const NewsSection = () => {
                 />
               </div>
               
-              {/* 뉴스 본문 */}
-              <div className="space-y-4">
-                <p className="text-gray-300 whitespace-pre-line">
-                  {selectedNews.description}
-                </p>
-                
-                {/* 뉴스 내용이 짧은 경우를 대비한 추가 컨텐츠 */}
-                <p className="text-gray-400">
-                  자세한 내용은 관리자에게 문의하시거나 공식 웹사이트를 참조하세요.
-                </p>
+              {/* 뉴스 내용 */}
+              <div className="text-gray-300 prose prose-invert prose-p:text-gray-300 max-w-none">
+                <p className="whitespace-pre-line">{selectedNews.content}</p>
               </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end">
-              <Button 
-                onClick={() => setDialogOpen(false)}
-                className="bg-gradient-to-r from-primary to-purple-500"
-              >
-                닫기
-              </Button>
+              
+              {/* 상세 페이지 링크가 있는 경우 */}
+              {selectedNews.link && (
+                <div className="mt-6">
+                  <Button 
+                    variant="default" 
+                    className="w-full py-2 bg-primary hover:bg-primary/90"
+                    onClick={() => window.open(selectedNews.link, '_blank')}
+                  >
+                    상세 페이지 보기
+                  </Button>
+                </div>
+              )}
+              
+              {/* 뉴스 목록 페이지로 이동하는 버튼 */}
+              <div className="mt-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full py-2"
+                  onClick={() => setLocation("/news")}
+                >
+                  모든 뉴스 보기
+                </Button>
+              </div>
             </div>
           </DialogContent>
         )}

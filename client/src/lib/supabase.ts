@@ -1,8 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase 접속 정보
-const supabaseUrl = 'https://zizuzfbixdajmdstagfw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppenV6ZmJpeGRham1kc3RhZ2Z3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3NDcxMjIsImV4cCI6MjA2MjMyMzEyMn0.wr9_JeKV1j5-LnQQNRjOlOkuyMt8otEHv2oziSUmQk8';
+// 새 프로젝트 생성 후 아래 URL과 API 키를 새 프로젝트의 값으로 교체하세요
+const supabaseUrl = 'https://sarpiggygpqzitvcdiqk.supabase.co'; // 여기에 새 프로젝트 URL 입력
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnBpZ2d5Z3Bxeml0dmNkaXFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MzAxMjQsImV4cCI6MjA2MjUwNjEyNH0.7n07LjbdZ4qqXQ4Lis40LWSGgNFynUB8tHqlUosceAM'; // 여기에 새 anon key 입력
 
 // Supabase 클라이언트 생성
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -37,13 +37,25 @@ const stripHtmlTags = (html: string) => {
   // 빈 문자열이나 null, undefined 체크
   if (!html) return '';
   
-  // HTML 태그 제거 (정규식 사용)
-  const strippedText = html.replace(/<[^>]*>/g, '');
+  // 스타일 태그와 내용 제거 (스타일 태그 안의 내용까지 모두 제거)
+  let cleanedText = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  
+  // 스크립트 태그와 내용 제거
+  cleanedText = cleanedText.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // 나머지 HTML 태그 제거
+  cleanedText = cleanedText.replace(/<[^>]*>/g, '');
   
   // HTML 엔티티 디코딩 (예: &amp; -> &, &lt; -> <)
   const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = strippedText;
-  return tempDiv.textContent || tempDiv.innerText || '';
+  tempDiv.innerHTML = cleanedText;
+  
+  // CSS 선택자나 스타일 관련 텍스트 추가 제거 (예: .container, font-family 등)
+  let finalText = tempDiv.textContent || tempDiv.innerText || '';
+  finalText = finalText.replace(/\.\w+\s*{[^}]*}/g, ''); // CSS 규칙 제거
+  finalText = finalText.replace(/[a-z-]+\s*:\s*[^;]+(;|\s*$)/gi, ''); // CSS 속성 제거
+  
+  return finalText.trim();
 };
 
 // 뉴스 작성 폼 유효성 검사 스키마

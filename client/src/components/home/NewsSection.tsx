@@ -11,6 +11,32 @@ import { News } from "@/types/news";
 import { formatDate } from "@/lib/utils";
 import { useLocation } from "wouter";
 
+// HTML 태그 제거 함수
+const stripHtmlTags = (html: string) => {
+  // 빈 문자열이나 null, undefined 체크
+  if (!html) return '';
+  
+  // 스타일 태그와 내용 제거 (스타일 태그 안의 내용까지 모두 제거)
+  let cleanedText = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  
+  // 스크립트 태그와 내용 제거
+  cleanedText = cleanedText.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // 나머지 HTML 태그 제거
+  cleanedText = cleanedText.replace(/<[^>]*>/g, '');
+  
+  // HTML 엔티티 디코딩 (예: &amp; -> &, &lt; -> <)
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = cleanedText;
+  
+  // CSS 선택자나 스타일 관련 텍스트 추가 제거 (예: .container, font-family 등)
+  let finalText = tempDiv.textContent || tempDiv.innerText || '';
+  finalText = finalText.replace(/\.\w+\s*{[^}]*}/g, ''); // CSS 규칙 제거
+  finalText = finalText.replace(/[a-z-]+\s*:\s*[^;]+(;|\s*$)/gi, ''); // CSS 속성 제거
+  
+  return finalText.trim();
+};
+
 // 기본 뉴스 아이템 (API 로딩 실패 시 보여줄 더미 데이터)
 const fallbackNewsItems = [
   {
@@ -189,7 +215,7 @@ const NewsSection = () => {
                   <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
                   
                   <p className="text-gray-400 text-lg mb-6 line-clamp-3">
-                    {item.content}
+                    {stripHtmlTags(item.content)}
                   </p>
                   
                   <button 

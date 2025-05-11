@@ -459,10 +459,10 @@ export default function RentalNews() {
                     {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
                     <div className="flex-1 flex flex-col justify-between h-full py-2 pr-10">
                       <div>
-                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-3 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-                        <p className="text-gray-600 text-sm md:text-base mb-4 line-clamp-2 text-left leading-relaxed">
+                        <p className="text-gray-600 text-base md:text-lg mb-4 line-clamp-2 text-left leading-relaxed">
                           {item.content}
                         </p>
                       </div>

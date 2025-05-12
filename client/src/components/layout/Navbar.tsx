@@ -9,6 +9,7 @@ import { getPaperlogyStyle } from "@/lib/fonts";
 const navLinks = [
   { name: "회사소개", href: "#about" },
   { name: "렌탈솔루션", href: "#services" },
+  { name: "고객후기", href: "#testimonials" },
   { name: "렌탈뉴스", href: "/news" },
 ];
 
@@ -90,6 +91,12 @@ const Navbar = () => {
               렌탈솔루션
             </button>
             <button
+              onClick={() => handleNavClick("#testimonials")}
+              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+            >
+              고객후기
+            </button>
+            <button
               onClick={() => handleNavClick("/news")}
               className={cn(
                 "nav-underline text-gray-300 hover:text-white transition-colors text-lg",
@@ -140,6 +147,12 @@ const Navbar = () => {
               className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
             >
               렌탈솔루션
+            </button>
+            <button
+              onClick={() => handleNavClick("#testimonials")}
+              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+            >
+              고객후기
             </button>
             <button
               onClick={() => handleNavClick("/news")}

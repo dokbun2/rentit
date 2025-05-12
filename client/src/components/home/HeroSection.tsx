@@ -5,8 +5,20 @@ import GradientBorder from "@/components/ui/gradient-border";
 import GlassEffect from "@/components/ui/glass-effect";
 import { fadeIn, staggerContainer } from "@/lib/motion";
 import { supabase } from "@/lib/supabase";
+import { useEffect, useRef } from "react";
 
 const HeroSection = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // 비디오가 로드되면 자동 재생
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error("비디오 자동재생 실패:", error);
+      });
+    }
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
@@ -21,13 +33,16 @@ const HeroSection = () => {
   return (
     <section id="home" className="min-h-screen pt-20 relative overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
-        {/* Background image with overlay */}
+        {/* 배경 비디오와 오버레이 */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-90 z-10"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" 
-          alt="Modern office space" 
+        <video 
+          ref={videoRef}
+          src="https://sarpiggygpqzitvcdiqk.supabase.co/storage/v1/object/public/imgs//video.mp4"
           className="w-full h-full object-cover object-center"
-        />
+          muted
+          loop
+          playsInline
+        ></video>
       </div>
       
       <div className="container mx-auto px-4 md:px-4 relative z-10">

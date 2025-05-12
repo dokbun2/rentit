@@ -96,6 +96,12 @@ const Navbar = () => {
             >
               고객후기
             </button>
+            <Button 
+              onClick={() => handleNavClick("#contact")}
+              className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
+            >
+              무료 상담
+            </Button>
             <button
               onClick={() => handleNavClick("/news")}
               className={cn(
@@ -105,12 +111,6 @@ const Navbar = () => {
             >
               렌탈뉴스
             </button>
-            <Button 
-              onClick={() => handleNavClick("#contact")}
-              className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
-            >
-              무료 상담
-            </Button>
           </div>
           
           {/* 모바일에서 메뉴 버튼 (오른쪽에 배치) */}
@@ -154,6 +154,12 @@ const Navbar = () => {
             >
               고객후기
             </button>
+            <Button 
+              onClick={() => handleNavClick("#contact")}
+              className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"
+            >
+              무료 상담
+            </Button>
             <button
               onClick={() => handleNavClick("/news")}
               className={cn(
@@ -163,12 +169,6 @@ const Navbar = () => {
             >
               렌탈뉴스
             </button>
-            <Button 
-              onClick={() => handleNavClick("#contact")}
-              className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"
-            >
-              무료 상담
-            </Button>
           </div>
         </motion.div>
       )}

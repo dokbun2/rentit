@@ -432,23 +432,31 @@ function NewsManager() {
     const filePath = `news/${fileName}`;
     
     setUploading(true);
-    setUploadProgress(0);
+    setUploadProgress(10); // 시작 진행률
     
     try {
       if (!supabase) throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
       
+      // 진행률 표시 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => Math.min(prev + 10, 90));
+      }, 300);
+      
       const { data, error } = await supabase.storage
-        .from('images')
+        .from('rentit-media')
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: true
         });
       
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
       if (error) throw error;
       
       // 업로드된 이미지의 공개 URL 가져오기
       const { data: publicURL } = supabase.storage
-        .from('images')
+        .from('rentit-media')
         .getPublicUrl(filePath);
       
       if (publicURL) {
@@ -457,13 +465,13 @@ function NewsManager() {
           ...formData,
           image: publicURL.publicUrl
         });
+        console.log('이미지 업로드 성공:', publicURL.publicUrl);
       }
     } catch (error) {
       console.error('이미지 업로드 오류:', error);
       alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setUploading(false);
-      setUploadProgress(100);
     }
   };
 
@@ -644,47 +652,46 @@ function NewsManager() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">이미지</label>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => document.getElementById('image-upload')?.click()}
-                        className="flex items-center gap-2"
-                        disabled={uploading}
-                      >
-                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                        {uploading ? `업로드 중 (${uploadProgress}%)` : '이미지 업로드'}
-                      </Button>
-                      <input
-                        type="file"
-                        id="image-upload"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        disabled={uploading}
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-medium text-gray-300">이미지</label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                      className="flex items-center gap-2 h-8 px-3"
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+                      {uploading ? `업로드 중 (${uploadProgress}%)` : '이미지 업로드'}
+                    </Button>
+                    <input
+                      type="file"
+                      id="image-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="image"
+                    value={formData.image || ''}
+                    onChange={handleInputChange}
+                    placeholder="이미지가 업로드되면 자동으로 채워집니다."
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    readOnly
+                  />
+                  {formData.image && (
+                    <div className="mt-2 relative w-full h-24 border border-gray-700 rounded-md overflow-hidden">
+                      <img 
+                        src={formData.image} 
+                        alt="미리보기" 
+                        className="w-full h-full object-cover"
                       />
                     </div>
-                    <input
-                      type="text"
-                      name="image"
-                      value={formData.image || ''}
-                      onChange={handleInputChange}
-                      placeholder="이미지가 업로드되면 자동으로 채워집니다."
-                      className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                      readOnly
-                    />
-                    {formData.image && (
-                      <div className="mt-2 relative w-full h-24 border border-gray-700 rounded-md overflow-hidden">
-                        <img 
-                          src={formData.image} 
-                          alt="미리보기" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
                 
                 <div>

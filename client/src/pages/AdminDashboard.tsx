@@ -427,50 +427,62 @@ function NewsManager() {
     if (!files || files.length === 0) return;
     
     const file = files[0];
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${uuidv4()}.${fileExt}`;
-    const filePath = `news/${fileName}`;
+    
+    // 이미지 파일 타입 및 크기 검사
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      alert('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+    
+    console.log('업로드 시작:', { 파일명: file.name, 크기: file.size, 타입: file.type });
     
     setUploading(true);
     setUploadProgress(10); // 시작 진행률
     
     try {
-      if (!supabase) throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
-      
       // 진행률 표시 시뮬레이션
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => Math.min(prev + 10, 90));
-      }, 300);
+        setUploadProgress(prev => Math.min(prev + 5, 90));
+      }, 200);
       
-      const { data, error } = await supabase.storage
-        .from('rentit-media')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
+      // 이미지 데이터를 base64로 변환하여 직접 폼에 설정
+      const reader = new FileReader();
       
-      clearInterval(progressInterval);
-      setUploadProgress(100);
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          // base64 데이터 URL로 이미지 설정
+          const imageDataUrl = event.target.result.toString();
+          
+          // 폼 데이터 업데이트
+          setFormData({
+            ...formData,
+            image: imageDataUrl
+          });
+          
+          console.log('이미지 데이터 URL 생성 완료');
+          
+          // 진행률 업데이트
+          clearInterval(progressInterval);
+          setUploadProgress(100);
+          
+          // 업로드 상태 완료로 설정
+          setTimeout(() => {
+            setUploading(false);
+          }, 500);
+        }
+      };
       
-      if (error) throw error;
+      // 파일 읽기 시작
+      reader.readAsDataURL(file);
       
-      // 업로드된 이미지의 공개 URL 가져오기
-      const { data: publicURL } = supabase.storage
-        .from('rentit-media')
-        .getPublicUrl(filePath);
-      
-      if (publicURL) {
-        // 폼 데이터 업데이트
-        setFormData({
-          ...formData,
-          image: publicURL.publicUrl
-        });
-        console.log('이미지 업로드 성공:', publicURL.publicUrl);
-      }
     } catch (error) {
       console.error('이미지 업로드 오류:', error);
       alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
-    } finally {
       setUploading(false);
     }
   };

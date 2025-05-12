@@ -162,7 +162,17 @@ function ContactsManager() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setContacts(data || []);
+      
+      console.log('불러온 연락처 데이터:', data);
+      
+      // 필드 이름 마이그레이션을 위한 데이터 매핑
+      const mappedData = data?.map(item => ({
+        ...item,
+        // 기존 데이터에 processed 필드가 있으면 is_processed로 변환
+        is_processed: item.processed !== undefined ? item.processed : item.is_processed
+      })) || [];
+      
+      setContacts(mappedData);
     } catch (error) {
       console.error('문의 목록 조회 오류:', error);
     } finally {
@@ -174,26 +184,40 @@ function ContactsManager() {
     try {
       if (!supabase) return;
       
-      const { error } = await supabase
+      console.log('처리 상태 변경 시도:', id, '현재 상태:', currentStatus, '→', !currentStatus);
+      
+      // 필드 이름과 쿼리 확인
+      const { error, data } = await supabase
         .from('contacts')
-        .update({ processed: !currentStatus })
-        .eq('id', id);
+        .update({ is_processed: !currentStatus })
+        .eq('id', id)
+        .select();
+      
+      console.log('업데이트 결과:', { 에러: error, 데이터: data });
 
-      if (error) throw error;
+      if (error) {
+        console.error('처리 상태 업데이트 오류:', error);
+        throw error;
+      }
       
       // 목록 업데이트
       setContacts(
         contacts.map(contact => 
-          contact.id === id ? { ...contact, processed: !currentStatus } : contact
+          contact.id === id ? { ...contact, is_processed: !currentStatus } : contact
         )
       );
       
       // 선택된 연락처가 있고, 해당 ID와 일치하면 업데이트
       if (selectedContact && selectedContact.id === id) {
-        setSelectedContact({ ...selectedContact, processed: !currentStatus });
+        setSelectedContact({ ...selectedContact, is_processed: !currentStatus });
       }
+      
+      // 성공 메시지
+      console.log('처리 상태 업데이트 성공!');
+      
     } catch (error) {
       console.error('처리 상태 업데이트 오류:', error);
+      alert('처리 상태 변경에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -243,12 +267,12 @@ function ContactsManager() {
                       <td className="px-2 py-3">
                         <span
                           className={`rounded-full px-2 py-1 text-xs ${
-                            contact.processed 
+                            contact.is_processed 
                               ? 'bg-primary/20 text-primary' 
                               : 'bg-secondary/20 text-secondary'
                           }`}
                         >
-                          {contact.processed ? '처리완료' : '대기중'}
+                          {contact.is_processed ? '처리완료' : '대기중'}
                         </span>
                       </td>
                     </tr>
@@ -275,15 +299,15 @@ function ContactsManager() {
                   </p>
                 </div>
                 <Button
-                  onClick={() => handleProcessToggle(selectedContact.id, selectedContact.processed)}
+                  onClick={() => handleProcessToggle(selectedContact.id, selectedContact.is_processed)}
                   className={`flex items-center gap-2 ${
-                    selectedContact.processed 
+                    selectedContact.is_processed 
                       ? 'bg-secondary hover:bg-secondary/80' 
                       : 'bg-primary hover:bg-primary/80'
                   }`}
                   size="sm"
                 >
-                  {selectedContact.processed ? (
+                  {selectedContact.is_processed ? (
                     <>
                       <XSquare size={16} />
                       <span>미처리로 변경</span>

@@ -29,7 +29,7 @@ export interface Contact {
   service: string;
   message: string;
   created_at: string;
-  processed: boolean;
+  is_processed: boolean;
 }
 
 export interface NewsItem {

@@ -31,7 +31,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen pt-20 relative overflow-hidden flex items-center">
+    <section id="home" className="min-h-[90vh] md:min-h-screen pt-20 relative overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
         {/* 배경 비디오와 오버레이 */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-90 z-10"></div>
@@ -66,7 +66,7 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
-              className="text-lg md:text-xl text-gray-300 mb-8"
+              className="text-lg md:text-xl text-gray-300 mb-4 md:mb-8"
             >
               렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
               렌탈비즈니스의 모든 것을 도와드립니다.
@@ -74,18 +74,18 @@ const HeroSection = () => {
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
-              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+              className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
             >
               <Button 
                 onClick={() => scrollToSection("#services")}
-                className="px-8 py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
+                className="px-6 py-5 md:px-8 md:py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
                 렌탈솔루션
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}
                 variant="outline" 
-                className="px-8 py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
+                className="px-6 py-5 md:px-8 md:py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
               >
                 무료상담신청
               </Button>
@@ -94,15 +94,15 @@ const HeroSection = () => {
           
           <motion.div 
             variants={fadeIn("up", 0.4)}
-            className="md:w-1/2 mt-12 md:mt-0 relative"
+            className="md:w-1/2 mt-8 md:mt-0 relative"
           >
             <GradientBorder>
-              <GlassEffect className="p-8 rounded-lg">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4">
+              <GlassEffect className="p-5 md:p-8 rounded-lg">
+                <div className="flex items-center mb-4 md:mb-6">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex items-center justify-center mr-3 md:mr-4">
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
-                      className="h-6 w-6 text-white" 
+                      className="h-5 w-5 md:h-6 md:w-6 text-white" 
                       fill="none" 
                       viewBox="0 0 24 24" 
                       stroke="currentColor"
@@ -116,35 +116,35 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
-                    <p className="text-gray-400 text-lg">성공적인 렌탈 비즈니스의 시작</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
+                    <p className="text-gray-400 text-base md:text-lg">성공적인 렌탈 비즈니스의 시작</p>
                   </div>
                 </div>
                 
-                <ul className="space-y-3">
+                <ul className="space-y-2 md:space-y-3">
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">렌탈사설립 전문컨설팅</span>
+                    <span className="text-gray-300 text-sm md:text-base">렌탈사설립 전문컨설팅</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">최신 렌탈전산 시스템 구축</span>
+                    <span className="text-gray-300 text-sm md:text-base">최신 렌탈전산 시스템 구축</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">업계 최고 렌탈 비즈니스 파트너십</span>
+                    <span className="text-gray-300 text-sm md:text-base">업계 최고 렌탈 비즈니스 파트너십</span>
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-base">부업으로 시작하는 렌탈 비즈니스</span>
+                    <span className="text-gray-300 text-sm md:text-base">부업으로 시작하는 렌탈 비즈니스</span>
                   </li>
                 </ul>
               </GlassEffect>
@@ -153,13 +153,13 @@ const HeroSection = () => {
         </motion.div>
       </div>
       
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
         <button 
           onClick={() => scrollToSection("#about")} 
           className="text-white opacity-70 hover:opacity-100 transition-opacity"
           aria-label="Scroll to about section"
         >
-          <ChevronDown className="h-6 w-6" />
+          <ChevronDown className="h-5 w-5 md:h-6 md:w-6" />
         </button>
       </div>
     </section>

@@ -31,7 +31,7 @@ const Navbar = () => {
     if (href.startsWith("#")) {
       const element = document.querySelector(href);
       if (element) {
-        const offset = href === "#contact" ? 140 : 100;
+        const offset = href === "#contact" ? 140 : (href === "#about" ? 20 : 100);
         const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({
           top: offsetTop,

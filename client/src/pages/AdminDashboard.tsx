@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { supabase } from '../lib/supabase';
-import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2 } from 'lucide-react';
+import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2, Upload, Loader2 } from 'lucide-react';
 import GlassEffect from '@/components/ui/glass-effect';
 import { Button } from '@/components/ui/button';
 import { Contact, NewsItem } from '../lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null);
@@ -345,6 +346,8 @@ function NewsManager() {
     active: true,
   });
   const [htmlPreview, setHtmlPreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     fetchNews();
@@ -415,6 +418,52 @@ function NewsManager() {
     
     if (name === 'description') {
       setHtmlPreview(value);
+    }
+  };
+
+  // 이미지 업로드 함수 추가
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    const file = files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const filePath = `news/${fileName}`;
+    
+    setUploading(true);
+    setUploadProgress(0);
+    
+    try {
+      if (!supabase) throw new Error('Supabase 클라이언트가 초기화되지 않았습니다.');
+      
+      const { data, error } = await supabase.storage
+        .from('images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+      
+      if (error) throw error;
+      
+      // 업로드된 이미지의 공개 URL 가져오기
+      const { data: publicURL } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+      
+      if (publicURL) {
+        // 폼 데이터 업데이트
+        setFormData({
+          ...formData,
+          image: publicURL.publicUrl
+        });
+      }
+    } catch (error) {
+      console.error('이미지 업로드 오류:', error);
+      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setUploading(false);
+      setUploadProgress(100);
     }
   };
 
@@ -561,10 +610,6 @@ function NewsManager() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">뉴스 관리</h2>
         <div className="flex space-x-3">
-          <Button onClick={() => setLocation('/admin/news')} variant="outline" className="flex items-center gap-2">
-            <FileText size={16} />
-            새 뉴스 관리 페이지로 이동
-          </Button>
           {!editMode && (
             <Button onClick={handleCreateClick} className="flex items-center gap-2">
               <Plus size={16} />
@@ -599,15 +644,47 @@ function NewsManager() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">이미지 URL</label>
-                  <input
-                    type="url"
-                    name="image"
-                    value={formData.image || ''}
-                    onChange={handleInputChange}
-                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    required
-                  />
+                  <label className="block text-sm font-medium text-gray-300 mb-1">이미지</label>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => document.getElementById('image-upload')?.click()}
+                        className="flex items-center gap-2"
+                        disabled={uploading}
+                      >
+                        {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {uploading ? `업로드 중 (${uploadProgress}%)` : '이미지 업로드'}
+                      </Button>
+                      <input
+                        type="file"
+                        id="image-upload"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        disabled={uploading}
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      name="image"
+                      value={formData.image || ''}
+                      onChange={handleInputChange}
+                      placeholder="이미지가 업로드되면 자동으로 채워집니다."
+                      className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      readOnly
+                    />
+                    {formData.image && (
+                      <div className="mt-2 relative w-full h-24 border border-gray-700 rounded-md overflow-hidden">
+                        <img 
+                          src={formData.image} 
+                          alt="미리보기" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <div>

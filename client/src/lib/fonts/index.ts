@@ -25,4 +25,4 @@ export const fontWeightMap: Record<FontWeight, number> = {
 // 폰트 클래스를 동적으로 생성하는 유틸리티 함수
 export const getPaperlogyStyle = (weight: FontWeight = 'regular', fontSize?: string): string => {
   return `font-paperlogy font-${weight} ${fontSize ? `text-[${fontSize}]` : ''}`.trim();
-}; 
+};

@@ -209,6 +209,9 @@ const ContactSection = () => {
             viewport={{ once: true, amount: 0.1 }}
             variants={fadeIn("left", 0.3)}
           >
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+              <span className="text-primary">무료상담</span> 신청하기
+            </h2>
             <GlassEffect className="rounded-xl p-8">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" id="contact-form">

@@ -150,21 +150,6 @@ const ServicesSection = () => {
             </motion.div>
           ))}
         </div>
-        
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={fadeIn("up", 0.5)}
-          className="mt-16 text-center"
-        >
-          <Button 
-            onClick={scrollToContact}
-            className="px-8 py-6 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
-          >
-            무료 상담 신청하기
-          </Button>
-        </motion.div>
       </div>
     </section>
   );

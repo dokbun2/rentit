@@ -54,7 +54,7 @@ const HeroSection = () => {
         >
           <motion.div 
             variants={fadeIn("up", 0.1)}
-            className="md:w-1/2 md:pr-8"
+            className="md:w-1/2 md:pr-8 text-center md:text-left"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
               <span className="text-primary">렌탈 비즈니스 </span>
@@ -74,7 +74,7 @@ const HeroSection = () => {
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
-              className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
+              className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center md:justify-start"
             >
               <Button 
                 onClick={() => scrollToSection("#services")}

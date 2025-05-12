@@ -143,7 +143,7 @@ const NewsSection = () => {
       <div className="absolute top-0 left-0 w-64 h-64 bg-primary rounded-full opacity-5 -ml-20 -mt-20"></div>
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-secondary rounded-full opacity-5 -mr-40 -mb-40"></div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -172,7 +172,7 @@ const NewsSection = () => {
             <p className="mt-4 text-gray-400">뉴스를 불러오는 중입니다...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-2 md:px-0 max-w-[95%] md:max-w-full mx-auto">
             {newsItems.map((item, index) => (
               <motion.div
                 key={index}
@@ -180,10 +180,10 @@ const NewsSection = () => {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={fadeIn("up", 0.2 + index * 0.1)}
-                className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 cursor-pointer"
+                className="group glass-effect rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 border border-gray-800/50 hover:border-primary/30 cursor-pointer transform hover:-translate-y-1"
                 onClick={() => item.id ? setLocation(`/news?id=${item.id}`) : setLocation("/news")}
               >
-                <div className="relative h-48">
+                <div className="relative h-40">
                   <img 
                     src={item.image_url} 
                     alt={item.title} 
@@ -193,33 +193,33 @@ const NewsSection = () => {
                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
                     }}
                   />
-                  <div className="absolute top-4 left-4 bg-background px-3 py-1 rounded-full text-sm text-gray-300">
+                  <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-gray-300">
                     {item.category || "렌탈뉴스"}
                   </div>
                 </div>
                 
-                <div className="p-6">
+                <div className="p-5">
                   <div className="flex justify-between items-center mb-3">
-                    <p className="text-gray-500 text-base group-hover:text-primary transition-colors">
+                    <p className="text-gray-500 text-sm group-hover:text-primary transition-colors">
                       {formatDate(item.created_at)}
                     </p>
                     <div className="flex space-x-2">
                       {item.tag && (
-                        <span className={`px-2 py-1 ${item.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
+                        <span className={`px-2 py-1 ${item.tag_color || "bg-primary/30"} rounded-md text-xs text-white`}>
                           {item.tag}
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 line-clamp-2 group-hover:text-primary transition-colors">{item.title}</h3>
                   
-                  <p className="text-gray-400 text-lg mb-6 line-clamp-3">
+                  <p className="text-gray-400 text-base mb-6 line-clamp-3">
                     {stripHtmlTags(item.content)}
                   </p>
                   
                   <button 
-                    className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-base"
+                    className="inline-flex items-center text-primary hover:opacity-80 transition-colors text-base font-medium group-hover:translate-x-1 transition-transform"
                     onClick={(e) => {
                       e.stopPropagation(); // 이벤트 버블링 방지
                       handleViewDetails(item, e);
@@ -242,7 +242,7 @@ const NewsSection = () => {
         >
           <Button 
             variant="outline" 
-            className="px-6 py-3 dark-light rounded-lg text-white text-lg hover:bg-background transition-all"
+            className="px-6 py-3 dark-light rounded-lg text-white text-lg hover:bg-background transition-all hover:shadow-md hover:shadow-primary/20 border-gray-700 hover:border-primary/50"
             onClick={() => setLocation("/news")}
           >
             더 많은 뉴스 보기 <ArrowRight className="ml-2 h-4 w-4" />

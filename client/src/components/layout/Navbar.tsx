@@ -32,7 +32,7 @@ const Navbar = () => {
     if (href.startsWith("#")) {
       const element = document.querySelector(href);
       if (element) {
-        const offset = href === "#contact" ? 140 : (href === "#about" ? 20 : 100);
+        const offset = href === "#contact" ? 140 : (href === "#about" || href === "#services" || href === "#testimonials" || href === "#news" ? 20 : 100);
         const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({
           top: offsetTop,
@@ -91,6 +91,15 @@ const Navbar = () => {
               렌탈솔루션
             </button>
             <button
+              onClick={() => handleNavClick("#news")}
+              className={cn(
+                "nav-underline text-gray-300 hover:text-white transition-colors text-lg",
+                location === "/news" && "text-primary"
+              )}
+            >
+              렌탈뉴스
+            </button>
+            <button
               onClick={() => handleNavClick("#testimonials")}
               className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
             >
@@ -102,15 +111,6 @@ const Navbar = () => {
             >
               무료 상담
             </Button>
-            <button
-              onClick={() => handleNavClick("/news")}
-              className={cn(
-                "nav-underline text-gray-300 hover:text-white transition-colors text-lg",
-                location === "/news" && "text-primary"
-              )}
-            >
-              렌탈뉴스
-            </button>
           </div>
           
           {/* 모바일에서 메뉴 버튼 (오른쪽에 배치) */}
@@ -149,6 +149,15 @@ const Navbar = () => {
               렌탈솔루션
             </button>
             <button
+              onClick={() => handleNavClick("#news")}
+              className={cn(
+                "nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg",
+                location === "/news" && "text-primary"
+              )}
+            >
+              렌탈뉴스
+            </button>
+            <button
               onClick={() => handleNavClick("#testimonials")}
               className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
             >
@@ -160,15 +169,6 @@ const Navbar = () => {
             >
               무료 상담
             </Button>
-            <button
-              onClick={() => handleNavClick("/news")}
-              className={cn(
-                "nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg",
-                location === "/news" && "text-primary"
-              )}
-            >
-              렌탈뉴스
-            </button>
           </div>
         </motion.div>
       )}

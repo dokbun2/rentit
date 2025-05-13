@@ -16,6 +16,14 @@
   ],
   "routes": [
     {
+      "src": "/",
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate"
+      },
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
       "src": "/sitemap.xml",
       "headers": {
         "content-type": "application/xml; charset=utf-8",

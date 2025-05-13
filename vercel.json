@@ -12,6 +12,10 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "api/sitemap.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -25,11 +29,7 @@
     },
     {
       "src": "/sitemap.xml",
-      "headers": {
-        "content-type": "application/xml; charset=utf-8",
-        "cache-control": "public, max-age=86400"
-      },
-      "dest": "/sitemap.xml",
+      "dest": "/api/sitemap.js",
       "status": 200
     },
     {

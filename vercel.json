@@ -29,6 +29,24 @@
       "dest": "/assets/$1"
     },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
+    { 
+      "src": "^/sitemap.xml$",
+      "headers": { 
+        "content-type": "application/xml; charset=utf-8",
+        "cache-control": "public, max-age=86400"
+      },
+      "dest": "/sitemap.xml",
+      "continue": true
+    },
+    { 
+      "src": "^/robots.txt$",
+      "headers": { 
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": "public, max-age=86400"
+      },
+      "dest": "/robots.txt",
+      "continue": true
+    },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { 
       "src": "/admin/login", 

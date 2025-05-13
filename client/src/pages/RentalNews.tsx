@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getNews } from "@/lib/api/news";
-import { News } from "@/types/news";
-import { formatDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { getNews } from "../lib/api/news";
+import { News } from "../types/news";
+import { formatDate } from "../lib/utils";
+import { Button } from "../components/ui/button";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { fadeIn } from "@/lib/motion";
+import { fadeIn } from "../lib/motion";
 import { 
   Dialog, 
   DialogContent, 
@@ -14,7 +14,7 @@ import {
   DialogTitle, 
   DialogFooter,
   DialogDescription
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import { 
   Form, 
   FormControl, 
@@ -22,15 +22,15 @@ import {
   FormItem, 
   FormLabel, 
   FormMessage 
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { toast } from "../hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../lib/supabase";
 
 // 뉴스 작성 폼 유효성 검사 스키마
 const newsFormSchema = z.object({

@@ -1,21 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npx vite build && cp -f public/sitemap.xml dist/ && cp -f public/sitemap-new.xml dist/ && cp -f public/robots.txt dist/ && cp -rf public/imgs dist/",
+  "buildCommand": "npx vite build && [ -f public/sitemap.xml ] && cp -f public/sitemap.xml dist/ || true && [ -f public/sitemap-new.xml ] && cp -f public/sitemap-new.xml dist/ || true && [ -f public/robots.txt ] && cp -f public/robots.txt dist/ || true && [ -d public/imgs ] && cp -rf public/imgs dist/ || true",
   "outputDirectory": "dist",
   "public": true,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "api/sitemap.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",

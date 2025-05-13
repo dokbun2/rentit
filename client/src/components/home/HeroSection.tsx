@@ -10,11 +10,21 @@ const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+      const offset = sectionId === "#contact" ? 140 : 100;
+      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",
       });
+      
+      if (sectionId === "#contact") {
+        setTimeout(() => {
+          const contactForm = document.querySelector('#contact-form');
+          if (contactForm) {
+            contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 500);
+      }
     }
   };
 

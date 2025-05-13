@@ -746,6 +746,50 @@ import MemoryStore from "memorystore";
 var app = express2();
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
+app.get("/sitemap.xml", (req, res) => {
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://renit.dokbun2.com/</loc>
+    <lastmod>2023-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://renit.dokbun2.com/about</loc>
+    <lastmod>2023-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://renit.dokbun2.com/services</loc>
+    <lastmod>2023-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://renit.dokbun2.com/contact</loc>
+    <lastmod>2023-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>`;
+  res.status(200).send(sitemap);
+});
+app.get("/robots.txt", (req, res) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  const robots = `User-agent: *
+Allow: /
+
+# \uAD00\uB9AC\uC790 \uD398\uC774\uC9C0 \uC811\uADFC \uC81C\uD55C
+Disallow: /admin/
+Disallow: /adminlogin/
+
+# \uC0AC\uC774\uD2B8\uB9F5 \uC704\uCE58
+Sitemap: https://renit.dokbun2.com/sitemap.xml`;
+  res.status(200).send(robots);
+});
 var MemoryStoreSession = MemoryStore(session);
 app.use(
   session({

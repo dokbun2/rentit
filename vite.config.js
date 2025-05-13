@@ -33,29 +33,19 @@ export default defineConfig({
     react(),
     copyStaticFiles()
   ],
+  assetsInclude: ['**/*.xml', '**/*.txt'],
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        sitemap: resolve(__dirname, 'public/sitemap.xml'),
-        robots: resolve(__dirname, 'public/robots.txt')
+        main: resolve(__dirname, 'index.html')
       },
       output: {
         // 상대 경로 문제 해결을 위한 설정
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name;
-          if (info === 'sitemap.xml') {
-            return 'sitemap.xml';
-          }
-          if (info === 'robots.txt') {
-            return 'robots.txt';
-          }
-          return 'assets/[name]-[hash].[ext]';
-        }
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
     // 정적 파일을 dist에 복사하도록 설정

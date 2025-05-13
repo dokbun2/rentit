@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { getPaperlogyStyle } from "@/lib/fonts";
+import { Button } from "../ui/button";
+import { cn } from "../../lib/utils";
+import { getPaperlogyStyle } from "../../lib/fonts";
 
 const navLinks = [
   { name: "회사소개", href: "#about" },

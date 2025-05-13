@@ -1,5 +1,5 @@
-import { News } from "@/types/news";
-import { supabase } from "@/lib/supabase";
+import { News } from "../../types/news";
+import { supabase } from "../supabase";
 
 export async function getNews(): Promise<News[]> {
   try {

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getNews } from "@/lib/api/news";
-import { News } from "@/types/news";
-import { formatDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { getNews } from "../lib/api/news";
+import { News } from "../types/news";
+import { formatDate } from "../lib/utils";
+import { Button } from "../components/ui/button";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { fadeIn } from "@/lib/motion";
+import { fadeIn } from "../lib/motion";
 import { 
   Dialog, 
   DialogContent, 
@@ -14,7 +14,7 @@ import {
   DialogTitle, 
   DialogFooter,
   DialogDescription
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import { 
   Form, 
   FormControl, 
@@ -22,15 +22,15 @@ import {
   FormItem, 
   FormLabel, 
   FormMessage 
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
+} from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { toast } from "../hooks/use-toast";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../lib/supabase";
 
 // 뉴스 작성 폼 유효성 검사 스키마
 const newsFormSchema = z.object({
@@ -345,7 +345,7 @@ export default function RentalNews() {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full opacity-5 -mr-60 -mb-60"></div>
       <div className="absolute top-1/3 right-10 w-48 h-48 bg-gradient-radial from-primary/20 to-transparent opacity-30"></div>
       
-      <div className="container mx-auto px-4 py-12 pt-14 md:pt-16 relative z-10">
+      <div className="container max-w-[1960px] mx-auto px-4 py-12 pt-14 md:pt-16 relative z-10">
         {!viewDetailMode ? (
           <>
             {/* 헤더 섹션 */}
@@ -444,7 +444,7 @@ export default function RentalNews() {
                     onClick={() => handleViewDetail(item)}
                   >
                     {/* 이미지 컨테이너 - 더 큰 정사각형 썸네일 */}
-                    <div className="flex-shrink-0 w-[140px] h-[140px] md:w-[180px] md:h-[180px] relative overflow-hidden rounded-xl shadow-md border-2 border-gray-100">
+                    <div className="flex-shrink-0 w-[160px] h-[160px] md:w-[220px] md:h-[220px] relative overflow-hidden rounded-xl shadow-md border-2 border-gray-100">
                       <img
                         src={item.image_url || "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800"}
                         alt={item.title}
@@ -457,12 +457,12 @@ export default function RentalNews() {
                     </div>
 
                     {/* 텍스트 컨텐츠 컨테이너 - 블로그 스타일 */}
-                    <div className="flex-1 flex flex-col h-[140px] md:h-[180px] justify-between py-2 pr-10">
+                    <div className="flex-1 flex flex-col h-[160px] md:h-[220px] justify-between py-2 pr-10">
                       <div>
-                        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
+                        <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-                        <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
+                        <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
                           {item.content}
                         </p>
                       </div>
@@ -552,7 +552,7 @@ export default function RentalNews() {
               initial="hidden"
               animate="show"
               variants={fadeIn("up", 0.2)}
-              className="max-w-4xl mx-auto"
+              className="max-w-[1960px] mx-auto"
             >
               <div className="flex justify-between items-center mb-6 mt-4">
                 <Button
@@ -586,7 +586,7 @@ export default function RentalNews() {
               
               <div className="glass-effect rounded-xl overflow-hidden">
                 {/* 헤더 이미지 */}
-                <div className="relative h-[300px] md:h-[400px]">
+                <div className="relative h-[380px] md:h-[500px]">
                   <img 
                     src={selectedNews.image_url} 
                     alt={selectedNews.title} 
@@ -606,7 +606,7 @@ export default function RentalNews() {
                         </span>
                       )}
                     </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white text-left">{selectedNews.title}</h1>
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-left">{selectedNews.title}</h1>
                     <div className="flex items-center mt-2 text-gray-300">
                       <Calendar className="h-4 w-4 mr-2" />
                       {formatDate(selectedNews.created_at)}
@@ -614,13 +614,13 @@ export default function RentalNews() {
                   </div>
                 </div>
                 
-                {/* 본문 내용 */}
-                <div className="p-8 md:p-12">
-                  <article className="prose prose-invert prose-lg md:prose-xl max-w-none text-left">
+                {/* 본문 내용 - 너비 확장 및 패딩 조정 */}
+                <div className="p-4 md:p-8">
+                  <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-none w-full mx-auto text-left">
                     {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
                     {selectedNews.content.split('\n\n').map((paragraph, idx) => (
                       paragraph.trim() && (
-                        <p key={idx} className="text-gray-300 leading-relaxed mb-6 text-left">
+                        <p key={idx} className="text-gray-300 leading-relaxed mb-8 text-lg md:text-xl lg:text-2xl text-left">
                           {paragraph}
                         </p>
                       )
@@ -628,11 +628,11 @@ export default function RentalNews() {
                   </article>
                   
                   {/* 공유 및 링크 섹션 */}
-                  <div className="mt-12 pt-8 border-t border-gray-800">
+                  <div className="mt-16 pt-8 border-t border-gray-800 w-full mx-auto">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (
-                        <div className="md:w-1/2">
+                        <div className="md:w-2/3">
                           <Button 
                             className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-400 py-6 text-lg"
                             onClick={() => window.open(selectedNews.link, "_blank")}
@@ -654,9 +654,9 @@ export default function RentalNews() {
               
               {/* 관련 뉴스 */}
               {news && news.length > 1 && (
-                <div className="mt-16">
-                  <h2 className="text-2xl font-bold mb-6 text-left">다른 <span className="text-primary">뉴스</span> 보기</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="mt-20">
+                  <h2 className="text-3xl font-bold mb-8 text-left">다른 <span className="text-primary">뉴스</span> 보기</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                     {news
                       .filter(item => item.id !== selectedNews.id)
                       .slice(0, 3)
@@ -669,7 +669,7 @@ export default function RentalNews() {
                           className="glass-effect rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:shadow-primary/10 transition-all"
                           onClick={() => handleViewDetail(item)}
                         >
-                          <div className="h-40 relative">
+                          <div className="h-52 relative">
                             <img 
                               src={item.image_url} 
                               alt={item.title}
@@ -684,8 +684,8 @@ export default function RentalNews() {
                               </div>
                             )}
                           </div>
-                          <div className="p-4">
-                            <h3 className="font-bold text-lg mb-2 line-clamp-2 text-left">{item.title}</h3>
+                          <div className="p-6">
+                            <h3 className="font-bold text-xl mb-3 line-clamp-2 text-left">{item.title}</h3>
                             <p className="text-gray-400 text-sm text-left">{formatDate(item.created_at)}</p>
                           </div>
                         </motion.div>

@@ -1,8 +1,8 @@
 import { Switch, Route } from "wouter";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "./components/ui/toaster";
+import { TooltipProvider } from "./components/ui/tooltip";
 import HomePage from "./pages/HomePage";
-import NotFound from "@/pages/not-found";
+import NotFound from "./pages/not-found";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import NewsManagement from "./pages/NewsManagement";

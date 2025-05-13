@@ -1,25 +1,35 @@
 import { motion } from "framer-motion";
 import { ChevronDown, Check, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import GradientBorder from "@/components/ui/gradient-border";
-import GlassEffect from "@/components/ui/glass-effect";
-import { fadeIn, staggerContainer } from "@/lib/motion";
-import { supabase } from "@/lib/supabase";
+import { Button } from "../ui/button";
+import GradientBorder from "../ui/gradient-border";
+import GlassEffect from "../ui/glass-effect";
+import { fadeIn, staggerContainer } from "../../lib/motion";
+import { supabase } from "../../lib/supabase";
 
 const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+      const offset = sectionId === "#contact" ? 140 : 100;
+      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",
       });
+      
+      if (sectionId === "#contact") {
+        setTimeout(() => {
+          const contactForm = document.querySelector('#contact-form');
+          if (contactForm) {
+            contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 500);
+      }
     }
   };
 
   return (
-    <section id="home" className="min-h-screen pt-20 relative overflow-hidden flex items-center">
+    <section id="home" className="min-h-screen pt-16 md:pt-20 relative overflow-hidden flex items-center">
       <div className="absolute inset-0 z-0">
         {/* Background image with overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-90 z-10"></div>
@@ -30,7 +40,11 @@ const HeroSection = () => {
         />
       </div>
       
+<<<<<<< Updated upstream
       <div className="container mx-auto px-4 md:px-4 relative z-10">
+=======
+      <div className="container mx-auto px-4 relative z-10">
+>>>>>>> Stashed changes
         <motion.div 
           variants={staggerContainer}
           initial="hidden"
@@ -39,9 +53,15 @@ const HeroSection = () => {
         >
           <motion.div 
             variants={fadeIn("up", 0.1)}
+<<<<<<< Updated upstream
             className="md:w-1/2 md:pr-8"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+=======
+            className="w-full md:w-1/2 md:pr-8 text-center md:text-left"
+          >
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+>>>>>>> Stashed changes
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
@@ -51,7 +71,11 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
+<<<<<<< Updated upstream
               className="text-lg md:text-xl text-gray-300 mb-8"
+=======
+              className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 md:mb-8"
+>>>>>>> Stashed changes
             >
               렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
               렌탈비즈니스의 모든 것을 도와드립니다.
@@ -59,18 +83,22 @@ const HeroSection = () => {
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
+<<<<<<< Updated upstream
               className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+=======
+              className="flex flex-col sm:flex-row justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-4"
+>>>>>>> Stashed changes
             >
               <Button 
                 onClick={() => scrollToSection("#services")}
-                className="px-8 py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
+                className="px-6 py-5 sm:px-8 sm:py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-base sm:text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
                 렌탈솔루션
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}
                 variant="outline" 
-                className="px-8 py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
+                className="px-6 py-5 sm:px-8 sm:py-7 dark-light border-gray-700 rounded-full text-white text-base sm:text-lg font-medium hover:bg-dark-lighter transition-all"
               >
                 무료상담신청
               </Button>
@@ -79,15 +107,19 @@ const HeroSection = () => {
           
           <motion.div 
             variants={fadeIn("up", 0.4)}
+<<<<<<< Updated upstream
             className="md:w-1/2 mt-12 md:mt-0 relative"
+=======
+            className="w-full md:w-1/2 mt-10 md:mt-0 relative"
+>>>>>>> Stashed changes
           >
             <GradientBorder>
-              <GlassEffect className="p-8 rounded-lg">
+              <GlassEffect className="p-6 sm:p-8 rounded-lg">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mr-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary flex items-center justify-center mr-4">
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
-                      className="h-6 w-6 text-white" 
+                      className="h-5 w-5 sm:h-6 sm:w-6 text-white" 
                       fill="none" 
                       viewBox="0 0 24 24" 
                       stroke="currentColor"
@@ -101,8 +133,8 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
-                    <p className="text-gray-400 text-lg">성공적인 렌탈 비즈니스의 시작</p>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
+                    <p className="text-gray-400 text-base sm:text-lg">성공적인 렌탈 비즈니스의 시작</p>
                   </div>
                 </div>
                 
@@ -111,25 +143,41 @@ const HeroSection = () => {
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
+<<<<<<< Updated upstream
                     <span className="text-gray-300 text-base">렌탈사설립 전문컨설팅</span>
+=======
+                    <span className="text-gray-300 text-sm sm:text-base">렌탈사설립 전문컨설팅</span>
+>>>>>>> Stashed changes
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
+<<<<<<< Updated upstream
                     <span className="text-gray-300 text-base">최신 렌탈전산 시스템 구축</span>
+=======
+                    <span className="text-gray-300 text-sm sm:text-base">최신 렌탈전산 시스템 구축</span>
+>>>>>>> Stashed changes
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
+<<<<<<< Updated upstream
                     <span className="text-gray-300 text-base">업계 최고 렌탈 비즈니스 파트너십</span>
+=======
+                    <span className="text-gray-300 text-sm sm:text-base">업계 최고 렌탈 비즈니스 파트너십</span>
+>>>>>>> Stashed changes
                   </li>
                   <li className="flex items-center">
                     <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
                       <Check className="h-3.5 w-3.5 text-purple-400" />
                     </div>
+<<<<<<< Updated upstream
                     <span className="text-gray-300 text-base">부업으로 시작하는 렌탈 비즈니스</span>
+=======
+                    <span className="text-gray-300 text-sm sm:text-base">부업으로 시작하는 렌탈 비즈니스</span>
+>>>>>>> Stashed changes
                   </li>
                 </ul>
               </GlassEffect>

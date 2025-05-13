@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Trophy, Handshake, Lightbulb, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeIn } from "@/lib/motion";
+import { Button } from "../ui/button";
+import { fadeIn } from "../../lib/motion";
 
 const AboutSection = () => {
   const scrollToContact = () => {
@@ -72,8 +72,8 @@ const AboutSection = () => {
               시장 조사부터 비즈니스 모델 구축, 시스템 개발까지 종합적인 컨설팅 서비스로 고객의 니즈에 맞는 최적의 결과를 도출합니다.
             </p>
             
-            <div className="flex flex-col items-start gap-4 mb-8 w-full max-w-md mx-auto pl-8 md:pl-36">
-              <div className="flex items-center w-full">
+            <div className="flex flex-col items-center md:items-start gap-4 mb-8 w-full max-w-md mx-auto px-4 md:pl-36">
+              <div className="flex items-center w-full justify-center md:justify-start">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
                   <Trophy className="h-5 w-5 text-primary" />
                 </div>
@@ -82,7 +82,7 @@ const AboutSection = () => {
                   <p className="text-gray-400 text-base">렌탈 분야 전문 컨설턴트</p>
                 </div>
               </div>
-              <div className="flex items-center w-full">
+              <div className="flex items-center w-full justify-center md:justify-start">
                 <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center mr-4 shrink-0">
                   <Handshake className="h-5 w-5 text-secondary" />
                 </div>
@@ -91,7 +91,7 @@ const AboutSection = () => {
                   <p className="text-gray-400 text-base">200+ 성공 비즈니스 사례</p>
                 </div>
               </div>
-              <div className="flex items-center w-full">
+              <div className="flex items-center w-full justify-center md:justify-start">
                 <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-4 shrink-0">
                   <Lightbulb className="h-5 w-5 text-amber-500" />
                 </div>
@@ -100,7 +100,7 @@ const AboutSection = () => {
                   <p className="text-gray-400 text-base">최신 렌탈 트렌드 반영</p>
                 </div>
               </div>
-              <div className="flex items-center w-full">
+              <div className="flex items-center w-full justify-center md:justify-start">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
                   <Users className="h-5 w-5 text-primary" />
                 </div>

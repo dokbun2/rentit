@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Building, Handshake, Laptop, Coins, Check, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeIn } from "@/lib/motion";
-import GlassEffect from "@/components/ui/glass-effect";
+import { Button } from "../ui/button";
+import { fadeIn } from "../../lib/motion";
+import GlassEffect from "../ui/glass-effect";
 
 interface Service {
   icon: React.ReactNode;

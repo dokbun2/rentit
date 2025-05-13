@@ -40,7 +40,7 @@ const HeroSection = () => {
         />
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <motion.div 
           variants={staggerContainer}
           initial="hidden"
@@ -51,7 +51,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="w-full md:w-1/2 md:pr-8 text-center md:text-left"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+            <h1 className="mobile-big-text font-bold leading-tight mb-8 sm:mb-10">
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
@@ -61,7 +61,7 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
-              className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 md:mb-8"
+              className="mobile-medium-text text-gray-300 mb-6 md:mb-8"
             >
               렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
               렌탈비즈니스의 모든 것을 도와드립니다.
@@ -69,18 +69,18 @@ const HeroSection = () => {
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
-              className="flex flex-col sm:flex-row justify-center md:justify-start space-y-3 sm:space-y-0 sm:space-x-4"
+              className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4"
             >
               <Button 
                 onClick={() => scrollToSection("#services")}
-                className="px-6 py-5 sm:px-8 sm:py-7 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white text-base sm:text-lg font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
+                className="px-6 py-5 sm:px-8 sm:py-7 text-base sm:text-lg md:text-xl bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
               >
                 렌탈솔루션
               </Button>
               <Button 
                 onClick={() => scrollToSection("#contact")}
                 variant="outline" 
-                className="px-6 py-5 sm:px-8 sm:py-7 dark-light border-gray-700 rounded-full text-white text-base sm:text-lg font-medium hover:bg-dark-lighter transition-all"
+                className="px-6 py-5 sm:px-8 sm:py-7 text-base sm:text-lg md:text-xl border-gray-700 rounded-full text-white font-medium hover:bg-dark-lighter transition-all"
               >
                 무료상담신청
               </Button>
@@ -89,15 +89,15 @@ const HeroSection = () => {
           
           <motion.div 
             variants={fadeIn("up", 0.4)}
-            className="w-full md:w-1/2 mt-10 md:mt-0 relative"
+            className="w-full md:w-1/2 mt-12 md:mt-0 relative"
           >
             <GradientBorder>
               <GlassEffect className="p-6 sm:p-8 rounded-lg">
-                <div className="flex items-center mb-6">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary flex items-center justify-center mr-4">
+                <div className="flex items-center mb-6 sm:mb-8">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary flex items-center justify-center mr-4">
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
-                      className="h-5 w-5 sm:h-6 sm:w-6 text-white" 
+                      className="h-6 w-6 sm:h-7 sm:w-7 text-white" 
                       fill="none" 
                       viewBox="0 0 24 24" 
                       stroke="currentColor"
@@ -111,35 +111,35 @@ const HeroSection = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">렌잇과 함께 성장!</h3>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">렌잇과 함께 성장!</h3>
                     <p className="text-gray-400 text-base sm:text-lg">성공적인 렌탈 비즈니스의 시작</p>
                   </div>
                 </div>
                 
-                <ul className="space-y-3">
+                <ul className="space-y-4 sm:space-y-5">
                   <li className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
-                      <Check className="h-3.5 w-3.5 text-purple-400" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-900/30 flex items-center justify-center mr-3 sm:mr-4">
+                      <Check className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-sm sm:text-base">렌탈사설립 전문컨설팅</span>
+                    <span className="text-gray-300 text-base sm:text-lg">렌탈사설립 전문컨설팅</span>
                   </li>
                   <li className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
-                      <Check className="h-3.5 w-3.5 text-purple-400" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-900/30 flex items-center justify-center mr-3 sm:mr-4">
+                      <Check className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-sm sm:text-base">최신 렌탈전산 시스템 구축</span>
+                    <span className="text-gray-300 text-base sm:text-lg">최신 렌탈전산 시스템 구축</span>
                   </li>
                   <li className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
-                      <Check className="h-3.5 w-3.5 text-purple-400" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-900/30 flex items-center justify-center mr-3 sm:mr-4">
+                      <Check className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-sm sm:text-base">업계 최고 렌탈 비즈니스 파트너십</span>
+                    <span className="text-gray-300 text-base sm:text-lg">업계 최고 렌탈 비즈니스 파트너십</span>
                   </li>
                   <li className="flex items-center">
-                    <div className="w-6 h-6 rounded-full bg-purple-900/30 flex items-center justify-center mr-3">
-                      <Check className="h-3.5 w-3.5 text-purple-400" />
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-900/30 flex items-center justify-center mr-3 sm:mr-4">
+                      <Check className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
-                    <span className="text-gray-300 text-sm sm:text-base">부업으로 시작하는 렌탈 비즈니스</span>
+                    <span className="text-gray-300 text-base sm:text-lg">부업으로 시작하는 렌탈 비즈니스</span>
                   </li>
                 </ul>
               </GlassEffect>
@@ -154,7 +154,7 @@ const HeroSection = () => {
           className="text-white opacity-70 hover:opacity-100 transition-opacity"
           aria-label="Scroll to about section"
         >
-          <ChevronDown className="h-6 w-6" />
+          <ChevronDown className="h-7 w-7 sm:h-8 sm:w-8" />
         </button>
       </div>
     </section>

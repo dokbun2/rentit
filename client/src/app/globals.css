@@ -36,6 +36,17 @@
   }
 }
 
+/* 모바일 최적화를 위한 텍스트 클래스 */
+@layer components {
+  .mobile-big-text {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  .mobile-medium-text {
+    @apply text-lg md:text-xl;
+  }
+}
+
 @font-face {
   font-family: 'Paperlogy';
   src: url('/fonts/Paperlogy-1Thin.woff') format('woff');

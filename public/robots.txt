@@ -1,6 +1,13 @@
 User-agent: *
 Allow: /
 
+# 네이버 검색봇 명시적 허용
+User-agent: Yeti
+Allow: /
+
+User-agent: Naverbot
+Allow: /
+
 # 관리자 페이지 접근 제한
 Disallow: /admin/
 Disallow: /adminlogin/

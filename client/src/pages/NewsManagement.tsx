@@ -7,13 +7,13 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "../components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
+import { Badge } from "../components/ui/badge";
 import { PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../lib/supabase";
 import { useLocation } from "wouter";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "../hooks/use-toast";
 
 // 뉴스 타입 정의 (Supabase의 스키마와 일치하도록 수정)
 type News = {

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { ChevronDown, Check, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import GradientBorder from "@/components/ui/gradient-border";
-import GlassEffect from "@/components/ui/glass-effect";
-import { fadeIn, staggerContainer } from "@/lib/motion";
-import { supabase } from "@/lib/supabase";
+import { Button } from "../ui/button";
+import GradientBorder from "../ui/gradient-border";
+import GlassEffect from "../ui/glass-effect";
+import { fadeIn, staggerContainer } from "../../lib/motion";
+import { supabase } from "../../lib/supabase";
 
 const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {

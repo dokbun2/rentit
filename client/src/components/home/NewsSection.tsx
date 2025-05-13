@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "../ui/badge";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeIn } from "@/lib/motion";
+import { Button } from "../ui/button";
+import { fadeIn } from "../../lib/motion";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { NewsItem } from "@/lib/supabase";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { News } from "@/types/news";
-import { formatDate } from "@/lib/utils";
+import { supabase } from "../../lib/supabase";
+import { NewsItem } from "../../lib/supabase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import { News } from "../../types/news";
+import { formatDate } from "../../lib/utils";
 import { useLocation } from "wouter";
 
 // 기본 뉴스 아이템 (API 로딩 실패 시 보여줄 더미 데이터)

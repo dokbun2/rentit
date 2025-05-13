@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Settings, Headset } from "lucide-react";
-import { fadeIn } from "@/lib/motion";
-import GlassEffect from "@/components/ui/glass-effect";
+import { fadeIn } from "../../lib/motion";
+import GlassEffect from "../ui/glass-effect";
 
 const features = [
   {

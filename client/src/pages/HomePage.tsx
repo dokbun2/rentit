@@ -1,15 +1,15 @@
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import HeroSection from "@/components/home/HeroSection";
-import AboutSection from "@/components/home/AboutSection";
-import ServicesSection from "@/components/home/ServicesSection";
-import FeaturesSection from "@/components/home/FeaturesSection";
-import NewsSection from "@/components/home/NewsSection";
-import TestimonialsSection from "@/components/home/TestimonialsSection";
-import ContactSection from "@/components/home/ContactSection";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
+import HeroSection from "../components/home/HeroSection";
+import AboutSection from "../components/home/AboutSection";
+import ServicesSection from "../components/home/ServicesSection";
+import FeaturesSection from "../components/home/FeaturesSection";
+import NewsSection from "../components/home/NewsSection";
+import TestimonialsSection from "../components/home/TestimonialsSection";
+import ContactSection from "../components/home/ContactSection";
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 const HomePage = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);

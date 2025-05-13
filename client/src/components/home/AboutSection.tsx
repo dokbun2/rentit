@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Trophy, Handshake, Lightbulb, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeIn } from "@/lib/motion";
+import { Button } from "../ui/button";
+import { fadeIn } from "../../lib/motion";
 
 const AboutSection = () => {
   const scrollToContact = () => {

@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { BookOpen } from "lucide-react";
 import { 
   Form, 
   FormControl, 
@@ -20,7 +19,6 @@ import { useForm } from "react-hook-form";
 import GlassEffect from "../ui/glass-effect";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { toast } from "../../hooks/use-toast";
-import { Alert, AlertDescription } from "../ui/alert";
 import { supabase } from "../../lib/supabase";
 
 const formSchema = z.object({

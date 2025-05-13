@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npx vite build && cp -f public/sitemap.xml dist/ && cp -f public/sitemap-new.xml dist/ && cp -f public/robots.txt dist/ && cp -rf public/imgs dist/",
   "outputDirectory": "dist",
   "public": true,
   "builds": [

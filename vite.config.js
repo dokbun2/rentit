@@ -39,7 +39,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html')
+        main: resolve(__dirname, 'client/index.html')
       },
       output: {
         // 상대 경로 문제 해결을 위한 설정
@@ -52,5 +52,7 @@ export default defineConfig({
     copyPublicDir: true
   },
   // public 폴더 내의 파일이 정적 파일로 처리되도록 설정
-  publicDir: 'public'
+  publicDir: 'public',
+  // 루트 디렉토리를 client로 설정
+  root: './client'
 }); 

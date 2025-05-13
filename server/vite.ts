@@ -77,7 +77,11 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // 정적 파일 서빙 설정
   app.use(express.static(distPath));
+  
+  // assets 폴더 명시적 서빙
+  app.use('/assets', express.static(path.join(distPath, 'assets')));
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {

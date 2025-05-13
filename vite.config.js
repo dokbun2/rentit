@@ -29,6 +29,7 @@ const copyStaticFiles = () => {
 };
 
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
     copyStaticFiles()
@@ -42,7 +43,7 @@ export default defineConfig({
         main: resolve(__dirname, 'client/index.html')
       },
       output: {
-        // 상대 경로 문제 해결을 위한 설정
+        // 절대 경로로 변경하여 경로 문제 해결
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'

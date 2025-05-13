@@ -105,7 +105,7 @@
       "dest": "/index.html" 
     },
     {
-      "src": "/(.*)\\.(?:js|css|json|xml|ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot|otf)",
+      "src": "/(.*)\\.([a-z0-9]+)$",
       "dest": "/$1.$2"
     },
     {

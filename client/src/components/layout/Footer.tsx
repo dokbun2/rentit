@@ -73,16 +73,6 @@ const Footer = () => {
             
             <ul className="space-y-3">
               <li>
-                <button onClick={() => scrollToSection("#contact")} className="text-gray-400 hover:text-primary transition-colors">
-                  문의하기
-                </button>
-              </li>
-              <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">
-                  FAQ
-                </a>
-              </li>
-              <li>
                 <a href="#" className="text-gray-400 hover:text-primary transition-colors">
                   자료실
                 </a>

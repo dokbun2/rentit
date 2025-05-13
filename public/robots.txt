@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# 관리자 페이지 접근 제한
+Disallow: /admin/
+Disallow: /adminlogin/
+
+# 사이트맵 위치
+Sitemap: https://renit.dokbun2.com/sitemap.xml 

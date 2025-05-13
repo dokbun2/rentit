@@ -614,9 +614,9 @@ export default function RentalNews() {
                   </div>
                 </div>
                 
-                {/* 본문 내용 */}
-                <div className="p-8 md:p-16">
-                  <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-[1960px] mx-auto text-left">
+                {/* 본문 내용 - 너비 확장 및 패딩 조정 */}
+                <div className="p-4 md:p-8">
+                  <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-none w-full mx-auto text-left">
                     {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
                     {selectedNews.content.split('\n\n').map((paragraph, idx) => (
                       paragraph.trim() && (
@@ -628,7 +628,7 @@ export default function RentalNews() {
                   </article>
                   
                   {/* 공유 및 링크 섹션 */}
-                  <div className="mt-16 pt-8 border-t border-gray-800 max-w-[1960px] mx-auto">
+                  <div className="mt-16 pt-8 border-t border-gray-800 w-full mx-auto">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (

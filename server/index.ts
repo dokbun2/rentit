@@ -11,38 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// sitemap.xml 경로 처리
-app.get('/sitemap.xml', (req, res) => {
-  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://renit.dokbun2.com/</loc>
-    <lastmod>2023-10-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://renit.dokbun2.com/about</loc>
-    <lastmod>2023-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://renit.dokbun2.com/services</loc>
-    <lastmod>2023-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://renit.dokbun2.com/contact</loc>
-    <lastmod>2023-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-</urlset>`;
-  res.status(200).send(sitemap);
-});
+// sitemap.xml 라우트 제거 - 정적 파일로 제공
 
 // robots.txt 경로 처리
 app.get('/robots.txt', (req, res) => {

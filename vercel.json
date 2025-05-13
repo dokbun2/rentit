@@ -31,7 +31,7 @@
       "src": "/sitemap.xml",
       "headers": {
         "content-type": "application/xml; charset=utf-8",
-        "cache-control": "public, max-age=86400"
+        "cache-control": "no-cache, no-store, must-revalidate"
       },
       "dest": "/sitemap.xml",
       "status": 200

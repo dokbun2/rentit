@@ -3,8 +3,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "public": true,
-  "cleanUrls": true,
-  "trailingSlash": false,
   "builds": [
     {
       "src": "package.json",
@@ -18,30 +16,17 @@
       "use": "@vercel/node"
     }
   ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "X-Requested-With, Content-Type, Accept"
-        }
-      ]
-    }
-  ],
   "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Robots-Tag": "index, follow",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
+      },
+      "continue": true
+    },
     {
       "src": "/",
       "headers": {
@@ -118,6 +103,14 @@
       "src": "/adminlogin", 
       "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
       "dest": "/index.html" 
+    },
+    {
+      "src": "/(.*)\\.(?:js|css|json|xml|ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot|otf)",
+      "dest": "/$1.$2"
+    },
+    {
+      "src": "/(.*)/",
+      "dest": "/$1"
     },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

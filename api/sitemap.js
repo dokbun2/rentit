@@ -1,6 +1,6 @@
 export default function handler(req, res) {
-  // XML 형식으로 응답 설정
-  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  // XML 형식으로 응답 설정 - 명확한 Content-Type 지정
+  res.setHeader('Content-Type', 'application/xml');
   res.setHeader('Cache-Control', 'public, max-age=86400');
   
   // 현재 날짜를 YYYY-MM-DD 형식으로 가져오기

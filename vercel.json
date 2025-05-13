@@ -30,7 +30,7 @@
     {
       "src": "/sitemap-new.xml",
       "headers": {
-        "content-type": "application/xml; charset=utf-8",
+        "content-type": "application/xml",
         "cache-control": "no-cache, no-store, must-revalidate"
       },
       "dest": "/sitemap-new.xml",
@@ -39,10 +39,10 @@
     {
       "src": "/sitemap.xml",
       "headers": {
-        "content-type": "application/xml; charset=utf-8",
+        "content-type": "application/xml",
         "cache-control": "no-cache, no-store, must-revalidate"
       },
-      "dest": "/sitemap.xml",
+      "dest": "/api/sitemap",
       "status": 200
     },
     {

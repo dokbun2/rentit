@@ -21,11 +21,36 @@ export const shareKakao = (content: Partial<ShareContent> = {}) => {
   
   if (typeof window === 'undefined') return;
   
-  if (!isKakaoSDKInitialized()) {
-    initKakaoSDK();
+  try {
+    // 항상 SDK를 재초기화하여 최신 상태 유지
+    if (window.Kakao) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init('9a9811c07e2b6578eaa1fecbbf84f915');
+        console.log('카카오 SDK 초기화 완료');
+      }
+    } else {
+      console.error('카카오 SDK를 찾을 수 없습니다.');
+      // SDK 로드 시도
+      const script = document.createElement('script');
+      script.src = 'https://developers.kakao.com/sdk/js/kakao.min.js';
+      script.onload = () => {
+        window.Kakao.init('9a9811c07e2b6578eaa1fecbbf84f915');
+        shareWithKakao(shareContent);
+      };
+      document.head.appendChild(script);
+      return;
+    }
+    
+    shareWithKakao(shareContent);
+  } catch (error) {
+    console.error('카카오 공유 초기화 실패:', error);
+    fallbackKakaoShare(shareContent);
   }
-  
-  if (window.Kakao && window.Kakao.isInitialized()) {
+};
+
+// 카카오 공유 실행 함수
+const shareWithKakao = (shareContent: ShareContent) => {
+  if (window.Kakao && window.Kakao.Share) {
     try {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
@@ -33,6 +58,8 @@ export const shareKakao = (content: Partial<ShareContent> = {}) => {
           title: shareContent.title,
           description: shareContent.description,
           imageUrl: shareContent.imageUrl,
+          imageWidth: 1200,
+          imageHeight: 630,
           link: {
             mobileWebUrl: shareContent.url,
             webUrl: shareContent.url
@@ -54,13 +81,23 @@ export const shareKakao = (content: Partial<ShareContent> = {}) => {
       });
     } catch (error) {
       console.error('카카오 공유 실패:', error);
-      // 대체 공유 방법 (모바일에서 작동)
-      const kakaoLinkUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${window.Kakao.getAppKey()}&text=${encodeURIComponent(shareContent.title)}&link_ver=4.0&template_id=feed`;
-      window.open(kakaoLinkUrl, '_blank', 'width=600,height=400');
+      fallbackKakaoShare(shareContent);
     }
   } else {
-    console.error('카카오 SDK가 초기화되지 않았습니다.');
-    alert('카카오 공유 기능을 사용할 수 없습니다. 다른 방법으로 공유해주세요.');
+    console.error('카카오 Share API를 찾을 수 없습니다.');
+    fallbackKakaoShare(shareContent);
+  }
+};
+
+// 대체 카카오 공유 방법
+const fallbackKakaoShare = (shareContent: ShareContent) => {
+  try {
+    const kakaoAppKey = window.Kakao?.getAppKey() || '9a9811c07e2b6578eaa1fecbbf84f915';
+    const kakaoLinkUrl = `https://sharer.kakao.com/talk/friends/picker/link?app_key=${kakaoAppKey}&text=${encodeURIComponent(shareContent.title)}&link_ver=4.0&template_id=feed`;
+    window.open(kakaoLinkUrl, '_blank', 'width=600,height=400');
+  } catch (error) {
+    console.error('대체 카카오 공유 방법도 실패:', error);
+    alert('카카오톡 공유 기능을 사용할 수 없습니다. 다른 방법으로 공유해주세요.');
   }
 };
 

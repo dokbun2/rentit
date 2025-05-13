@@ -25,29 +25,46 @@
     },
     {
       "src": "/assets/(.*)",
-      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "headers": { 
+        "cache-control": "public, max-age=31536000, immutable"
+      },
       "dest": "/assets/$1"
     },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { 
-      "src": "/admin/login", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "src": "^/admin/dashboard$", 
+      "headers": { 
+        "cache-control": "no-cache, no-store, must-revalidate"
+      },
       "dest": "/index.html" 
     },
     { 
-      "src": "/admin/dashboard", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "src": "^/admin/login$", 
+      "headers": { 
+        "cache-control": "no-cache, no-store, must-revalidate"
+      },
       "dest": "/index.html" 
     },
     { 
-      "src": "/admin/(.*)", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "src": "^/admin/?$", 
+      "headers": { 
+        "cache-control": "no-cache, no-store, must-revalidate"
+      },
       "dest": "/index.html" 
     },
     { 
-      "src": "/adminlogin", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
+      "src": "^/admin/news$", 
+      "headers": { 
+        "cache-control": "no-cache, no-store, must-revalidate"
+      },
+      "dest": "/index.html" 
+    },
+    { 
+      "src": "^/adminlogin$", 
+      "headers": { 
+        "cache-control": "no-cache, no-store, must-revalidate"
+      },
       "dest": "/index.html" 
     },
     { "src": "/(.*)", "dest": "/index.html" }

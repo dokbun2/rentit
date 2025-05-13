@@ -2,29 +2,11 @@
   "version": 2,
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
-  "public": true,
+  "framework": null,
   "routes": [
     {
-      "src": "/(.*)",
-      "headers": {
-        "X-Robots-Tag": "index, follow",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
-      },
-      "continue": true
-    },
-    {
-      "src": "/sitemap-new.xml",
-      "dest": "/sitemap-new.xml"
-    },
-    {
-      "src": "/sitemap.xml",
-      "dest": "/sitemap.xml"
-    },
-    {
-      "src": "/robots.txt",
-      "dest": "/robots.txt"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
     },
     {
       "src": "/fonts/(.*)",
@@ -35,16 +17,8 @@
       "dest": "/imgs/$1"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/(.*\\.(js|css|ico|jpg|jpeg|png|gif|svg|woff|woff2))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",

@@ -11,22 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// sitemap.xml 라우트 제거 - 정적 파일로 제공
-
-// robots.txt 경로 처리
-app.get('/robots.txt', (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  const robots = `User-agent: *
-Allow: /
-
-# 관리자 페이지 접근 제한
-Disallow: /admin/
-Disallow: /adminlogin/
-
-# 사이트맵 위치
-Sitemap: https://renit.dokbun2.com/sitemap.xml`;
-  res.status(200).send(robots);
-});
+// sitemap.xml 및 robots.txt 라우트 제거 - 정적 파일로 제공
 
 // 세션 설정
 const MemoryStoreSession = MemoryStore(session);

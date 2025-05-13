@@ -6,4 +6,4 @@ Disallow: /admin/
 Disallow: /adminlogin/
 
 # 사이트맵 위치
-Sitemap: https://renit.dokbun2.com/sitemap.xml 
+Sitemap: https://renit.dokbun2.com/sitemap-new.xml 

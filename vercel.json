@@ -32,41 +32,10 @@
     },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { 
-      "src": "^/admin/dashboard$", 
-      "headers": { 
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "^/admin/login$", 
-      "headers": { 
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "^/admin/?$", 
-      "headers": { 
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "^/admin/news$", 
-      "headers": { 
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "^/adminlogin$", 
-      "headers": { 
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/index.html" 
-    },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/(.*)",
+      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
+      "dest": "/index.html"
+    }
   ]
 } 

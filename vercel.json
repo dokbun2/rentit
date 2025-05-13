@@ -28,90 +28,40 @@
       "continue": true
     },
     {
-      "src": "/",
-      "headers": {
-        "cache-control": "public, max-age=0, must-revalidate",
-        "x-robots-tag": "index, follow",
-        "content-type": "text/html; charset=utf-8"
-      },
-      "dest": "/index.html",
-      "status": 200
-    },
-    {
       "src": "/sitemap-new.xml",
-      "headers": {
-        "content-type": "application/xml",
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/sitemap-new.xml",
-      "status": 200
+      "dest": "/sitemap-new.xml"
     },
     {
       "src": "/sitemap.xml",
-      "headers": {
-        "content-type": "application/xml",
-        "cache-control": "no-cache, no-store, must-revalidate"
-      },
-      "dest": "/sitemap.xml",
-      "status": 200
+      "dest": "/sitemap.xml"
     },
     {
       "src": "/robots.txt",
-      "headers": {
-        "content-type": "text/plain; charset=utf-8",
-        "cache-control": "public, max-age=86400"
-      },
-      "dest": "/robots.txt",
-      "status": 200
+      "dest": "/robots.txt"
     },
     {
       "src": "/fonts/(.*)",
-      "headers": {
-        "cache-control": "public, max-age=31536000, immutable",
-        "content-type": "font/woff"
-      },
       "dest": "/fonts/$1"
     },
     {
       "src": "/imgs/(.*)",
-      "headers": { "cache-control": "public, max-age=31536000, immutable" },
       "dest": "/imgs/$1"
     },
     {
       "src": "/assets/(.*)",
-      "headers": { "cache-control": "public, max-age=31536000, immutable" },
       "dest": "/assets/$1"
     },
-    { "src": "/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { 
-      "src": "/admin/login", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "/admin/dashboard", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "/admin/(.*)", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
-      "dest": "/index.html" 
-    },
-    { 
-      "src": "/adminlogin", 
-      "headers": { "cache-control": "no-cache, no-store, must-revalidate" },
-      "dest": "/index.html" 
+    {
+      "src": "/favicon.ico",
+      "dest": "/favicon.ico"
     },
     {
-      "src": "/(.*)\\.([a-z0-9]+)$",
-      "dest": "/$1.$2"
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
-      "src": "/(.*)/",
-      "dest": "/$1"
-    },
-    { "src": "/(.*)", "dest": "/index.html" }
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 } 

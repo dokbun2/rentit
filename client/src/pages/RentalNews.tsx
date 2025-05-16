@@ -87,6 +87,28 @@ export default function RentalNews() {
   // 사용자 인증 상태 확인
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // 모바일 화면 감지를 위한 상태
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // 화면 크기 변경을 감지하는 useEffect
+  useEffect(() => {
+    // 초기 화면 크기 확인
+    setIsMobile(window.innerWidth < 768);
+    
+    // 화면 크기 변경 이벤트 핸들러
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // 이벤트 리스너 등록
+    window.addEventListener('resize', handleResize);
+    
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // URL에서 ID 파라미터 가져오기
   const getNewsIdFromUrl = () => {
     if (typeof window !== 'undefined') {
@@ -486,7 +508,10 @@ export default function RentalNews() {
                 variants={fadeIn("up", 0.2)}
                 className="grid grid-cols-1 gap-8"
               >
-                {(activeCategory ? news.filter(item => item.category === activeCategory) : news).map((item, index) => (
+                {(activeCategory ? news.filter(item => item.category === activeCategory) : news)
+                  // 모바일 화면에서는 첫 번째 아이템(최신)만 표시, 데스크탑에서는 모두 표시
+                  .slice(0, isMobile ? 1 : news.length)
+                  .map((item, index) => (
                   <motion.div
                     key={item.id}
                     initial="hidden"

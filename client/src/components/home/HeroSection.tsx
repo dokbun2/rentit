@@ -34,7 +34,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="h-screen-110 md:min-h-screen pt-40 md:pt-20 relative overflow-hidden flex items-start md:items-center">
+    <section id="home" className="h-screen-110 md:min-h-screen pt-28 md:pt-20 relative overflow-hidden flex items-start md:items-center">
       <div className="absolute inset-0 z-0">
         {/* 배경 비디오와 오버레이 */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-90 z-10"></div>

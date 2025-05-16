@@ -98,7 +98,7 @@ const HeroSection = () => {
                 variant="outline" 
                 className="px-6 py-6 md:px-8 md:py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
               >
-                무료상담신청
+                무료상담
               </Button>
             </motion.div>
           </motion.div>

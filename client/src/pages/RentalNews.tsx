@@ -93,19 +93,19 @@ export default function RentalNews() {
   // 화면 크기 변경을 감지하는 useEffect
   useEffect(() => {
     // 초기 화면 크기 확인
-    setIsMobile(window.innerWidth < 768);
-    
-    // 화면 크기 변경 이벤트 핸들러
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
     
-    // 이벤트 리스너 등록
-    window.addEventListener('resize', handleResize);
+    // 초기 체크
+    checkMobile();
+    
+    // 화면 크기 변경 이벤트 핸들러
+    window.addEventListener('resize', checkMobile);
     
     // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
 
@@ -509,7 +509,6 @@ export default function RentalNews() {
                 className="grid grid-cols-1 gap-8"
               >
                 {(activeCategory ? news.filter(item => item.category === activeCategory) : news)
-                  // 모바일 화면에서는 첫 번째 아이템(최신)만 표시, 데스크탑에서는 모두 표시
                   .slice(0, isMobile ? 1 : news.length)
                   .map((item, index) => (
                   <motion.div

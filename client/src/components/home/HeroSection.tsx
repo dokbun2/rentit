@@ -59,7 +59,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="md:w-1/2 md:pr-8 text-center md:text-left"
           >
-            <h1 className="text-[2.7rem] md:text-[3.5rem] lg:text-[4.2rem] font-bold leading-tight mb-6 md:mb-4">
+            <h1 className="text-[2.5rem] md:text-[3.5rem] lg:text-[4.2rem] font-bold leading-tight mb-6 md:mb-4">
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
@@ -71,13 +71,13 @@ const HeroSection = () => {
               variants={fadeIn("up", 0.2)}
               className="text-lg md:text-xl text-gray-300 mb-10 md:mb-12 mt-4"
             >
-              렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
+              렌탈사설립, 전산구축, 렌탈사제휴, 렌탈부업<br/>
               렌탈비즈니스의 모든 것을 도와드립니다.
             </motion.p>
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
-              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start mb-8 md:mb-0"
+              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start mb-4 md:mb-0"
             >
               <Button 
                 onClick={() => scrollToSection("#services")}

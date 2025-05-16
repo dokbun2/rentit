@@ -82,7 +82,7 @@ const TestimonialsSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌잇의 서비스를 경험한 고객들의 생생한 후기를 확인하세요.
+            렌잇의 서비스를 구축하고 경험한 고객사들의 성공사례를 확인하세요.
           </motion.p>
         </motion.div>
         

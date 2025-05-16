@@ -182,7 +182,7 @@ const NewsSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-lg text-gray-400 max-w-2xl mx-auto"
           >
-            렌탈 시장의 최신 트렌드와 업계 소식을 확인하세요.
+            렌탈 시장의 최신 트렌드와 업계 소식 확인
           </motion.p>
         </motion.div>
         

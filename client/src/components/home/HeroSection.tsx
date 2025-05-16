@@ -77,7 +77,7 @@ const HeroSection = () => {
             
             <motion.div 
               variants={fadeIn("up", 0.3)}
-              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start mb-4 md:mb-0"
+              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start mb-1 md:mb-0"
             >
               <Button 
                 onClick={() => scrollToSection("#services")}

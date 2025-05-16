@@ -59,7 +59,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="md:w-1/2 md:pr-8 text-center md:text-left"
           >
-            <h1 className="text-[2.8rem] md:text-[3.7rem] lg:text-[4.2rem] font-bold leading-tight mb-6 md:mb-4">
+            <h1 className="text-[2.7rem] md:text-[3.5rem] lg:text-[4.2rem] font-bold leading-tight mb-6 md:mb-4">
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />

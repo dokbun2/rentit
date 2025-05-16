@@ -27,7 +27,7 @@
     --destructive-foreground: 0 0% 98%;
     --ring: 240 4.9% 83.9%;
     --radius: 0.5rem;
-    
+
     /* 모바일 뷰포트 높이 (JS에서 설정됨) */
     --vh: 1vh;
 

@@ -22,7 +22,10 @@ const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+      let offset = 80;
+      if (sectionId === "#contact") offset = 140;
+      else if (["#about", "#services", "#testimonials", "#news"].includes(sectionId)) offset = 20;
+      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth",
@@ -31,7 +34,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section id="home" className="h-screen-110 md:min-h-screen pt-20 relative overflow-hidden flex items-center">
+    <section id="home" className="h-screen-110 md:min-h-screen pt-40 md:pt-20 relative overflow-hidden flex items-start md:items-center">
       <div className="absolute inset-0 z-0">
         {/* 배경 비디오와 오버레이 */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background opacity-90 z-10"></div>
@@ -56,7 +59,7 @@ const HeroSection = () => {
             variants={fadeIn("up", 0.1)}
             className="md:w-1/2 md:pr-8 text-center md:text-left"
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 md:mb-4">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 md:mb-4">
               <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
@@ -66,7 +69,7 @@ const HeroSection = () => {
             
             <motion.p 
               variants={fadeIn("up", 0.2)}
-              className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 mt-4"
+              className="text-lg md:text-xl text-gray-300 mb-10 md:mb-12 mt-4"
             >
               렌탈사설립, 렌탈전산구축, 렌탈업무제휴, 렌탈부업<br/>
               렌탈비즈니스의 모든 것을 도와드립니다.
@@ -83,7 +86,15 @@ const HeroSection = () => {
                 렌탈솔루션
               </Button>
               <Button 
-                onClick={() => scrollToSection("#contact")}
+                onClick={() => {
+                  scrollToSection("#contact");
+                  setTimeout(() => {
+                    const contactForm = document.querySelector('#contact-form');
+                    if (contactForm) {
+                      contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                  }, 500);
+                }}
                 variant="outline" 
                 className="px-6 py-6 md:px-8 md:py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"
               >

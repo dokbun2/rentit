@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "../../lib/utils";
-import { getPaperlogyStyle } from "../../lib/fonts";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { getPaperlogyStyle } from "@/lib/fonts";
 
 const navLinks = [
   { name: "회사소개", href: "#about" },
@@ -70,9 +70,9 @@ const Navbar = () => {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="flex items-baseline">
-              <span className={cn("text-primary text-[1.3em]", getPaperlogyStyle('black'))}>REN</span>
-              <span className={cn("text-secondary text-[1.3em]", getPaperlogyStyle('bold'))}>'T</span>
-              <span className={cn("ml-2 text-[24px] text-gray-300", getPaperlogyStyle('regular'))}>렌잇</span>
+              <span className={cn("text-primary text-[1.1em]", getPaperlogyStyle('black'))}>REN</span>
+              <span className={cn("text-secondary text-[1.1em]", getPaperlogyStyle('bold'))}>'T</span>
+              <span className={cn("ml-2 text-[23px] text-gray-300", getPaperlogyStyle('regular'))}>렌잇</span>
             </div>
           </Link>
           

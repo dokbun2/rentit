@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
-import { Badge } from "../ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
-import { Button } from "../ui/button";
-import { fadeIn } from "../../lib/motion";
+import { Button } from "@/components/ui/button";
+import { fadeIn } from "@/lib/motion";
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabase";
-import { NewsItem } from "../../lib/supabase";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
-import { News } from "../../types/news";
-import { formatDate } from "../../lib/utils";
+import { supabase } from "@/lib/supabase";
+import { NewsItem } from "@/lib/supabase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { News } from "@/types/news";
+import { formatDate } from "@/lib/utils";
 import { useLocation } from "wouter";
 
 // HTML 태그 제거 함수

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
-import { Button } from "../ui/button";
-import { fadeIn } from "../../lib/motion";
-import GlassEffect from "../ui/glass-effect";
+import { Button } from "@/components/ui/button";
+import { fadeIn } from "@/lib/motion";
+import GlassEffect from "@/components/ui/glass-effect";
 
 const testimonials = [
   {

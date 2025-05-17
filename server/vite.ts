@@ -5,6 +5,11 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const viteLogger = createLogger();
 
@@ -36,7 +41,7 @@ export async function setupVite(app: Express, server: Server) {
         process.exit(1);
       },
     },
-    server: serverOptions,
+    server: serverOptions as any,
     appType: "custom",
   });
 
@@ -46,7 +51,7 @@ export async function setupVite(app: Express, server: Server) {
 
     try {
       const clientTemplate = path.resolve(
-        import.meta.dirname,
+        __dirname,
         "..",
         "client",
         "index.html",
@@ -68,8 +73,12 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
+<<<<<<< HEAD
   // dist 폴더를 기준으로 정적 파일 서빙
   const distPath = path.resolve(import.meta.dirname, "..", "dist");
+=======
+  const distPath = path.resolve(__dirname, "public");
+>>>>>>> rollback-from-8c1775a
 
   if (!fs.existsSync(distPath)) {
     throw new Error(

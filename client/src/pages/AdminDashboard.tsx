@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { supabase } from '../lib/supabase';
+<<<<<<< HEAD
 import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2 } from 'lucide-react';
 import GlassEffect from "../components/ui/glass-effect";
 import { Button } from "../components/ui/button";
+=======
+import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2, Upload, Loader2 } from 'lucide-react';
+import GlassEffect from '@/components/ui/glass-effect';
+import { Button } from '@/components/ui/button';
+>>>>>>> rollback-from-8c1775a
 import { Contact, NewsItem } from '../lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null);
@@ -161,7 +168,17 @@ function ContactsManager() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setContacts(data || []);
+      
+      console.log('불러온 연락처 데이터:', data);
+      
+      // 필드 이름 마이그레이션을 위한 데이터 매핑
+      const mappedData = data?.map(item => ({
+        ...item,
+        // 기존 데이터에 processed 필드가 있으면 is_processed로 변환
+        is_processed: item.processed !== undefined ? item.processed : item.is_processed
+      })) || [];
+      
+      setContacts(mappedData);
     } catch (error) {
       console.error('문의 목록 조회 오류:', error);
     } finally {
@@ -173,26 +190,40 @@ function ContactsManager() {
     try {
       if (!supabase) return;
       
-      const { error } = await supabase
+      console.log('처리 상태 변경 시도:', id, '현재 상태:', currentStatus, '→', !currentStatus);
+      
+      // 필드 이름과 쿼리 확인
+      const { error, data } = await supabase
         .from('contacts')
-        .update({ processed: !currentStatus })
-        .eq('id', id);
+        .update({ is_processed: !currentStatus })
+        .eq('id', id)
+        .select();
+      
+      console.log('업데이트 결과:', { 에러: error, 데이터: data });
 
-      if (error) throw error;
+      if (error) {
+        console.error('처리 상태 업데이트 오류:', error);
+        throw error;
+      }
       
       // 목록 업데이트
       setContacts(
         contacts.map(contact => 
-          contact.id === id ? { ...contact, processed: !currentStatus } : contact
+          contact.id === id ? { ...contact, is_processed: !currentStatus } : contact
         )
       );
       
       // 선택된 연락처가 있고, 해당 ID와 일치하면 업데이트
       if (selectedContact && selectedContact.id === id) {
-        setSelectedContact({ ...selectedContact, processed: !currentStatus });
+        setSelectedContact({ ...selectedContact, is_processed: !currentStatus });
       }
+      
+      // 성공 메시지
+      console.log('처리 상태 업데이트 성공!');
+      
     } catch (error) {
       console.error('처리 상태 업데이트 오류:', error);
+      alert('처리 상태 변경에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -242,12 +273,12 @@ function ContactsManager() {
                       <td className="px-2 py-3">
                         <span
                           className={`rounded-full px-2 py-1 text-xs ${
-                            contact.processed 
+                            contact.is_processed 
                               ? 'bg-primary/20 text-primary' 
                               : 'bg-secondary/20 text-secondary'
                           }`}
                         >
-                          {contact.processed ? '처리완료' : '대기중'}
+                          {contact.is_processed ? '처리완료' : '대기중'}
                         </span>
                       </td>
                     </tr>
@@ -274,15 +305,15 @@ function ContactsManager() {
                   </p>
                 </div>
                 <Button
-                  onClick={() => handleProcessToggle(selectedContact.id, selectedContact.processed)}
+                  onClick={() => handleProcessToggle(selectedContact.id, selectedContact.is_processed)}
                   className={`flex items-center gap-2 ${
-                    selectedContact.processed 
+                    selectedContact.is_processed 
                       ? 'bg-secondary hover:bg-secondary/80' 
                       : 'bg-primary hover:bg-primary/80'
                   }`}
                   size="sm"
                 >
-                  {selectedContact.processed ? (
+                  {selectedContact.is_processed ? (
                     <>
                       <XSquare size={16} />
                       <span>미처리로 변경</span>
@@ -344,6 +375,9 @@ function NewsManager() {
     image: '',
     active: true,
   });
+  const [htmlPreview, setHtmlPreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   useEffect(() => {
     fetchNews();
@@ -404,12 +438,83 @@ function NewsManager() {
       active: true,
     });
     setEditMode(false);
+    setHtmlPreview('');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const updatedValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
     setFormData({ ...formData, [name]: updatedValue });
+    
+    if (name === 'description') {
+      setHtmlPreview(value);
+    }
+  };
+
+  // 이미지 업로드 함수 추가
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    const file = files[0];
+    
+    // 이미지 파일 타입 및 크기 검사
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      alert('파일 크기는 5MB 이하여야 합니다.');
+      return;
+    }
+    
+    console.log('업로드 시작:', { 파일명: file.name, 크기: file.size, 타입: file.type });
+    
+    setUploading(true);
+    setUploadProgress(10); // 시작 진행률
+    
+    try {
+      // 진행률 표시 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => Math.min(prev + 5, 90));
+      }, 200);
+      
+      // 이미지 데이터를 base64로 변환하여 직접 폼에 설정
+      const reader = new FileReader();
+      
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          // base64 데이터 URL로 이미지 설정
+          const imageDataUrl = event.target.result.toString();
+          
+          // 폼 데이터 업데이트
+          setFormData({
+            ...formData,
+            image: imageDataUrl
+          });
+          
+          console.log('이미지 데이터 URL 생성 완료');
+          
+          // 진행률 업데이트
+          clearInterval(progressInterval);
+          setUploadProgress(100);
+          
+          // 업로드 상태 완료로 설정
+          setTimeout(() => {
+            setUploading(false);
+          }, 500);
+        }
+      };
+      
+      // 파일 읽기 시작
+      reader.readAsDataURL(file);
+      
+    } catch (error) {
+      console.error('이미지 업로드 오류:', error);
+      alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+      setUploading(false);
+    }
   };
 
   const handleEditClick = (news: NewsItem) => {
@@ -423,11 +528,13 @@ function NewsManager() {
       image: news.image,
       active: news.active,
     });
+    setHtmlPreview(news.description || '');
     setEditMode(true);
   };
 
   const handleCreateClick = () => {
     resetForm();
+    setHtmlPreview('');
     setEditMode(true);
   };
 
@@ -553,10 +660,6 @@ function NewsManager() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">뉴스 관리</h2>
         <div className="flex space-x-3">
-          <Button onClick={() => setLocation('/admin/news')} variant="outline" className="flex items-center gap-2">
-            <FileText size={16} />
-            새 뉴스 관리 페이지로 이동
-          </Button>
           {!editMode && (
             <Button onClick={handleCreateClick} className="flex items-center gap-2">
               <Plus size={16} />
@@ -571,114 +674,164 @@ function NewsManager() {
       </div>
       
       {editMode ? (
-        <GlassEffect className="p-6 rounded-xl">
-          <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 왼쪽 컨테이너 - 뉴스 정보 및 내용 입력 */}
+          <GlassEffect className="p-6 rounded-xl h-full">
+            <h2 className="mb-4 text-xl font-bold">{formData.id ? '뉴스 수정' : '새 뉴스 작성'}</h2>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">제목</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-medium text-gray-300">이미지</label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                      className="flex items-center gap-2 h-8 px-3"
+                      disabled={uploading}
+                    >
+                      {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+                      {uploading ? `업로드 중 (${uploadProgress}%)` : '이미지 업로드'}
+                    </Button>
+                    <input
+                      type="file"
+                      id="image-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="image"
+                    value={formData.image || ''}
+                    onChange={handleInputChange}
+                    placeholder="이미지가 업로드되면 자동으로 채워집니다."
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    readOnly
+                  />
+                  {formData.image && (
+                    <div className="mt-2 relative w-full h-24 border border-gray-700 rounded-md overflow-hidden">
+                      <img 
+                        src={formData.image} 
+                        alt="미리보기" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">카테고리</label>
+                  <input
+                    type="text"
+                    name="category"
+                    value={formData.category || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">태그</label>
+                  <input
+                    type="text"
+                    name="tag"
+                    value={formData.tag || ''}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">태그 색상</label>
+                  <select
+                    name="tag_color"
+                    value={formData.tag_color || 'bg-primary/30'}
+                    onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  >
+                    <option value="bg-primary/30">보라색</option>
+                    <option value="bg-secondary/30">초록색</option>
+                    <option value="bg-amber-700/30">주황색</option>
+                  </select>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    name="active"
+                    checked={!!formData.active}
+                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-700 bg-dark-lighter text-primary"
+                  />
+                  <label htmlFor="active" className="text-sm font-medium text-gray-300">활성화</label>
+                </div>
+              </div>
+              
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">제목</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title || ''}
+                <label className="block text-sm font-medium text-gray-300 mb-1">내용</label>
+                <p className="text-xs text-gray-400 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                <textarea
+                  name="description"
+                  value={formData.description || ''}
                   onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  rows={16}
+                  style={{ minHeight: '500px' }}
+                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-mono text-sm"
                   required
-                />
+                ></textarea>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">이미지 URL</label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">카테고리</label>
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">태그</label>
-                <input
-                  type="text"
-                  name="tag"
-                  value={formData.tag || ''}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">태그 색상</label>
-                <select
-                  name="tag_color"
-                  value={formData.tag_color || 'bg-primary/30'}
-                  onChange={handleInputChange}
-                  className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              <div className="flex justify-end space-x-3 pt-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCancelClick}
                 >
-                  <option value="bg-primary/30">보라색</option>
-                  <option value="bg-secondary/30">초록색</option>
-                  <option value="bg-amber-700/30">주황색</option>
-                </select>
+                  취소
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-gradient-to-r from-primary to-purple-500"
+                >
+                  저장
+                </Button>
               </div>
-              
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="active"
-                  name="active"
-                  checked={!!formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-700 bg-dark-lighter text-primary"
-                />
-                <label htmlFor="active" className="text-sm font-medium text-gray-300">활성화</label>
-              </div>
+            </form>
+          </GlassEffect>
+          
+          {/* 오른쪽 컨테이너 - HTML 미리보기 */}
+          <GlassEffect className="p-6 rounded-xl h-full flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">HTML 미리보기</h2>
+              <span className="text-xs text-gray-400">입력한 내용의 실제 표시 모습</span>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">내용</label>
-              <textarea
-                name="description"
-                value={formData.description || ''}
-                onChange={handleInputChange}
-                rows={6}
-                className="w-full rounded-md border border-gray-700 bg-white px-3 py-2 text-black shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                required
-              ></textarea>
+            <div className="flex-grow rounded-md border border-gray-700 bg-white p-6 text-black shadow-sm overflow-y-auto" style={{ minHeight: '700px' }}>
+              <div className="prose max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: htmlPreview }} />
+              </div>
             </div>
-            
-            <div className="flex justify-end space-x-3 pt-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancelClick}
-              >
-                취소
-              </Button>
-              <Button
-                type="submit"
-                className="bg-gradient-to-r from-primary to-purple-500"
-              >
-                저장
-              </Button>
-            </div>
-          </form>
-        </GlassEffect>
+          </GlassEffect>
+        </div>
       ) : (
         <div className="flex flex-col space-y-4">
           <GlassEffect className="p-4 rounded-xl">
@@ -728,32 +881,34 @@ function NewsManager() {
                             {news.active ? '활성' : '비활성'}
                           </span>
                         </td>
-                        <td className="px-2 py-3 text-right space-x-2">
-                          <Button
-                            onClick={() => handleToggleActive(news.id, news.active)}
-                            variant="ghost"
-                            size="sm"
-                            className="text-gray-300 hover:text-white"
-                          >
-                            {news.active ? '비활성화' : '활성화'}
-                          </Button>
-                          <Button
-                            onClick={() => handleEditClick(news)}
-                            variant="outline"
-                            size="sm"
-                            className="text-primary hover:text-primary-foreground"
-                          >
-                            수정
-                          </Button>
-                          <Button
-                            onClick={() => handleDelete(news.id)}
-                            variant="destructive"
-                            size="sm"
-                            className="flex items-center"
-                          >
-                            <Trash2 size={14} className="mr-1" />
-                            삭제
-                          </Button>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              onClick={() => handleToggleActive(news.id, news.active)}
+                              variant="ghost"
+                              size="sm"
+                              className="text-gray-300 hover:text-white"
+                            >
+                              {news.active ? '비활성화' : '활성화'}
+                            </Button>
+                            <Button
+                              onClick={() => handleEditClick(news)}
+                              variant="outline"
+                              size="sm"
+                              className="text-primary hover:text-primary-foreground"
+                            >
+                              수정
+                            </Button>
+                            <Button
+                              onClick={() => handleDelete(news.id)}
+                              variant="destructive"
+                              size="sm"
+                              className="flex items-center"
+                            >
+                              <Trash2 size={14} className="mr-1" />
+                              삭제
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}

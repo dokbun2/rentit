@@ -24,7 +24,23 @@ const HomePage = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    // Mobile viewport height fix
+    const setMobileHeight = () => {
+      // The trick: set a CSS variable to the actual viewport height
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    };
+    
+    // Initial call
+    setMobileHeight();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', setMobileHeight);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('resize', setMobileHeight);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -35,9 +51,9 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background overflow-hidden">
       <Navbar />
-      <main>
+      <main className="flex-grow">
         <HeroSection />
         <AboutSection />
         <ServicesSection />

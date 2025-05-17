@@ -9,6 +9,7 @@ import { getPaperlogyStyle } from "../../lib/fonts";
 const navLinks = [
   { name: "회사소개", href: "#about" },
   { name: "렌탈솔루션", href: "#services" },
+  { name: "고객후기", href: "#testimonials" },
   { name: "렌탈뉴스", href: "/news" },
 ];
 
@@ -31,7 +32,7 @@ const Navbar = () => {
     if (href.startsWith("#")) {
       const element = document.querySelector(href);
       if (element) {
-        const offset = href === "#contact" ? 140 : 100;
+        const offset = href === "#contact" ? 140 : (href === "#about" || href === "#services" || href === "#testimonials" || href === "#news" ? 20 : 100);
         const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({
           top: offsetTop,
@@ -90,13 +91,19 @@ const Navbar = () => {
               렌탈솔루션
             </button>
             <button
-              onClick={() => handleNavClick("/news")}
+              onClick={() => handleNavClick("#news")}
               className={cn(
                 "nav-underline text-gray-300 hover:text-white transition-colors text-lg",
                 location === "/news" && "text-primary"
               )}
             >
               렌탈뉴스
+            </button>
+            <button
+              onClick={() => handleNavClick("#testimonials")}
+              className="nav-underline text-gray-300 hover:text-white transition-colors text-lg"
+            >
+              고객후기
             </button>
             <Button 
               onClick={() => handleNavClick("#contact")}
@@ -142,13 +149,19 @@ const Navbar = () => {
               렌탈솔루션
             </button>
             <button
-              onClick={() => handleNavClick("/news")}
+              onClick={() => handleNavClick("#news")}
               className={cn(
                 "nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg",
                 location === "/news" && "text-primary"
               )}
             >
               렌탈뉴스
+            </button>
+            <button
+              onClick={() => handleNavClick("#testimonials")}
+              className="nav-underline text-gray-300 hover:text-white py-2 transition-colors text-left text-lg"
+            >
+              고객후기
             </button>
             <Button 
               onClick={() => handleNavClick("#contact")}

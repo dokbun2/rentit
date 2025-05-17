@@ -151,6 +151,64 @@ const ContactSection = () => {
               <h3 className="text-2xl font-bold mb-6 text-center">무료 상담 신청</h3>
               <p className="text-gray-400 text-center mb-6">렌탈 비즈니스에 관한 문의사항을 작성해 주세요.</p>
               
+<<<<<<< HEAD
+=======
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">주소</h4>
+                    <p className="text-gray-400">서울 성동구 아차산로17길 49(성수동2가) 15층 1504호</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <Phone className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">전화번호</h4>
+                    <p className="text-gray-400">010-3180-0038</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <Mail className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">이메일</h4>
+                    <p className="text-gray-400">ceo@rnpick.co.kr</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
+                    <Clock className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white mb-1">영업시간</h4>
+                    <p className="text-gray-400">월-금: 09:00 - 18:00<br/>토, 일, 공휴일: 휴무</p>
+                  </div>
+                </div>
+              </div>
+            </GlassEffect>
+          </motion.div>
+          
+          {/* Contact Form */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={fadeIn("left", 0.3)}
+          >
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+              <span className="text-primary">무료상담</span> 신청하기
+            </h2>
+            <GlassEffect className="rounded-xl p-8">
+>>>>>>> rollback-from-8c1775a
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" id="contact-form">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

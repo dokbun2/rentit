@@ -64,13 +64,13 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="py-20 bg-background relative overflow-hidden">
-      <div className="container mx-auto px-4">
+    <section id="testimonials" className="py-16 md:py-20 bg-background relative overflow-hidden">
+      <div className="container mx-auto px-4 md:px-8">
         <motion.div
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <motion.h2 
             variants={fadeIn("up", 0.1)}
@@ -82,11 +82,11 @@ const TestimonialsSection = () => {
             variants={fadeIn("up", 0.2)}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            렌잇의 서비스를 경험한 고객들의 생생한 후기를 확인하세요.
+            렌잇의 서비스를 구축하고 경험한 고객사들의 성공사례를 확인하세요.
           </motion.p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
@@ -95,7 +95,7 @@ const TestimonialsSection = () => {
               viewport={{ once: true, amount: 0.1 }}
               variants={fadeIn("up", 0.2 + index * 0.1)}
             >
-              <GlassEffect className="rounded-xl p-8 relative">
+              <GlassEffect className="rounded-xl p-6 md:p-8 relative border border-gray-800/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/10 transition-all">
                 <div className="absolute -top-4 -left-4 text-6xl text-primary opacity-20">❝</div>
                 
                 <p className="text-gray-300 mb-6 relative z-10">
@@ -116,21 +116,6 @@ const TestimonialsSection = () => {
             </motion.div>
           ))}
         </div>
-        
-        <motion.div 
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-          variants={fadeIn("up", 0.4)}
-          className="text-center"
-        >
-          <Button 
-            onClick={scrollToContact}
-            className="px-6 py-3 bg-gradient-to-r from-primary to-purple-500 rounded-full text-white font-medium hover:shadow-lg hover:shadow-primary/30 transition-all"
-          >
-            무료 상담 신청하기
-          </Button>
-        </motion.div>
       </div>
     </section>
   );

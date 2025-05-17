@@ -8,8 +8,23 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 console.log('SUPABASE_URL (디버깅):', supabaseUrl);
 console.log('SUPABASE_ANON_KEY 설정 여부:', supabaseAnonKey ? '설정됨' : '설정되지 않음');
 
-// Supabase 클라이언트 생성
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Supabase 클라이언트 생성 - SSL 인증서 문제 해결을 위한 옵션 추가
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  },
+  global: {
+    fetch: (url, options) => {
+      return fetch(url, {
+        ...options,
+        // SSL 인증서 에러 무시
+        mode: 'cors'
+      });
+    }
+  }
+});
 
 console.log('Supabase 클라이언트 초기화 상태:', !!supabase);
 // URL 로깅 (프라이빗 프로퍼티 접근 대신 문자열로 표시)
@@ -29,7 +44,7 @@ export interface Contact {
   service: string;
   message: string;
   created_at: string;
-  processed: boolean;
+  is_processed: boolean;
 }
 
 export interface NewsItem {

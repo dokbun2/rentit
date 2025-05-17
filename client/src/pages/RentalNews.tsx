@@ -32,6 +32,32 @@ import { useForm } from "react-hook-form";
 import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
+// HTML 태그 제거 함수
+const stripHtmlTags = (html: string) => {
+  // 빈 문자열이나 null, undefined 체크
+  if (!html) return '';
+  
+  // 스타일 태그와 내용 제거 (스타일 태그 안의 내용까지 모두 제거)
+  let cleanedText = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  
+  // 스크립트 태그와 내용 제거
+  cleanedText = cleanedText.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  
+  // 나머지 HTML 태그 제거
+  cleanedText = cleanedText.replace(/<[^>]*>/g, '');
+  
+  // HTML 엔티티 디코딩 (예: &amp; -> &, &lt; -> <)
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = cleanedText;
+  
+  // CSS 선택자나 스타일 관련 텍스트 추가 제거 (예: .container, font-family 등)
+  let finalText = tempDiv.textContent || tempDiv.innerText || '';
+  finalText = finalText.replace(/\.\w+\s*{[^}]*}/g, ''); // CSS 규칙 제거
+  finalText = finalText.replace(/[a-z-]+\s*:\s*[^;]+(;|\s*$)/gi, ''); // CSS 속성 제거
+  
+  return finalText.trim();
+};
+
 // 뉴스 작성 폼 유효성 검사 스키마
 const newsFormSchema = z.object({
   title: z.string().min(2, { message: "제목을 입력해주세요" }),
@@ -54,9 +80,34 @@ export default function RentalNews() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewDetailMode, setViewDetailMode] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  // 미리보기 상태 추가
+  const [createPreviewContent, setCreatePreviewContent] = useState<string>("");
+  const [editPreviewContent, setEditPreviewContent] = useState<string>("");
 
   // 사용자 인증 상태 확인
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // 모바일 화면 감지를 위한 상태
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // 화면 크기 변경을 감지하는 useEffect
+  useEffect(() => {
+    // 초기 화면 크기 확인
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // 초기 체크
+    checkMobile();
+    
+    // 화면 크기 변경 이벤트 핸들러
+    window.addEventListener('resize', checkMobile);
+    
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // URL에서 ID 파라미터 가져오기
   const getNewsIdFromUrl = () => {
@@ -142,6 +193,16 @@ export default function RentalNews() {
     },
   });
 
+  // 미리보기 내용 업데이트 (작성 폼)
+  useEffect(() => {
+    const subscription = createForm.watch((value) => {
+      if (value.content) {
+        setCreatePreviewContent(value.content);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [createForm.watch]);
+
   // 뉴스 수정 폼
   const editForm = useForm<NewsFormValues>({
     resolver: zodResolver(newsFormSchema),
@@ -155,6 +216,16 @@ export default function RentalNews() {
       tag_color: "bg-primary/30",
     },
   });
+
+  // 미리보기 내용 업데이트 (수정 폼)
+  useEffect(() => {
+    const subscription = editForm.watch((value) => {
+      if (value.content) {
+        setEditPreviewContent(value.content);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [editForm.watch]);
 
   // 뉴스 작성 제출 처리
   const handleCreateSubmit = async (data: NewsFormValues) => {
@@ -251,16 +322,18 @@ export default function RentalNews() {
     
     setIsSubmitting(true);
     try {
-      // Supabase를 통해 뉴스 삭제
-      const { error } = await supabase
+      console.log('삭제 요청 ID:', selectedNews.id, typeof selectedNews.id);
+      
+      const { data, error } = await supabase
         .from('news')
         .delete()
-        .eq('id', selectedNews.id);
+        .eq('id', selectedNews.id)
+        .select();
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      console.log('삭제 응답:', data, error);
 
+      if (error) throw error;
+      
       toast({
         title: "뉴스가 성공적으로 삭제되었습니다",
         variant: "default",
@@ -293,6 +366,7 @@ export default function RentalNews() {
       tag: item.tag || "",
       tag_color: item.tag_color || "bg-primary/30",
     });
+    setEditPreviewContent(item.content); // 미리보기 내용 초기화
     setIsEditDialogOpen(true);
   };
 
@@ -434,7 +508,9 @@ export default function RentalNews() {
                 variants={fadeIn("up", 0.2)}
                 className="grid grid-cols-1 gap-8"
               >
-                {(activeCategory ? news.filter(item => item.category === activeCategory) : news).map((item, index) => (
+                {(activeCategory ? news.filter(item => item.category === activeCategory) : news)
+                  .slice(0, isMobile ? 1 : news.length)
+                  .map((item, index) => (
                   <motion.div
                     key={item.id}
                     initial="hidden"
@@ -462,8 +538,13 @@ export default function RentalNews() {
                         <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
+<<<<<<< HEAD
                         <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
                           {item.content}
+=======
+                        <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
+                          {stripHtmlTags(item.content)}
+>>>>>>> rollback-from-8c1775a
                         </p>
                       </div>
                       
@@ -586,34 +667,51 @@ export default function RentalNews() {
               
               <div className="glass-effect rounded-xl overflow-hidden">
                 {/* 헤더 이미지 */}
+<<<<<<< HEAD
                 <div className="relative h-[380px] md:h-[500px]">
+=======
+                <div className="relative rounded-xl overflow-hidden mx-4 md:mx-6">
+>>>>>>> rollback-from-8c1775a
                   <img 
                     src={selectedNews.image_url} 
                     alt={selectedNews.title} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto block object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500";
                     }}
                   />
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="bg-background px-3 py-1 rounded-full text-sm text-gray-300">
+                </div>
+                
+                {/* 뉴스 정보 (이미지 아래로 이동) */}
+                <div className="p-6 md:p-8 bg-gradient-to-br from-purple-900/90 via-indigo-900/90 to-purple-800/90 border-t border-purple-500/30 mt-4 md:mt-6 rounded-xl rounded-bl-none rounded-br-none shadow-lg mx-4 md:mx-6">
+                  <h1 className="text-3xl md:text-4xl font-bold text-left mb-4 text-white drop-shadow-sm">{selectedNews.title}</h1>
+                  
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="bg-purple-500/20 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs text-purple-100 font-medium border border-purple-500/30">
                         {selectedNews.category || "렌탈뉴스"}
                       </span>
                       {selectedNews.tag && (
-                        <span className={`px-2 py-1 ${selectedNews.tag_color || "bg-primary/30"} rounded-md text-sm text-white`}>
+                        <span className={`px-2.5 py-1 bg-indigo-500/30 backdrop-blur-sm rounded-full text-xs text-indigo-100 border border-indigo-500/30`}>
                           {selectedNews.tag}
                         </span>
                       )}
                     </div>
+<<<<<<< HEAD
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-left">{selectedNews.title}</h1>
                     <div className="flex items-center mt-2 text-gray-300">
                       <Calendar className="h-4 w-4 mr-2" />
+=======
+                    
+                    <div className="text-purple-300 text-xs flex items-center">
+                      <Calendar className="h-3.5 w-3.5 mr-1.5 text-purple-300" />
+>>>>>>> rollback-from-8c1775a
                       {formatDate(selectedNews.created_at)}
                     </div>
                   </div>
                 </div>
                 
+<<<<<<< HEAD
                 {/* 본문 내용 - 너비 확장 및 패딩 조정 */}
                 <div className="p-4 md:p-8">
                   <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-none w-full mx-auto text-left">
@@ -629,6 +727,17 @@ export default function RentalNews() {
                   
                   {/* 공유 및 링크 섹션 */}
                   <div className="mt-16 pt-8 border-t border-gray-800 w-full mx-auto">
+=======
+                {/* 본문 내용 */}
+                <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl rounded-tl-none rounded-tr-none mx-4 md:mx-6 shadow-lg mt-0 border-t-0">
+                  <article className="prose prose-lg md:prose-xl max-w-none text-left text-gray-800">
+                    {/* HTML 내용 렌더링 */}
+                    <div dangerouslySetInnerHTML={{ __html: selectedNews.content }} />
+                  </article>
+                  
+                  {/* 공유 및 링크 섹션 */}
+                  <div className="mt-12 pt-8 border-t border-gray-200">
+>>>>>>> rollback-from-8c1775a
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (
@@ -644,8 +753,8 @@ export default function RentalNews() {
                       
                       {/* 관련 정보 섹션 */}
                       <div className="flex flex-col space-y-2 md:text-right">
-                        <p className="text-gray-400">카테고리: <span className="text-primary">{selectedNews.category || "렌탈뉴스"}</span></p>
-                        <p className="text-gray-400">작성일: <span className="text-white">{formatDate(selectedNews.created_at)}</span></p>
+                        <p className="text-gray-600">카테고리: <span className="text-primary">{selectedNews.category || "렌탈뉴스"}</span></p>
+                        <p className="text-gray-600">작성일: <span className="text-gray-800">{formatDate(selectedNews.created_at)}</span></p>
                       </div>
                     </div>
                   </div>
@@ -700,7 +809,7 @@ export default function RentalNews() {
 
       {/* 새 글 작성 다이얼로그 */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+        <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">새 뉴스 작성</DialogTitle>
             <DialogDescription className="text-left">렌탈 시장의 최신 소식을 작성해주세요</DialogDescription>
@@ -748,49 +857,65 @@ export default function RentalNews() {
                   )}
                 />
               </div>
-              <FormField
-                control={createForm.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>내용</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="뉴스 내용을 입력하세요" 
-                        className="min-h-[200px]" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이미지 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={createForm.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>링크 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="링크 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={createForm.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>내용</FormLabel>
+                      <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="뉴스 내용을 입력하세요" 
+                          className="min-h-[400px] font-mono text-sm" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="col-span-1">
+                  <div className="mb-2 flex justify-between items-center">
+                    <span className="font-medium">미리보기</span>
+                    <span className="text-xs text-gray-500">HTML이 적용된 모습을 확인해보세요</span>
+                  </div>
+                  <div className="border rounded-md p-4 min-h-[400px] bg-white text-gray-800 overflow-auto">
+                    <div className="prose prose-sm max-w-none">
+                      <div dangerouslySetInnerHTML={{ __html: createPreviewContent }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={createForm.control}
+                  name="image_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이미지 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={createForm.control}
+                  name="link"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>링크 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="링크 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button 
                   type="button" 
@@ -815,7 +940,7 @@ export default function RentalNews() {
 
       {/* 글 수정 다이얼로그 */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-background border border-gray-800">
+        <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">뉴스 수정</DialogTitle>
             <DialogDescription className="text-left">뉴스 내용을 수정해주세요</DialogDescription>
@@ -863,49 +988,65 @@ export default function RentalNews() {
                   )}
                 />
               </div>
-              <FormField
-                control={editForm.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>내용</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="뉴스 내용을 입력하세요" 
-                        className="min-h-[200px]" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이미지 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="이미지 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={editForm.control}
-                name="link"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>링크 URL (선택사항)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="링크 URL을 입력하세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={editForm.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem className="col-span-1">
+                      <FormLabel>내용</FormLabel>
+                      <p className="text-xs text-gray-500 mb-2">HTML 태그를 사용하여 서식을 적용할 수 있습니다. (예: &lt;b&gt;굵게&lt;/b&gt;, &lt;i&gt;기울임&lt;/i&gt;, &lt;a href="..."&gt;링크&lt;/a&gt;)</p>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="뉴스 내용을 입력하세요" 
+                          className="min-h-[400px] font-mono text-sm" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="col-span-1">
+                  <div className="mb-2 flex justify-between items-center">
+                    <span className="font-medium">미리보기</span>
+                    <span className="text-xs text-gray-500">HTML이 적용된 모습을 확인해보세요</span>
+                  </div>
+                  <div className="border rounded-md p-4 min-h-[400px] bg-white text-gray-800 overflow-auto">
+                    <div className="prose prose-sm max-w-none">
+                      <div dangerouslySetInnerHTML={{ __html: editPreviewContent }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={editForm.control}
+                  name="image_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이미지 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="이미지 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editForm.control}
+                  name="link"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>링크 URL (선택사항)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="링크 URL을 입력하세요" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <DialogFooter>
                 <Button 
                   type="button" 

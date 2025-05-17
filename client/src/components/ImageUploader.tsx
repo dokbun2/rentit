@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { v4 as uuidv4 } from 'uuid';
+import { Loader2, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ImageUploaderProps {
   onUploadComplete: (url: string) => void;
@@ -31,74 +33,84 @@ export default function ImageUploader({ onUploadComplete, folder = 'news' }: Ima
       }
       
       setUploading(true);
-      setProgress(0);
+      setProgress(10); // 시작 진행률
       
-      // 파일명 생성 (중복 방지를 위해 타임스탬프 추가)
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-      const filePath = `${folder}/${fileName}`;
+      // 진행률 표시 시뮬레이션
+      const progressInterval = setInterval(() => {
+        setProgress(prev => Math.min(prev + 10, 90));
+      }, 300);
       
-      // Supabase Storage에 업로드
-      const { error: uploadError } = await supabase.storage
-        .from('rentit-media')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-          onUploadProgress: (progress) => {
-            const percent = Math.round((progress.loaded / progress.total) * 100);
-            setProgress(percent);
-          }
-        });
+      // 이미지 데이터를 base64로 변환하여 직접 사용
+      const reader = new FileReader();
       
-      if (uploadError) throw uploadError;
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          // base64 데이터 URL로 이미지 설정
+          const imageDataUrl = event.target.result.toString();
+          
+          // 진행률 업데이트
+          clearInterval(progressInterval);
+          setProgress(100);
+          
+          // 콜백 함수 호출
+          onUploadComplete(imageDataUrl);
+          console.log('이미지 데이터 URL 생성 완료');
+          
+          // 업로드 상태 완료로 설정
+          setTimeout(() => {
+            setUploading(false);
+          }, 500);
+        }
+      };
       
-      // 업로드된 이미지의 공개 URL 가져오기
-      const { data } = supabase.storage
-        .from('rentit-media')
-        .getPublicUrl(filePath);
+      // 파일 읽기 시작
+      reader.readAsDataURL(file);
       
-      // 콜백 함수 호출
-      onUploadComplete(data.publicUrl);
     } catch (err: any) {
       console.error('이미지 업로드 오류:', err);
       setError(err.message || '이미지 업로드 중 오류가 발생했습니다.');
-    } finally {
       setUploading(false);
     }
   };
 
   return (
     <div className="mb-4">
-      <div className="flex items-center space-x-3">
-        <label
-          htmlFor="file-upload"
-          className="cursor-pointer rounded-md bg-gray-100 px-3 py-2 text-sm font-medium hover:bg-gray-200"
-        >
-          이미지 선택
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
+      <div className="flex items-center justify-between mb-1">
+        <label className="text-sm font-medium text-gray-300">이미지</label>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => document.getElementById('file-upload')?.click()}
+          className="flex items-center gap-2 h-8 px-3"
           disabled={uploading}
-          className="hidden"
-        />
-        {uploading && (
-          <div className="flex items-center space-x-2">
-            <div className="h-2 w-24 rounded-full bg-gray-200">
-              <div
-                className="h-2 rounded-full bg-primary-dark"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <span className="text-xs text-gray-500">{progress}%</span>
-          </div>
-        )}
+        >
+          {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+          {uploading ? `업로드 중 (${progress}%)` : '이미지 업로드'}
+        </Button>
       </div>
+      <input
+        id="file-upload"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        disabled={uploading}
+        className="hidden"
+      />
       
       {error && (
         <p className="mt-2 text-xs text-red-500">{error}</p>
+      )}
+      
+      {uploading && (
+        <div className="mt-2">
+          <div className="h-2 w-full rounded-full bg-gray-200">
+            <div
+              className="h-2 rounded-full bg-primary-dark"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -14,6 +14,7 @@ const AdminRouteHandler = () => {
   const [, navigate] = useLocation();
 
   useEffect(() => {
+    // 어드민 대시보드로 리디렉션
     navigate("/admin/dashboard");
   }, [navigate]);
   

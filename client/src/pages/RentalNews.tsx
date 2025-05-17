@@ -538,13 +538,6 @@ export default function RentalNews() {
                         <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-<<<<<<< HEAD
-                        <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
-                          {item.content}
-=======
-                        <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
-                          {stripHtmlTags(item.content)}
->>>>>>> rollback-from-8c1775a
                         </p>
                       </div>
                       
@@ -667,11 +660,6 @@ export default function RentalNews() {
               
               <div className="glass-effect rounded-xl overflow-hidden">
                 {/* 헤더 이미지 */}
-<<<<<<< HEAD
-                <div className="relative h-[380px] md:h-[500px]">
-=======
-                <div className="relative rounded-xl overflow-hidden mx-4 md:mx-6">
->>>>>>> rollback-from-8c1775a
                   <img 
                     src={selectedNews.image_url} 
                     alt={selectedNews.title} 
@@ -697,47 +685,11 @@ export default function RentalNews() {
                         </span>
                       )}
                     </div>
-<<<<<<< HEAD
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-left">{selectedNews.title}</h1>
-                    <div className="flex items-center mt-2 text-gray-300">
-                      <Calendar className="h-4 w-4 mr-2" />
-=======
-                    
-                    <div className="text-purple-300 text-xs flex items-center">
-                      <Calendar className="h-3.5 w-3.5 mr-1.5 text-purple-300" />
->>>>>>> rollback-from-8c1775a
                       {formatDate(selectedNews.created_at)}
                     </div>
                   </div>
                 </div>
                 
-<<<<<<< HEAD
-                {/* 본문 내용 - 너비 확장 및 패딩 조정 */}
-                <div className="p-4 md:p-8">
-                  <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-none w-full mx-auto text-left">
-                    {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
-                    {selectedNews.content.split('\n\n').map((paragraph, idx) => (
-                      paragraph.trim() && (
-                        <p key={idx} className="text-gray-300 leading-relaxed mb-8 text-lg md:text-xl lg:text-2xl text-left">
-                          {paragraph}
-                        </p>
-                      )
-                    ))}
-                  </article>
-                  
-                  {/* 공유 및 링크 섹션 */}
-                  <div className="mt-16 pt-8 border-t border-gray-800 w-full mx-auto">
-=======
-                {/* 본문 내용 */}
-                <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl rounded-tl-none rounded-tr-none mx-4 md:mx-6 shadow-lg mt-0 border-t-0">
-                  <article className="prose prose-lg md:prose-xl max-w-none text-left text-gray-800">
-                    {/* HTML 내용 렌더링 */}
-                    <div dangerouslySetInnerHTML={{ __html: selectedNews.content }} />
-                  </article>
-                  
-                  {/* 공유 및 링크 섹션 */}
-                  <div className="mt-12 pt-8 border-t border-gray-200">
->>>>>>> rollback-from-8c1775a
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (

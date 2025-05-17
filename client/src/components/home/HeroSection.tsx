@@ -63,7 +63,7 @@ const HeroSection = () => {
             className="flex-1 text-center md:text-left"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              <span className="text-primary">렌탈 비지니스 </span>
+              <span className="text-primary">렌탈 비즈니스 </span>
               <span className="text-white">모든 것!</span>
               <br />
               <span className="text-white">렌잇이 </span>
@@ -74,7 +74,7 @@ const HeroSection = () => {
               className="text-lg md:text-2xl text-gray-200 mb-8"
             >
               렌탈사설립, 전산구축, 렌탈사제휴, 렌탈부업<br/>
-              렌탈비지니스의 모든 것을 도와드립니다.
+              렌탈비즈니스의 모든 것을 도와드립니다.
             </motion.p>
             <motion.div 
               variants={fadeIn("up", 0.3)}

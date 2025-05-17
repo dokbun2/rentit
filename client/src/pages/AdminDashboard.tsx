@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { supabase } from '../lib/supabase';
 import { LogOut, Users, FileText, CheckSquare, XSquare, Plus, Trash2, Upload, Loader2 } from 'lucide-react';
-import GlassEffect from '@/components/ui/glass-effect';
-import { Button } from '@/components/ui/button';
+import GlassEffect from '../components/ui/glass-effect';
+import { Button } from '../components/ui/button';
 import { Contact, NewsItem } from '../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -1,25 +1,33 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  BookOpen
+} from "lucide-react";
+import { 
   Form, 
   FormControl, 
   FormField, 
   FormItem, 
   FormLabel, 
   FormMessage 
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import { fadeIn } from "../../lib/motion";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { fadeIn } from "@/lib/motion";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import GlassEffect from "../ui/glass-effect";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { toast } from "../../hooks/use-toast";
-import { supabase } from "../../lib/supabase";
+import GlassEffect from "@/components/ui/glass-effect";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "이름을 입력해주세요" }),
@@ -139,20 +147,17 @@ const ContactSection = () => {
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-radial from-primary/10 to-transparent opacity-70"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
-            variants={fadeIn("up", 0.3)}
-            className="w-full max-w-2xl"
+            variants={fadeIn("right", 0.3)}
           >
+            {/* Contact Information */}
             <GlassEffect className="rounded-xl p-8">
-              <h3 className="text-2xl font-bold mb-6 text-center">무료 상담 신청</h3>
-              <p className="text-gray-400 text-center mb-6">렌탈 비즈니스에 관한 문의사항을 작성해 주세요.</p>
+              <h3 className="text-2xl font-bold mb-6">REN'T</h3>
               
-<<<<<<< HEAD
-=======
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4">
@@ -208,7 +213,6 @@ const ContactSection = () => {
               <span className="text-primary">무료상담</span> 신청하기
             </h2>
             <GlassEffect className="rounded-xl p-8">
->>>>>>> rollback-from-8c1775a
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" id="contact-form">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

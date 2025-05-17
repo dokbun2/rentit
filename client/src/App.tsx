@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-import { Switch, Route } from "wouter";
-import { Toaster } from "./components/ui/toaster";
-import { TooltipProvider } from "./components/ui/tooltip";
-=======
 import { Switch, Route, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
->>>>>>> rollback-from-8c1775a
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/not-found";
 import AdminLogin from "./pages/AdminLogin";

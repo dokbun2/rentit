@@ -31,6 +31,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PlusCircle, Edit, Trash2, Calendar, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { useSupabase } from "../contexts/SupabaseContext";
+import { useNavigate } from "react-router-dom";
 
 // HTML 태그 제거 함수
 const stripHtmlTags = (html: string) => {
@@ -72,29 +74,31 @@ const newsFormSchema = z.object({
 type NewsFormValues = z.infer<typeof newsFormSchema>;
 
 export default function RentalNews() {
-  const [, setLocation] = useLocation();
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isListView, setIsListView] = useState(true);
   const [selectedNews, setSelectedNews] = useState<News | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [viewDetailMode, setViewDetailMode] = useState(false);
+  const [news, setNews] = useState<News[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState<News | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const { supabase } = useSupabase();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // 미리보기 상태 추가
   const [createPreviewContent, setCreatePreviewContent] = useState<string>("");
   const [editPreviewContent, setEditPreviewContent] = useState<string>("");
 
-  // 사용자 인증 상태 확인
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // 모바일 화면 감지를 위한 상태
-  const [isMobile, setIsMobile] = useState(false);
-  
   // 화면 크기 변경을 감지하는 useEffect
   useEffect(() => {
     // 초기 화면 크기 확인
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobileView(window.innerWidth <= 768);
     };
     
     // 초기 체크
@@ -120,7 +124,7 @@ export default function RentalNews() {
   };
 
   // 뉴스 데이터 불러오기
-  const { data: news, isLoading, refetch } = useQuery<News[]>({
+  const { data: newsData, isLoading: newsLoading, refetch } = useQuery<News[]>({
     queryKey: ["news"],
     queryFn: getNews,
   });
@@ -159,14 +163,14 @@ export default function RentalNews() {
   // URL에서 ID를 읽어 해당 뉴스 상세보기로 자동 이동
   useEffect(() => {
     const newsId = getNewsIdFromUrl();
-    if (newsId && news) {
-      const targetNews = news.find(item => item.id === newsId);
+    if (newsId && newsData) {
+      const targetNews = newsData.find(item => item.id === newsId);
       if (targetNews) {
         setSelectedNews(targetNews);
-        setViewDetailMode(true);
+        setIsListView(false);
       }
     }
-  }, [news]);
+  }, [newsData]);
 
   // 컴포넌트 마운트 시 인증 상태 확인
   useEffect(() => {
@@ -256,7 +260,7 @@ export default function RentalNews() {
         variant: "default",
       });
 
-      setIsCreateDialogOpen(false);
+      setIsCreateModalOpen(false);
       createForm.reset();
       refetch(); // 뉴스 목록 새로고침
     } catch (error) {
@@ -301,7 +305,7 @@ export default function RentalNews() {
         variant: "default",
       });
 
-      setIsEditDialogOpen(false);
+      setIsEditModalOpen(false);
       editForm.reset();
       refetch(); // 뉴스 목록 새로고침
     } catch (error) {
@@ -339,8 +343,8 @@ export default function RentalNews() {
         variant: "default",
       });
 
-      setIsDeleteDialogOpen(false);
-      setViewDetailMode(false);
+      setIsDeleteModalOpen(false);
+      setIsListView(true);
       refetch(); // 뉴스 목록 새로고침
     } catch (error) {
       console.error("뉴스 삭제 오류:", error);
@@ -367,26 +371,26 @@ export default function RentalNews() {
       tag_color: item.tag_color || "bg-primary/30",
     });
     setEditPreviewContent(item.content); // 미리보기 내용 초기화
-    setIsEditDialogOpen(true);
+    setIsEditModalOpen(true);
   };
 
   // 삭제 버튼 클릭 처리
   const handleDeleteClick = (item: News) => {
     setSelectedNews(item);
-    setIsDeleteDialogOpen(true);
+    setIsDeleteModalOpen(true);
   };
 
   // 뉴스 상세 보기
   const handleViewDetail = (item: News) => {
     setSelectedNews(item);
-    setViewDetailMode(true);
+    setIsListView(false);
     window.scrollTo(0, 0);
   };
 
   // 뉴스 목록으로 돌아가기
   const handleBackToList = () => {
     setSelectedNews(null);
-    setViewDetailMode(false);
+    setIsListView(true);
     setActiveCategory(null); // 카테고리 필터 초기화
     
     // URL에서 ID 파라미터 제거
@@ -420,7 +424,7 @@ export default function RentalNews() {
       <div className="absolute top-1/3 right-10 w-48 h-48 bg-gradient-radial from-primary/20 to-transparent opacity-30"></div>
       
       <div className="container max-w-[1960px] mx-auto px-4 py-12 pt-14 md:pt-16 relative z-10">
-        {!viewDetailMode ? (
+        {!isListView ? (
           <>
             {/* 헤더 섹션 */}
             <motion.div
@@ -509,7 +513,7 @@ export default function RentalNews() {
                 className="grid grid-cols-1 gap-8"
               >
                 {(activeCategory ? news.filter(item => item.category === activeCategory) : news)
-                  .slice(0, isMobile ? 1 : news.length)
+                  .slice(0, isMobileView ? 1 : news.length)
                   .map((item, index) => (
                   <motion.div
                     key={item.id}
@@ -538,13 +542,8 @@ export default function RentalNews() {
                         <h3 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2 text-left group-hover:text-primary transition-colors line-clamp-1 tracking-tight text-gray-800">
                           {item.title}
                         </h3>
-<<<<<<< HEAD
-                        <p className="text-gray-600 text-base md:text-lg lg:text-xl mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
-                          {item.content}
-=======
                         <p className="text-gray-600 text-base md:text-lg mb-2 line-clamp-2 text-left leading-relaxed h-[calc(1.5em*2)] overflow-hidden">
                           {stripHtmlTags(item.content)}
->>>>>>> rollback-from-8c1775a
                         </p>
                       </div>
                       
@@ -667,11 +666,7 @@ export default function RentalNews() {
               
               <div className="glass-effect rounded-xl overflow-hidden">
                 {/* 헤더 이미지 */}
-<<<<<<< HEAD
                 <div className="relative h-[380px] md:h-[500px]">
-=======
-                <div className="relative rounded-xl overflow-hidden mx-4 md:mx-6">
->>>>>>> rollback-from-8c1775a
                   <img 
                     src={selectedNews.image_url} 
                     alt={selectedNews.title} 
@@ -697,37 +692,13 @@ export default function RentalNews() {
                         </span>
                       )}
                     </div>
-<<<<<<< HEAD
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-left">{selectedNews.title}</h1>
-                    <div className="flex items-center mt-2 text-gray-300">
-                      <Calendar className="h-4 w-4 mr-2" />
-=======
-                    
                     <div className="text-purple-300 text-xs flex items-center">
                       <Calendar className="h-3.5 w-3.5 mr-1.5 text-purple-300" />
->>>>>>> rollback-from-8c1775a
                       {formatDate(selectedNews.created_at)}
                     </div>
                   </div>
                 </div>
                 
-<<<<<<< HEAD
-                {/* 본문 내용 - 너비 확장 및 패딩 조정 */}
-                <div className="p-4 md:p-8">
-                  <article className="prose prose-invert prose-lg md:prose-xl lg:prose-2xl max-w-none w-full mx-auto text-left">
-                    {/* 문단 구분을 위해 줄바꿈을 <p> 태그로 변환 */}
-                    {selectedNews.content.split('\n\n').map((paragraph, idx) => (
-                      paragraph.trim() && (
-                        <p key={idx} className="text-gray-300 leading-relaxed mb-8 text-lg md:text-xl lg:text-2xl text-left">
-                          {paragraph}
-                        </p>
-                      )
-                    ))}
-                  </article>
-                  
-                  {/* 공유 및 링크 섹션 */}
-                  <div className="mt-16 pt-8 border-t border-gray-800 w-full mx-auto">
-=======
                 {/* 본문 내용 */}
                 <div className="p-6 md:p-8 bg-white dark:bg-white rounded-xl rounded-tl-none rounded-tr-none mx-4 md:mx-6 shadow-lg mt-0 border-t-0">
                   <article className="prose prose-lg md:prose-xl max-w-none text-left text-gray-800">
@@ -737,7 +708,6 @@ export default function RentalNews() {
                   
                   {/* 공유 및 링크 섹션 */}
                   <div className="mt-12 pt-8 border-t border-gray-200">
->>>>>>> rollback-from-8c1775a
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
                       {/* 링크가 있는 경우 */}
                       {selectedNews.link && (
@@ -808,7 +778,7 @@ export default function RentalNews() {
       </div>
 
       {/* 새 글 작성 다이얼로그 */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+      <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
         <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">새 뉴스 작성</DialogTitle>
@@ -920,7 +890,7 @@ export default function RentalNews() {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  onClick={() => setIsCreateDialogOpen(false)}
+                  onClick={() => setIsCreateModalOpen(false)}
                   disabled={isSubmitting}
                 >
                   취소
@@ -939,7 +909,7 @@ export default function RentalNews() {
       </Dialog>
 
       {/* 글 수정 다이얼로그 */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="sm:max-w-[900px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">뉴스 수정</DialogTitle>
@@ -1051,7 +1021,7 @@ export default function RentalNews() {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  onClick={() => setIsEditDialogOpen(false)}
+                  onClick={() => setIsEditModalOpen(false)}
                   disabled={isSubmitting}
                 >
                   취소
@@ -1070,7 +1040,7 @@ export default function RentalNews() {
       </Dialog>
 
       {/* 글 삭제 확인 다이얼로그 */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent className="sm:max-w-[425px] bg-background border border-gray-800">
           <DialogHeader className="text-left">
             <DialogTitle className="text-xl text-left">뉴스 삭제</DialogTitle>
@@ -1084,7 +1054,7 @@ export default function RentalNews() {
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => setIsDeleteDialogOpen(false)}
+              onClick={() => setIsDeleteModalOpen(false)}
               disabled={isSubmitting}
             >
               취소

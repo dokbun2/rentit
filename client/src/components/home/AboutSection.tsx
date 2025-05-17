@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Trophy, Handshake, Lightbulb, Users } from "lucide-react";
-import { Button } from "../ui/button";
-import { fadeIn } from "../../lib/motion";
+import { Button } from "@/components/ui/button";
+import { fadeIn } from "@/lib/motion";
 
 const AboutSection = () => {
   const scrollToContact = () => {
@@ -72,62 +72,37 @@ const AboutSection = () => {
               시장 조사부터 비즈니스 모델 구축, 시스템 개발까지 종합적인 컨설팅 서비스로 고객의 니즈에 맞는 최적의 결과를 도출합니다.
             </p>
             
-<<<<<<< HEAD
-            <div className="flex flex-col items-center md:items-start gap-4 mb-8 w-full max-w-md mx-auto px-4 md:pl-36">
-              <div className="flex items-center w-full justify-center md:justify-start">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
-                  <Trophy className="h-5 w-5 text-primary" />
-=======
             <div className="flex flex-col items-start gap-4 md:gap-5 mb-6 md:mb-8 w-full max-w-md mx-auto pl-4 md:pl-24">
               <div className="flex items-center w-full">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4 md:mr-5 shrink-0">
                   <Trophy className="h-5 w-5 md:h-6 md:w-6 text-primary" />
->>>>>>> rollback-from-8c1775a
                 </div>
                 <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white text-lg md:text-xl mb-1 md:mb-2">전문성</h4>
                   <p className="text-gray-400 text-base md:text-lg">렌탈 분야 전문 컨설턴트</p>
                 </div>
               </div>
-<<<<<<< HEAD
-              <div className="flex items-center w-full justify-center md:justify-start">
-                <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center mr-4 shrink-0">
-                  <Handshake className="h-5 w-5 text-secondary" />
-=======
               <div className="flex items-center w-full">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-secondary/20 flex items-center justify-center mr-4 md:mr-5 shrink-0">
                   <Handshake className="h-5 w-5 md:h-6 md:w-6 text-secondary" />
->>>>>>> rollback-from-8c1775a
                 </div>
                 <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white text-lg md:text-xl mb-1 md:mb-2">신뢰성</h4>
                   <p className="text-gray-400 text-base md:text-lg">200+ 성공 비즈니스 사례</p>
                 </div>
               </div>
-<<<<<<< HEAD
-              <div className="flex items-center w-full justify-center md:justify-start">
-                <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-4 shrink-0">
-                  <Lightbulb className="h-5 w-5 text-amber-500" />
-=======
               <div className="flex items-center w-full">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-amber-500/20 flex items-center justify-center mr-4 md:mr-5 shrink-0">
                   <Lightbulb className="h-5 w-5 md:h-6 md:w-6 text-amber-500" />
->>>>>>> rollback-from-8c1775a
                 </div>
                 <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white text-lg md:text-xl mb-1 md:mb-2">혁신성</h4>
                   <p className="text-gray-400 text-base md:text-lg">최신 렌탈 트렌드 반영</p>
                 </div>
               </div>
-<<<<<<< HEAD
-              <div className="flex items-center w-full justify-center md:justify-start">
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 shrink-0">
-                  <Users className="h-5 w-5 text-primary" />
-=======
               <div className="flex items-center w-full">
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/20 flex items-center justify-center mr-4 md:mr-5 shrink-0">
                   <Users className="h-5 w-5 md:h-6 md:w-6 text-primary" />
->>>>>>> rollback-from-8c1775a
                 </div>
                 <div className="flex flex-col items-start text-left">
                   <h4 className="font-bold text-white text-lg md:text-xl mb-1 md:mb-2">고객 중심</h4>

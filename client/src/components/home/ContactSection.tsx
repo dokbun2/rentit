@@ -118,43 +118,23 @@ const ContactSection = () => {
             throw new Error('데이터 저장 중 오류가 발생했습니다: ' + error.message);
           }
         }
-
-        // 이메일 전송 API 호출
-        const emailResponse = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(contactData),
-        });
-
-        if (!emailResponse.ok) {
-          const errorData = await emailResponse.json();
-          throw new Error(errorData.message || '이메일 전송 중 오류가 발생했습니다.');
-        }
-
-        // 성공 메시지 표시
-        toast({
-          title: "상담 신청 완료",
-          description: "문의가 성공적으로 접수되었습니다. 빠른 시일 내에 연락드리겠습니다.",
-        });
-
-        // 폼 초기화
-        form.reset();
         
-      } catch (error: any) {
-        console.error('문의 처리 중 오류:', error);
+        // 성공 메시지
         toast({
-          title: "오류 발생",
-          description: error.message || "문의 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
-          variant: "destructive",
+          title: "상담 신청이 완료되었습니다",
+          description: "빠른 시일 내에 연락드리겠습니다.",
         });
+        
+        form.reset();
+      } catch (insertError) {
+        console.error('데이터 삽입 도중 예외 발생:', insertError);
+        throw insertError;
       }
-    } catch (error: any) {
-      console.error('폼 제출 오류:', error);
+    } catch (error) {
+      console.error('상담 신청 오류:', error);
       toast({
-        title: "오류 발생",
-        description: error.message || "문의 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        title: "오류가 발생했습니다",
+        description: error instanceof Error ? error.message : "잠시 후 다시 시도해주세요.",
         variant: "destructive",
       });
     } finally {

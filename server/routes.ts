@@ -13,12 +13,23 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'dokbun2@gmail.com',
-    pass: 'mrzc gumh lnoy ytke'
-  }
+    pass: 'aexi fydq yyvd mplc'
+  },
+  debug: true, // 디버그 모드 활성화
+  logger: true // 로거 활성화
 });
 
 // 이메일 전송 함수
 async function sendContactEmail(contactData: any) {
+  console.log('이메일 전송 시작...');
+  console.log('Transporter 설정:', {
+    service: transporter.options.service,
+    auth: {
+      user: transporter.options.auth?.user,
+      // 비밀번호는 보안상 로깅하지 않음
+    }
+  });
+
   const mailOptions = {
     from: 'dokbun2@gmail.com',
     to: 'dokbun2@gmail.com',
@@ -36,10 +47,12 @@ async function sendContactEmail(contactData: any) {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log('문의 이메일이 성공적으로 전송되었습니다.');
+    console.log('이메일 전송 시도...');
+    const info = await transporter.sendMail(mailOptions);
+    console.log('이메일 전송 성공:', info);
+    return info;
   } catch (error) {
-    console.error('이메일 전송 중 오류 발생:', error);
+    console.error('이메일 전송 중 상세 오류:', error);
     throw error;
   }
 }

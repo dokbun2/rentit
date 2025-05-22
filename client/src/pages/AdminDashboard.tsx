@@ -7,6 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Contact, NewsItem } from '../lib/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
+// 서비스 값과 한글 라벨 매핑
+const serviceMap: { [key: string]: string } = {
+  establishment: "렌탈사 설립",
+  partnership: "렌탈업무 제휴",
+  system: "렌탈시스템 구축",
+  parttime: "렌탈 부업",
+  other: "기타",
+};
+
+// 서비스 값을 한글 라벨로 변환하는 함수
+const getServiceLabel = (serviceValue: string): string => {
+  return serviceMap[serviceValue] || serviceValue; // 매핑되지 않은 값은 그대로 반환
+};
+
 export default function AdminDashboard() {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -260,7 +274,7 @@ function ContactsManager() {
                       onClick={() => setSelectedContact(contact)}
                     >
                       <td className="px-2 py-3">{contact.name}</td>
-                      <td className="px-2 py-3">{contact.service}</td>
+                      <td className="px-2 py-3">{getServiceLabel(contact.service)}</td>
                       <td className="px-2 py-3">
                         {formatDate(contact.created_at)}
                       </td>
@@ -332,7 +346,7 @@ function ContactsManager() {
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <div className="col-span-1 text-gray-400">서비스</div>
-                  <div className="col-span-2">{selectedContact.service}</div>
+                  <div className="col-span-2">{getServiceLabel(selectedContact.service)}</div>
                 </div>
               </div>
               

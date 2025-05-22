@@ -69,11 +69,11 @@ const sendConfirmationEmail = async (formData) => {
       <p>영업일 기준 1-2일 내에 담당자가 연락드릴 예정입니다.</p>
       <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
       <p style="color: #666; font-size: 14px;">
-        추가 문의사항이 있으시면 언제든지 <a href="mailto:info@rentit.co.kr" style="color: #8b5cf6;">info@rentit.co.kr</a>로 연락주세요.
+        추가 문의사항이 있으시면 언제든지 <a href="mailto:ceo@rnpick.co.kr" style="color: #8b5cf6;">ceo@rnpick.co.kr</a>로 연락주세요.
       </p>
       <div style="margin-top: 30px; text-align: center; color: #888; font-size: 12px;">
         <p>© 2025 렌잇. 모든 권리 보유.</p>
-        <p>경기도 하남시 감일로 75번길 40 201호 렌잇빌딩 2층</p>
+        <p>서울 성동구 아차산로17길 49(성수동2가) 15층 1504호</p>
       </div>
     </div>
   `;

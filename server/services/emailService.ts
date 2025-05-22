@@ -1,5 +1,19 @@
 import nodemailer from 'nodemailer';
 
+// 서비스 값과 한글 라벨 매핑
+const serviceMap: { [key: string]: string } = {
+  establishment: "렌탈사 설립",
+  partnership: "렌탈업무 제휴",
+  system: "렌탈시스템 구축",
+  parttime: "렌탈 부업",
+  other: "기타",
+};
+
+// 서비스 값을 한글 라벨로 변환하는 함수
+const getServiceLabel = (serviceValue: string): string => {
+  return serviceMap[serviceValue] || serviceValue; // 매핑되지 않은 값은 그대로 반환
+};
+
 // Gmail 설정
 const GMAIL_USER = 'ggamsire@gmail.com';
 const GMAIL_PASSWORD = 'oerg svup hvto snts';
@@ -62,7 +76,7 @@ export const sendContactNotification = async (formData: {
     <p><strong>이름:</strong> ${name}</p>
     <p><strong>연락처:</strong> ${phone}</p>
     <p><strong>이메일:</strong> ${email}</p>
-    <p><strong>관심 서비스:</strong> ${service}</p>
+    <p><strong>관심 서비스:</strong> ${getServiceLabel(service)}</p>
     <p><strong>문의 내용:</strong> ${message}</p>
     <p><strong>접수 시간:</strong> ${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>
     <hr>
@@ -88,15 +102,15 @@ export const sendConfirmationEmail = async (formData: {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
       <h2 style="color: #8b5cf6;">렌잇 상담 신청이 접수되었습니다</h2>
       <p>${name}님, 상담 신청해 주셔서 감사합니다.</p>
-      <p>귀하의 <strong>${service}</strong> 관련 문의가 성공적으로 접수되었습니다.</p>
+      <p>귀하의 <strong>${getServiceLabel(service)}</strong> 관련 문의가 성공적으로 접수되었습니다.</p>
       <p>영업일 기준 1-2일 내에 담당자가 연락드릴 예정입니다.</p>
       <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
       <p style="color: #666; font-size: 14px;">
-        추가 문의사항이 있으시면 언제든지 <a href="mailto:info@rentit.co.kr" style="color: #8b5cf6;">info@rentit.co.kr</a>로 연락주세요.
+        추가 문의사항이 있으시면 언제든지 <a href="mailto:ceo@rnpick.co.kr" style="color: #8b5cf6;">ceo@rnpick.co.kr</a>로 연락주세요.
       </p>
       <div style="margin-top: 30px; text-align: center; color: #888; font-size: 12px;">
         <p>© 2025 렌잇. 모든 권리 보유.</p>
-        <p>경기도 하남시 감일로 75번길 40 201호 렌잇빌딩 2층</p>
+        <p>서울 성동구 아차산로17길 49(성수동2가) 15층 1504호</p>
       </div>
     </div>
   `;

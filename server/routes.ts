@@ -4,58 +4,8 @@ import { storage } from "./storage";
 import { insertContactSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import { sendContactNotification, sendConfirmationEmail } from "./services/emailService";
+import { sendContactEmail } from "./services/emailService";
 import * as supabaseService from "./services/supabaseClient";
-import nodemailer from "nodemailer";
-
-// 이메일 전송을 위한 transporter 설정
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'dokbun2@gmail.com',
-    pass: 'aexi fydq yyvd mplc'
-  },
-  debug: true, // 디버그 모드 활성화
-  logger: true // 로거 활성화
-});
-
-// 이메일 전송 함수
-async function sendContactEmail(contactData: any) {
-  console.log('이메일 전송 시작...');
-  console.log('Transporter 설정:', {
-    service: transporter.options.service,
-    auth: {
-      user: transporter.options.auth?.user,
-      // 비밀번호는 보안상 로깅하지 않음
-    }
-  });
-
-  const mailOptions = {
-    from: 'dokbun2@gmail.com',
-    to: 'dokbun2@gmail.com',
-    subject: `[렌잇] 새로운 문의가 접수되었습니다 - ${contactData.name}`,
-    html: `
-      <h2>새로운 문의가 접수되었습니다</h2>
-      <p><strong>이름:</strong> ${contactData.name}</p>
-      <p><strong>연락처:</strong> ${contactData.phone}</p>
-      <p><strong>이메일:</strong> ${contactData.email}</p>
-      <p><strong>관심 서비스:</strong> ${contactData.service}</p>
-      <p><strong>문의 내용:</strong></p>
-      <p>${contactData.message}</p>
-      <p><strong>접수 시간:</strong> ${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>
-    `
-  };
-
-  try {
-    console.log('이메일 전송 시도...');
-    const info = await transporter.sendMail(mailOptions);
-    console.log('이메일 전송 성공:', info);
-    return info;
-  } catch (error) {
-    console.error('이메일 전송 중 상세 오류:', error);
-    throw error;
-  }
-}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here

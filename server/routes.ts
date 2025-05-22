@@ -54,12 +54,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contactData = req.body;
       
       // Supabase에 데이터 저장
-      const { data, error } = await supabaseService.createContact(contactData);
+      const data = await supabaseService.saveContact(contactData);
       
-      if (error) throw error;
-
-      // 이메일 전송
-      await sendContactEmail(contactData);
+      // 이메일 전송 시도
+      try {
+        await sendContactEmail(contactData);
+        console.log('이메일 전송 성공');
+      } catch (emailError) {
+        console.error('이메일 전송 실패:', emailError);
+        // 이메일 전송 실패는 전체 요청을 실패시키지 않음
+      }
 
       res.status(200).json({ 
         success: true, 

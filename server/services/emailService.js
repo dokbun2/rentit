@@ -5,10 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.testEmailService = exports.sendConfirmationEmail = exports.sendContactNotification = exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-// Gmail 설정
-const GMAIL_USER = 'ggamsire@gmail.com';
-const GMAIL_PASSWORD = 'oerg svup hvto snts';
-const ADMIN_EMAIL = 'dokbun2@gmail.com';
+// 환경 변수에서 값 가져오기
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+// 필수 환경 변수 확인
+if (!GMAIL_USER || !GMAIL_PASSWORD || !ADMIN_EMAIL) {
+    console.error('FATAL ERROR: Missing environment variables for email service');
+    process.exit(1); // 환경 변수가 없으면 프로세스 종료
+}
 // 이메일 전송을 위한 트랜스포터 설정
 const transporter = nodemailer_1.default.createTransport({
     service: 'gmail',

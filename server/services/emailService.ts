@@ -14,10 +14,17 @@ const getServiceLabel = (serviceValue: string): string => {
   return serviceMap[serviceValue] || serviceValue; // 매핑되지 않은 값은 그대로 반환
 };
 
-// Gmail 설정
-const GMAIL_USER = 'ggamsire@gmail.com';
-const GMAIL_PASSWORD = 'oerg svup hvto snts';
-const ADMIN_EMAIL = 'dokbun2@gmail.com';
+// 환경 변수에서 값 가져오기
+const GMAIL_USER = process.env.GMAIL_USER as string;
+const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD as string;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL as string;
+
+// 필수 환경 변수 확인
+if (!GMAIL_USER || !GMAIL_PASSWORD || !ADMIN_EMAIL) {
+  console.error('FATAL ERROR: Missing environment variables for email service');
+  // 애플리케이션이 시작되지 않도록 프로세스 종료 또는 적절한 오류 처리
+  process.exit(1); // 환경 변수가 없으면 프로세스 종료
+}
 
 // 이메일 전송을 위한 트랜스포터 설정
 const transporter = nodemailer.createTransport({

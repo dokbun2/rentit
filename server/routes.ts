@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { insertContactSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import { sendContactEmail } from "./services/emailService";
+import { sendContactNotification, sendConfirmationEmail } from "./services/emailService";
 import * as supabaseService from "./services/supabaseClient";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -14,15 +14,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
   app.post("/api/contact", async (req: Request, res: Response) => {
     try {
-      const contactData = req.body;
+      const contactData = insertContactSchema.parse(req.body);
       
       // Supabase에 데이터 저장
-      const data = await supabaseService.saveContact(contactData);
+      const data = await storage.createContactSubmission(contactData);
       
       // 이메일 전송 시도
       try {
-        await sendContactEmail(contactData);
-        console.log('이메일 전송 성공');
+        // 관리자 알림 이메일 전송
+        await sendContactNotification(contactData);
+        console.log('관리자 알림 이메일 전송 성공');
+
+        // 고객 확인 이메일 전송
+        await sendConfirmationEmail({
+          name: contactData.name,
+          email: contactData.email,
+          service: contactData.service
+        });
+        console.log('고객 확인 이메일 전송 성공');
       } catch (emailError) {
         console.error('이메일 전송 실패:', emailError);
         // 이메일 전송 실패는 전체 요청을 실패시키지 않음

@@ -6,6 +6,43 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { sendContactNotification, sendConfirmationEmail } from "./services/emailService";
 import * as supabaseService from "./services/supabaseClient";
+import nodemailer from "nodemailer";
+
+// 이메일 전송을 위한 transporter 설정
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'dokbun2@gmail.com',
+    pass: 'mrzc gumh lnoy ytke'
+  }
+});
+
+// 이메일 전송 함수
+async function sendContactEmail(contactData: any) {
+  const mailOptions = {
+    from: 'dokbun2@gmail.com',
+    to: 'dokbun2@gmail.com',
+    subject: `[렌잇] 새로운 문의가 접수되었습니다 - ${contactData.name}`,
+    html: `
+      <h2>새로운 문의가 접수되었습니다</h2>
+      <p><strong>이름:</strong> ${contactData.name}</p>
+      <p><strong>연락처:</strong> ${contactData.phone}</p>
+      <p><strong>이메일:</strong> ${contactData.email}</p>
+      <p><strong>관심 서비스:</strong> ${contactData.service}</p>
+      <p><strong>문의 내용:</strong></p>
+      <p>${contactData.message}</p>
+      <p><strong>접수 시간:</strong> ${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('문의 이메일이 성공적으로 전송되었습니다.');
+  } catch (error) {
+    console.error('이메일 전송 중 오류 발생:', error);
+    throw error;
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
@@ -14,38 +51,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
   app.post("/api/contact", async (req: Request, res: Response) => {
     try {
-      // Validate the request body
-      const contactData = insertContactSchema.parse(req.body);
+      const contactData = req.body;
       
-      // Store the contact submission (local storage)
-      const newContact = await storage.createContactSubmission(contactData);
+      // Supabase에 데이터 저장
+      const { data, error } = await supabaseService.createContact(contactData);
+      
+      if (error) throw error;
 
-      // Supabase에도 저장
-      try {
-        await supabaseService.saveContact(contactData);
-      } catch (supabaseError) {
-        console.error('Supabase 저장 실패:', supabaseError);
-        // Supabase 저장 실패해도 계속 진행
-      }
-      
-      // 이메일 전송 시도
-      try {
-        // 관리자에게 알림 이메일 전송
-        await sendContactNotification(contactData);
-        
-        // 고객에게 확인 이메일 전송
-        await sendConfirmationEmail(contactData);
-        
-        console.log("상담 신청 관련 이메일이 성공적으로 전송되었습니다.");
-      } catch (emailError) {
-        // 이메일 전송 실패해도 폼 제출은 성공으로 처리
-        console.error("이메일 전송 실패:", emailError);
-      }
-      
-      res.status(201).json({ 
+      // 이메일 전송
+      await sendContactEmail(contactData);
+
+      res.status(200).json({ 
         success: true, 
-        message: "상담 신청이 완료되었습니다. 입력하신 이메일로 접수 확인 메일이 발송됩니다.", 
-        data: newContact 
+        message: "문의가 성공적으로 접수되었습니다.",
+        data 
       });
     } catch (error) {
       if (error instanceof ZodError) {

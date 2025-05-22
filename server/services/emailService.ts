@@ -1,6 +1,23 @@
 import nodemailer from 'nodemailer';
 import { FormValues } from '../types/contact';
 
+<<<<<<< HEAD
+=======
+// 서비스 값과 한글 라벨 매핑
+const serviceMap: { [key: string]: string } = {
+  establishment: "렌탈사 설립",
+  partnership: "렌탈업무 제휴",
+  system: "렌탈시스템 구축",
+  parttime: "렌탈 부업",
+  other: "기타",
+};
+
+// 서비스 값을 한글 라벨로 변환하는 함수
+const getServiceLabel = (serviceValue: string): string => {
+  return serviceMap[serviceValue] || serviceValue; // 매핑되지 않은 값은 그대로 반환
+};
+
+>>>>>>> parent of 8e693e8 (11)
 // Gmail 설정
 const GMAIL_USER = 'ggamsire@gmail.com';
 const GMAIL_PASSWORD = 'oerg svup hvto snts';

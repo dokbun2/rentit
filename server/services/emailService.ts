@@ -1,12 +1,19 @@
 import nodemailer from 'nodemailer';
 import { FormValues } from '../types/contact';
 
+// Gmail 설정
+const GMAIL_USER = 'ggamsire@gmail.com';
+const GMAIL_PASSWORD = 'oerg svup hvto snts';
+const ADMIN_EMAIL = 'dokbun2@gmail.com';
+
 // 이메일 전송을 위한 트랜스포터 설정
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // TLS
   auth: {
-    user: 'ggamsire@gmail.com',
-    pass: 'oerg svup hvto snts'
+    user: GMAIL_USER,
+    pass: GMAIL_PASSWORD
   },
   debug: true,
   logger: true
@@ -32,8 +39,8 @@ export const sendContactNotification = async (formData: FormValues): Promise<boo
     
     // 이메일 옵션 설정
     const mailOptions = {
-      from: 'ggamsire@gmail.com',
-      to: 'dokbun2@gmail.com',
+      from: GMAIL_USER,
+      to: ADMIN_EMAIL,
       subject: `[렌잇] 새로운 상담 신청 - ${name}님`,
       html: emailContent,
     };
@@ -43,9 +50,9 @@ export const sendContactNotification = async (formData: FormValues): Promise<boo
     console.log('상담 신청 알림 이메일이 전송되었습니다:', info.messageId);
     
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('이메일 전송 중 오류가 발생했습니다:', error);
-    return false;
+    throw new Error(`이메일 전송 실패: ${error.message}`);
   }
 };
 
@@ -74,7 +81,7 @@ export const sendConfirmationEmail = async (formData: FormValues): Promise<boole
     
     // 이메일 옵션 설정
     const mailOptions = {
-      from: 'ggamsire@gmail.com',
+      from: GMAIL_USER,
       to: email,
       subject: `[렌잇] ${name}님의 상담 신청이 접수되었습니다`,
       html: emailContent,
@@ -85,9 +92,9 @@ export const sendConfirmationEmail = async (formData: FormValues): Promise<boole
     console.log('고객 확인 이메일이 전송되었습니다:', info.messageId);
     
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error('확인 이메일 전송 중 오류가 발생했습니다:', error);
-    return false;
+    throw new Error(`확인 이메일 전송 실패: ${error.message}`);
   }
 };
 

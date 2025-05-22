@@ -1,19 +1,45 @@
 import nodemailer from 'nodemailer';
 import { FormValues } from '../types/contact';
 
+// 환경 변수 체크
+const checkEnvVariables = () => {
+  const requiredVars = ['EMAIL_USER', 'EMAIL_PASSWORD', 'ADMIN_EMAIL'];
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0) {
+    console.error('Missing required environment variables:', missingVars);
+    return false;
+  }
+  return true;
+};
+
 // 이메일 전송을 위한 트랜스포터 설정
 const transporter = nodemailer.createTransport({
-  service: 'gmail',  // Gmail 사용. 다른 서비스 사용 시 변경
+  service: 'gmail',
   auth: {
-    user: 'dokbun2@gmail.com',
-    pass: 'aexi fydq yyvd mplc'
+    user: 'ggamsire@gmail.com',
+    pass: 'oerg svup hvto snts'
   },
-  debug: true,
-  logger: true
+  debug: process.env.NODE_ENV === 'development',
+  logger: process.env.NODE_ENV === 'development'
+});
+
+// 트랜스포터 설정 확인
+transporter.verify(function(error, success) {
+  if (error) {
+    console.error('이메일 서버 연결 실패:', error);
+  } else {
+    console.log('이메일 서버 연결 성공');
+  }
 });
 
 // 관리자에게 상담 신청 알림 보내기
 export const sendContactNotification = async (formData: FormValues): Promise<boolean> => {
+  if (!checkEnvVariables()) {
+    console.error('이메일 전송 실패: 환경 변수가 설정되지 않았습니다.');
+    return false;
+  }
+
   try {
     const { name, phone, email, service, message } = formData;
     
@@ -31,11 +57,17 @@ export const sendContactNotification = async (formData: FormValues): Promise<boo
     
     // 이메일 옵션 설정
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'your-email@gmail.com',
-      to: process.env.ADMIN_EMAIL || 'admin@rentit.co.kr', // 관리자 이메일 주소
+      from: 'ggamsire@gmail.com',
+      to: 'ggamsire@gmail.com',
       subject: `[렌잇] 새로운 상담 신청 - ${name}님`,
       html: emailContent,
     };
+    
+    console.log('이메일 전송 시도:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
     
     // 이메일 전송
     const info = await transporter.sendMail(mailOptions);
@@ -50,6 +82,11 @@ export const sendContactNotification = async (formData: FormValues): Promise<boo
 
 // 고객에게 상담 신청 접수 확인 이메일 보내기
 export const sendConfirmationEmail = async (formData: FormValues): Promise<boolean> => {
+  if (!checkEnvVariables()) {
+    console.error('이메일 전송 실패: 환경 변수가 설정되지 않았습니다.');
+    return false;
+  }
+
   try {
     const { name, email, service } = formData;
     
@@ -62,7 +99,7 @@ export const sendConfirmationEmail = async (formData: FormValues): Promise<boole
         <p>영업일 기준 1-2일 내에 담당자가 연락드릴 예정입니다.</p>
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
         <p style="color: #666; font-size: 14px;">
-          추가 문의사항이 있으시면 언제든지 <a href="mailto:info@rentit.co.kr" style="color: #8b5cf6;">info@rentit.co.kr</a>로 연락주세요.
+          추가 문의사항이 있으시면 언제든지 <a href="mailto:ggamsire@gmail.com" style="color: #8b5cf6;">ggamsire@gmail.com</a>로 연락주세요.
         </p>
         <div style="margin-top: 30px; text-align: center; color: #888; font-size: 12px;">
           <p>© 2025 렌잇. 모든 권리 보유.</p>
@@ -73,11 +110,17 @@ export const sendConfirmationEmail = async (formData: FormValues): Promise<boole
     
     // 이메일 옵션 설정
     const mailOptions = {
-      from: `"렌잇 고객센터" <${process.env.EMAIL_USER || 'info@rentit.co.kr'}>`,
+      from: `"렌잇 고객센터" <ggamsire@gmail.com>`,
       to: email,
       subject: `[렌잇] ${name}님의 상담 신청이 접수되었습니다`,
       html: emailContent,
     };
+    
+    console.log('확인 이메일 전송 시도:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
     
     // 이메일 전송
     const info = await transporter.sendMail(mailOptions);
@@ -100,17 +143,13 @@ interface ContactData {
 
 // 이메일 전송 함수
 export async function sendContactEmail(contactData: ContactData) {
-  console.log('이메일 전송 시작...');
-  console.log('Transporter 설정:', {
-    service: transporter.options.service,
-    auth: {
-      user: transporter.options.auth?.user,
-    }
-  });
+  if (process.env.NODE_ENV === 'development') {
+    console.log('이메일 전송 시작...');
+  }
 
   const mailOptions = {
-    from: 'ggamsire@gmail.com',
-    to: 'dokbun2@gmail.com',
+    from: process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL,
     subject: `[렌잇] 새로운 문의가 접수되었습니다 - ${contactData.name}`,
     html: `
       <h2>새로운 문의가 접수되었습니다</h2>
@@ -125,9 +164,10 @@ export async function sendContactEmail(contactData: ContactData) {
   };
 
   try {
-    console.log('이메일 전송 시도...');
     const info = await transporter.sendMail(mailOptions);
-    console.log('이메일 전송 성공:', info);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('이메일 전송 성공:', info);
+    }
     return info;
   } catch (error) {
     console.error('이메일 전송 중 상세 오류:', error);

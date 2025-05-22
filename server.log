@@ -1,0 +1,24 @@
+[2025-05-22 17:19:40] DEBUG Creating transport: nodemailer (7.0.3; +https://nodemailer.com/; SMTP/7.0.3[client:7.0.3])
+[2025-05-22 17:19:40] DEBUG [bMQre3oKz8] Resolved smtp.gmail.com as 173.194.174.109 [cache miss]
+node:events:495
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 127.0.0.1:5002
+    at __node_internal_captureLargerStackTrace (node:internal/errors:496:5)
+    at __node_internal_uvExceptionWithHostPort (node:internal/errors:593:12)
+    at Server.setupListenHandle [as _listen2] (node:net:1817:16)
+    at listenInCluster (node:net:1865:12)
+    at doListen (node:net:2014:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1844:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '127.0.0.1',
+  port: 5002
+}
+
+Node.js v18.20.8

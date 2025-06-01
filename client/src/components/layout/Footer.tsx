@@ -73,7 +73,7 @@ const Footer = () => {
             
             <ul className="space-y-3">
               <li>
-                <button onClick={() => scrollToSection("#contact")} className="text-gray-400 hover:text-primary transition-colors">
+                <button onClick={() => window.open('https://tally.so/r/wd1R1V', '_blank')} className="text-gray-400 hover:text-primary transition-colors">
                   문의하기
                 </button>
               </li>

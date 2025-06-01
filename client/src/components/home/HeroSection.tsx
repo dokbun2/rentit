@@ -87,13 +87,7 @@ const HeroSection = () => {
               </Button>
               <Button 
                 onClick={() => {
-                  scrollToSection("#contact");
-                  setTimeout(() => {
-                    const contactForm = document.querySelector('#contact-form');
-                    if (contactForm) {
-                      contactForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                  }, 500);
+                  window.open('https://tally.so/r/wd1R1V', '_blank');
                 }}
                 variant="outline" 
                 className="px-6 py-6 md:px-8 md:py-7 dark-light border-gray-700 rounded-full text-white text-lg font-medium hover:bg-dark-lighter transition-all"

@@ -106,7 +106,7 @@ const Navbar = () => {
               고객후기
             </button>
             <Button 
-              onClick={() => handleNavClick("#contact")}
+              onClick={() => window.open('https://tally.so/r/wd1R1V', '_blank')}
               className="bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg px-6 py-6"
             >
               무료 상담
@@ -164,7 +164,7 @@ const Navbar = () => {
               고객후기
             </button>
             <Button 
-              onClick={() => handleNavClick("#contact")}
+              onClick={() => window.open('https://tally.so/r/wd1R1V', '_blank')}
               className="w-full mt-4 bg-gradient-to-r from-primary to-purple-500 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all text-lg py-6"
             >
               무료 상담
